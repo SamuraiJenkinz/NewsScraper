@@ -4,7 +4,7 @@ Run ORM model for BrasilIntel.
 Tracks individual scraping and classification runs.
 """
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, DateTime, Text
+from sqlalchemy import Column, Integer, String, DateTime, Text, Boolean
 from sqlalchemy.orm import relationship
 from app.database import Base
 
@@ -31,8 +31,24 @@ class Run(Base):
     items_found = Column(Integer, default=0)
     error_message = Column(Text, nullable=True)
 
+    # Email delivery tracking (Phase 6)
+    email_status = Column(String(20), nullable=True)  # pending, sent, failed, skipped
+    email_sent_at = Column(DateTime, nullable=True)
+    email_recipients_count = Column(Integer, default=0)
+    email_error_message = Column(Text, nullable=True)
+
+    # PDF tracking
+    pdf_generated = Column(Boolean, default=False)
+    pdf_size_bytes = Column(Integer, nullable=True)
+
+    # Critical alert tracking
+    critical_alert_sent = Column(Boolean, default=False)
+    critical_alert_sent_at = Column(DateTime, nullable=True)
+    critical_insurers_count = Column(Integer, default=0)
+
     # Relationships
     news_items = relationship("NewsItem", back_populates="run")
 
     def __repr__(self) -> str:
-        return f"<Run(id={self.id}, category='{self.category}', status='{self.status}')>"
+        email_info = f", email='{self.email_status}'" if self.email_status else ""
+        return f"<Run(id={self.id}, category='{self.category}', status='{self.status}'{email_info})>"
