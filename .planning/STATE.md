@@ -10,17 +10,17 @@ See: .planning/PROJECT.md (updated 2026-02-04)
 ## Current Position
 
 Phase: 2 of 8 (Vertical Slice Validation)
-Plan: 3 of 9 in current phase
+Plan: 4 of 9 in current phase
 Status: In progress
-Last activity: 2026-02-04 - Completed 02-03-PLAN.md (Apify Scraper Service)
+Last activity: 2026-02-04 - Completed 02-04-PLAN.md (Azure OpenAI Classification Service)
 
-Progress: [█░░░░░░░░░] 14.6% (1/8 phases complete, Phase 2 at 33%)
+Progress: [█░░░░░░░░░] 16.7% (1/8 phases complete, Phase 2 at 44%)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
-- Average duration: ~4.9 minutes
+- Total plans completed: 7
+- Average duration: ~4.5 minutes
 - Total execution time: ~0.5 hours
 
 **By Phase:**
@@ -28,10 +28,10 @@ Progress: [█░░░░░░░░░] 14.6% (1/8 phases complete, Phase 2 a
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation | 4 | ~26 min | ~6.5 min |
-| 02-vertical-slice-validation | 2 | ~4.5 min | ~2.3 min |
+| 02-vertical-slice-validation | 3 | ~6.6 min | ~2.2 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-03 (~12 min), 01-04 (~8 min), 02-01 (~2.5 min), 02-02 (~2.5 min), 02-03 (~2 min)
+- Last 5 plans: 01-04 (~8 min), 02-01 (~2.5 min), 02-02 (~2.5 min), 02-03 (~2 min), 02-04 (~2.1 min)
 - Trend: Phase 2 service layer plans consistently faster than full-stack Phase 1 plans
 
 *Updated after each plan completion*
@@ -63,6 +63,11 @@ Recent decisions affecting current work:
 - OR queries combine insurer name and ANS code for better search accuracy (02-03)
 - ScrapedNewsItem dataclass for flexible Apify result field mapping (02-03)
 - Non-blocking error handling returns empty lists on scraper failures (02-03)
+- Azure OpenAI structured outputs with Pydantic response_format for guaranteed schema conformance (02-04)
+- Portuguese system prompts for consistent Portuguese-language summarization output (02-04)
+- temperature=0 for deterministic classification behavior (02-04)
+- Fallback classification returns Monitor status when LLM unavailable (02-04)
+- Token limit protection: aggregate classification limited to 10 news items (02-04)
 
 ### Pending Todos
 
@@ -105,21 +110,22 @@ None yet.
 
 ## Phase 2 Progress - IN PROGRESS
 
-**Plans complete: 3 of 9**
+**Plans complete: 4 of 9**
 
 | Plan | Name | Status |
 |------|------|--------|
 | 02-01 | Database Models | ✅ DONE |
 | 02-02 | Configuration | ✅ DONE |
 | 02-03 | Scraper Service | ✅ DONE |
+| 02-04 | Classification Service | ✅ DONE |
 
-**Next:** 02-04 Classifier service implementation
+**Next:** 02-05 API endpoints for scraping and classification
 
 ## Session Continuity
 
-Last session: 2026-02-04 16:31 UTC
-Stopped at: Completed 02-03-PLAN.md (Apify Scraper Service)
-Resume file: .planning/phases/02-vertical-slice-validation/02-04-PLAN.md
+Last session: 2026-02-04 16:06 UTC
+Stopped at: Completed 02-04-PLAN.md (Azure OpenAI Classification Service)
+Resume file: .planning/phases/02-vertical-slice-validation/02-05-PLAN.md
 
 ### What's Available Now
 
@@ -141,6 +147,8 @@ From Phase 2:
 - `app.config.Settings, get_settings` - Centralized configuration (02-02)
 - `app.services.scraper.ApifyScraperService` - Google News scraper (02-03)
 - `app.services.scraper.ScrapedNewsItem` - Scraping result dataclass (02-03)
+- `app.services.classifier.ClassificationService` - Azure OpenAI classification (02-04)
+- `app.schemas.classification.*` - NewsClassification, InsurerClassification (02-04)
 - Database tables: runs, news_items with foreign keys (02-01)
 
 ---
