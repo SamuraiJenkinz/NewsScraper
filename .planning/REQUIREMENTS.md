@@ -20,7 +20,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### News Collection
 
-- [ ] **NEWS-01**: System scrapes Google News for each enabled insurer using name + ANS code
+- [x] **NEWS-01**: System scrapes Google News for each enabled insurer using name + ANS code
 - [ ] **NEWS-02**: System scrapes Valor Econômico for insurance-related news
 - [ ] **NEWS-03**: System scrapes InfoMoney for insurance-related news
 - [ ] **NEWS-04**: System scrapes CQCS for insurance industry news
@@ -33,16 +33,16 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Classification
 
-- [ ] **CLASS-01**: Azure OpenAI classifies each insurer status as Critical, Watch, Monitor, or Stable
+- [x] **CLASS-01**: Azure OpenAI classifies each insurer status as Critical, Watch, Monitor, or Stable
 - [ ] **CLASS-02**: Classification based on news content analysis (financial crisis, regulatory action, M&A, leadership changes)
-- [ ] **CLASS-03**: Azure OpenAI generates concise bullet-point summary for each news item
+- [x] **CLASS-03**: Azure OpenAI generates concise bullet-point summary for each news item
 - [ ] **CLASS-04**: Azure OpenAI assigns sentiment (positive/negative/neutral) to each news item
 - [ ] **CLASS-05**: Classification results stored with insurer records
 - [ ] **CLASS-06**: LLM summarization can be toggled via configuration (USE_LLM_SUMMARY)
 
 ### Reporting
 
-- [ ] **REPT-01**: System generates 3 separate daily reports (Health, Dental, Group Life)
+- [x] **REPT-01**: System generates 3 separate daily reports (Health, Dental, Group Life)
 - [ ] **REPT-02**: Reports match Marsh branding (colors, layout) from reference HTML designs
 - [ ] **REPT-03**: Reports include confidential banner with classification level
 - [ ] **REPT-04**: Reports include executive summary with key findings cards (Critical/Warning/Positive)
@@ -58,7 +58,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Delivery
 
-- [ ] **DELV-01**: System sends reports via Microsoft Graph API (Exchange Online)
+- [x] **DELV-01**: System sends reports via Microsoft Graph API (Exchange Online)
 - [ ] **DELV-02**: Email supports TO, CC, BCC recipient lists per category
 - [ ] **DELV-03**: Recipients configurable per product category (Health, Dental, Group Life)
 - [ ] **DELV-04**: System sends immediate alert email when Critical status detected
@@ -98,15 +98,15 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Deployment
 
-- [ ] **DEPL-01**: Application runs as Python package with entry point `python -m src.main`
-- [ ] **DEPL-02**: Docker container available for local Windows 11 development
-- [ ] **DEPL-03**: Windows Scheduled Task setup via PowerShell script for production
-- [ ] **DEPL-04**: PowerShell management script with start/stop/status/logs/run-now commands
-- [ ] **DEPL-05**: Application uses Python venv for dependency isolation
-- [ ] **DEPL-06**: All configuration via environment variables (.env file)
-- [ ] **DEPL-07**: SQLite database stored in configurable data directory
-- [ ] **DEPL-08**: Logs written to data/logs/ with date-stamped filenames
-- [ ] **DEPL-09**: Health check endpoint at /api/health returns system status
+- [x] **DEPL-01**: Application runs as Python package with entry point `python -m src.main`
+- [x] **DEPL-02**: Docker container available for local Windows 11 development
+- [x] **DEPL-03**: Windows Scheduled Task setup via PowerShell script for production
+- [x] **DEPL-04**: PowerShell management script with start/stop/status/logs/run-now commands
+- [x] **DEPL-05**: Application uses Python venv for dependency isolation
+- [x] **DEPL-06**: All configuration via environment variables (.env file)
+- [x] **DEPL-07**: SQLite database stored in configurable data directory
+- [x] **DEPL-08**: Logs written to data/logs/ with date-stamped filenames
+- [x] **DEPL-09**: Health check endpoint at /api/health returns system status
 
 ## v2 Requirements
 
@@ -161,7 +161,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DATA-06 | Phase 1 | Complete |
 | DATA-07 | Phase 1 | Complete |
 | DATA-08 | Phase 1 | Complete |
-| NEWS-01 | Phase 2 | Pending |
+| NEWS-01 | Phase 2 | Complete |
 | NEWS-02 | Phase 3 | Pending |
 | NEWS-03 | Phase 3 | Pending |
 | NEWS-04 | Phase 3 | Pending |
@@ -171,13 +171,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | NEWS-08 | Phase 3 | Pending |
 | NEWS-09 | Phase 3 | Pending |
 | NEWS-10 | Phase 3 | Pending |
-| CLASS-01 | Phase 2 | Pending |
+| CLASS-01 | Phase 2 | Complete |
 | CLASS-02 | Phase 4 | Pending |
-| CLASS-03 | Phase 2 | Pending |
+| CLASS-03 | Phase 2 | Complete |
 | CLASS-04 | Phase 4 | Pending |
 | CLASS-05 | Phase 4 | Pending |
 | CLASS-06 | Phase 4 | Pending |
-| REPT-01 | Phase 2 | Pending |
+| REPT-01 | Phase 2 | Complete |
 | REPT-02 | Phase 5 | Pending |
 | REPT-03 | Phase 5 | Pending |
 | REPT-04 | Phase 5 | Pending |
@@ -190,7 +190,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | REPT-11 | Phase 5 | Pending |
 | REPT-12 | Phase 5 | Pending |
 | REPT-13 | Phase 5 | Pending |
-| DELV-01 | Phase 2 | Pending |
+| DELV-01 | Phase 2 | Complete |
 | DELV-02 | Phase 6 | Pending |
 | DELV-03 | Phase 6 | Pending |
 | DELV-04 | Phase 6 | Pending |
@@ -221,15 +221,15 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ADMN-14 | Phase 8 | Pending |
 | ADMN-15 | Phase 8 | Pending |
 | ADMN-16 | Phase 8 | Pending |
-| DEPL-01 | Phase 2 | Pending |
-| DEPL-02 | Phase 2 | Pending |
-| DEPL-03 | Phase 2 | Pending |
-| DEPL-04 | Phase 2 | Pending |
-| DEPL-05 | Phase 2 | Pending |
-| DEPL-06 | Phase 2 | Pending |
-| DEPL-07 | Phase 2 | Pending |
-| DEPL-08 | Phase 2 | Pending |
-| DEPL-09 | Phase 2 | Pending |
+| DEPL-01 | Phase 2 | Complete |
+| DEPL-02 | Phase 2 | Complete |
+| DEPL-03 | Phase 2 | Complete |
+| DEPL-04 | Phase 2 | Complete |
+| DEPL-05 | Phase 2 | Complete |
+| DEPL-06 | Phase 2 | Complete |
+| DEPL-07 | Phase 2 | Complete |
+| DEPL-08 | Phase 2 | Complete |
+| DEPL-09 | Phase 2 | Complete |
 
 **Coverage:**
 - v1 requirements: 63 total

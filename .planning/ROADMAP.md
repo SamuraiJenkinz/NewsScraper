@@ -13,7 +13,7 @@ BrasilIntel delivers daily competitive intelligence to Marsh Brasil executives t
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation & Data Layer** - Core persistence, insurer database, Excel import/export
-- [ ] **Phase 2: Vertical Slice Validation** - Single-source end-to-end pipeline proof
+- [x] **Phase 2: Vertical Slice Validation** - Single-source end-to-end pipeline proof
 - [ ] **Phase 3: News Collection Scale** - All sources, 897 insurers, production scraping
 - [ ] **Phase 4: AI Classification Pipeline** - Full Azure OpenAI classification system
 - [ ] **Phase 5: Professional Reporting** - Marsh-branded HTML reports with all sections
@@ -56,15 +56,15 @@ Plans:
 **Plans**: 9 plans in 4 waves
 
 Plans:
-- [ ] 02-01-PLAN.md — Database models for NewsItem and Run tracking
-- [ ] 02-02-PLAN.md — Configuration module with pydantic-settings
-- [ ] 02-03-PLAN.md — Apify scraper service for Google News
-- [ ] 02-04-PLAN.md — Azure OpenAI classification service with structured outputs
-- [ ] 02-05-PLAN.md — Microsoft Graph email service
-- [ ] 02-06-PLAN.md — HTML report generator with Jinja2 templates
-- [ ] 02-07-PLAN.md — Run orchestration endpoint (/api/runs/execute)
-- [ ] 02-08-PLAN.md — Docker deployment (Dockerfile, docker-compose.yml)
-- [ ] 02-09-PLAN.md — Windows Scheduled Task deployment and enhanced health check
+- [x] 02-01-PLAN.md — Database models for NewsItem and Run tracking
+- [x] 02-02-PLAN.md — Configuration module with pydantic-settings
+- [x] 02-03-PLAN.md — Apify scraper service for Google News
+- [x] 02-04-PLAN.md — Azure OpenAI classification service with structured outputs
+- [x] 02-05-PLAN.md — Microsoft Graph email service
+- [x] 02-06-PLAN.md — HTML report generator with Jinja2 templates
+- [x] 02-07-PLAN.md — Run orchestration endpoint (/api/runs/execute)
+- [x] 02-08-PLAN.md — Docker deployment (Dockerfile, docker-compose.yml)
+- [x] 02-09-PLAN.md — Windows Scheduled Task deployment and enhanced health check
 
 ### Phase 3: News Collection Scale
 **Goal**: Scale scraping to all 6 news sources with batch processing for 897 insurers
@@ -178,7 +178,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Data Layer | 4/4 | Complete | 2026-02-04 |
-| 2. Vertical Slice Validation | 0/9 | Planned | - |
+| 2. Vertical Slice Validation | 9/9 | Complete | 2026-02-04 |
 | 3. News Collection Scale | 0/TBD | Not started | - |
 | 4. AI Classification Pipeline | 0/TBD | Not started | - |
 | 5. Professional Reporting | 0/TBD | Not started | - |
