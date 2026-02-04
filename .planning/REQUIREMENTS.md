@@ -153,89 +153,89 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DATA-01 | TBD | Pending |
-| DATA-02 | TBD | Pending |
-| DATA-03 | TBD | Pending |
-| DATA-04 | TBD | Pending |
-| DATA-05 | TBD | Pending |
-| DATA-06 | TBD | Pending |
-| DATA-07 | TBD | Pending |
-| DATA-08 | TBD | Pending |
-| NEWS-01 | TBD | Pending |
-| NEWS-02 | TBD | Pending |
-| NEWS-03 | TBD | Pending |
-| NEWS-04 | TBD | Pending |
-| NEWS-05 | TBD | Pending |
-| NEWS-06 | TBD | Pending |
-| NEWS-07 | TBD | Pending |
-| NEWS-08 | TBD | Pending |
-| NEWS-09 | TBD | Pending |
-| NEWS-10 | TBD | Pending |
-| CLASS-01 | TBD | Pending |
-| CLASS-02 | TBD | Pending |
-| CLASS-03 | TBD | Pending |
-| CLASS-04 | TBD | Pending |
-| CLASS-05 | TBD | Pending |
-| CLASS-06 | TBD | Pending |
-| REPT-01 | TBD | Pending |
-| REPT-02 | TBD | Pending |
-| REPT-03 | TBD | Pending |
-| REPT-04 | TBD | Pending |
-| REPT-05 | TBD | Pending |
-| REPT-06 | TBD | Pending |
-| REPT-07 | TBD | Pending |
-| REPT-08 | TBD | Pending |
-| REPT-09 | TBD | Pending |
-| REPT-10 | TBD | Pending |
-| REPT-11 | TBD | Pending |
-| REPT-12 | TBD | Pending |
-| REPT-13 | TBD | Pending |
-| DELV-01 | TBD | Pending |
-| DELV-02 | TBD | Pending |
-| DELV-03 | TBD | Pending |
-| DELV-04 | TBD | Pending |
-| DELV-05 | TBD | Pending |
-| DELV-06 | TBD | Pending |
-| DELV-07 | TBD | Pending |
-| DELV-08 | TBD | Pending |
-| SCHD-01 | TBD | Pending |
-| SCHD-02 | TBD | Pending |
-| SCHD-03 | TBD | Pending |
-| SCHD-04 | TBD | Pending |
-| SCHD-05 | TBD | Pending |
-| SCHD-06 | TBD | Pending |
-| SCHD-07 | TBD | Pending |
-| ADMN-01 | TBD | Pending |
-| ADMN-02 | TBD | Pending |
-| ADMN-03 | TBD | Pending |
-| ADMN-04 | TBD | Pending |
-| ADMN-05 | TBD | Pending |
-| ADMN-06 | TBD | Pending |
-| ADMN-07 | TBD | Pending |
-| ADMN-08 | TBD | Pending |
-| ADMN-09 | TBD | Pending |
-| ADMN-10 | TBD | Pending |
-| ADMN-11 | TBD | Pending |
-| ADMN-12 | TBD | Pending |
-| ADMN-13 | TBD | Pending |
-| ADMN-14 | TBD | Pending |
-| ADMN-15 | TBD | Pending |
-| ADMN-16 | TBD | Pending |
-| DEPL-01 | TBD | Pending |
-| DEPL-02 | TBD | Pending |
-| DEPL-03 | TBD | Pending |
-| DEPL-04 | TBD | Pending |
-| DEPL-05 | TBD | Pending |
-| DEPL-06 | TBD | Pending |
-| DEPL-07 | TBD | Pending |
-| DEPL-08 | TBD | Pending |
-| DEPL-09 | TBD | Pending |
+| DATA-01 | Phase 1 | Pending |
+| DATA-02 | Phase 1 | Pending |
+| DATA-03 | Phase 1 | Pending |
+| DATA-04 | Phase 1 | Pending |
+| DATA-05 | Phase 1 | Pending |
+| DATA-06 | Phase 1 | Pending |
+| DATA-07 | Phase 1 | Pending |
+| DATA-08 | Phase 1 | Pending |
+| NEWS-01 | Phase 2 | Pending |
+| NEWS-02 | Phase 3 | Pending |
+| NEWS-03 | Phase 3 | Pending |
+| NEWS-04 | Phase 3 | Pending |
+| NEWS-05 | Phase 3 | Pending |
+| NEWS-06 | Phase 3 | Pending |
+| NEWS-07 | Phase 3 | Pending |
+| NEWS-08 | Phase 3 | Pending |
+| NEWS-09 | Phase 3 | Pending |
+| NEWS-10 | Phase 3 | Pending |
+| CLASS-01 | Phase 2 | Pending |
+| CLASS-02 | Phase 4 | Pending |
+| CLASS-03 | Phase 2 | Pending |
+| CLASS-04 | Phase 4 | Pending |
+| CLASS-05 | Phase 4 | Pending |
+| CLASS-06 | Phase 4 | Pending |
+| REPT-01 | Phase 2 | Pending |
+| REPT-02 | Phase 5 | Pending |
+| REPT-03 | Phase 5 | Pending |
+| REPT-04 | Phase 5 | Pending |
+| REPT-05 | Phase 5 | Pending |
+| REPT-06 | Phase 5 | Pending |
+| REPT-07 | Phase 5 | Pending |
+| REPT-08 | Phase 5 | Pending |
+| REPT-09 | Phase 5 | Pending |
+| REPT-10 | Phase 5 | Pending |
+| REPT-11 | Phase 5 | Pending |
+| REPT-12 | Phase 5 | Pending |
+| REPT-13 | Phase 5 | Pending |
+| DELV-01 | Phase 2 | Pending |
+| DELV-02 | Phase 6 | Pending |
+| DELV-03 | Phase 6 | Pending |
+| DELV-04 | Phase 6 | Pending |
+| DELV-05 | Phase 6 | Pending |
+| DELV-06 | Phase 6 | Pending |
+| DELV-07 | Phase 6 | Pending |
+| DELV-08 | Phase 6 | Pending |
+| SCHD-01 | Phase 7 | Pending |
+| SCHD-02 | Phase 7 | Pending |
+| SCHD-03 | Phase 7 | Pending |
+| SCHD-04 | Phase 7 | Pending |
+| SCHD-05 | Phase 7 | Pending |
+| SCHD-06 | Phase 7 | Pending |
+| SCHD-07 | Phase 7 | Pending |
+| ADMN-01 | Phase 8 | Pending |
+| ADMN-02 | Phase 8 | Pending |
+| ADMN-03 | Phase 8 | Pending |
+| ADMN-04 | Phase 8 | Pending |
+| ADMN-05 | Phase 8 | Pending |
+| ADMN-06 | Phase 8 | Pending |
+| ADMN-07 | Phase 8 | Pending |
+| ADMN-08 | Phase 8 | Pending |
+| ADMN-09 | Phase 8 | Pending |
+| ADMN-10 | Phase 8 | Pending |
+| ADMN-11 | Phase 8 | Pending |
+| ADMN-12 | Phase 8 | Pending |
+| ADMN-13 | Phase 8 | Pending |
+| ADMN-14 | Phase 8 | Pending |
+| ADMN-15 | Phase 8 | Pending |
+| ADMN-16 | Phase 8 | Pending |
+| DEPL-01 | Phase 2 | Pending |
+| DEPL-02 | Phase 2 | Pending |
+| DEPL-03 | Phase 2 | Pending |
+| DEPL-04 | Phase 2 | Pending |
+| DEPL-05 | Phase 2 | Pending |
+| DEPL-06 | Phase 2 | Pending |
+| DEPL-07 | Phase 2 | Pending |
+| DEPL-08 | Phase 2 | Pending |
+| DEPL-09 | Phase 2 | Pending |
 
 **Coverage:**
 - v1 requirements: 63 total
-- Mapped to phases: 0
-- Unmapped: 63 (roadmap pending)
+- Mapped to phases: 63
+- Unmapped: 0 (100% coverage)
 
 ---
 *Requirements defined: 2026-02-04*
-*Last updated: 2026-02-04 after initial definition*
+*Last updated: 2026-02-04 after roadmap creation*
