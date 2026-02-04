@@ -5,12 +5,14 @@ FastAPI application entry point with database initialization and health check.
 """
 import os
 from contextlib import asynccontextmanager
+from datetime import datetime
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
+from sqlalchemy import text
 
-from app.database import Base, engine
+from app.database import Base, engine, SessionLocal
 # Import models to register them with Base.metadata before create_all
 from app.models import insurer, run, news_item  # noqa: F401
 from app.routers import insurers, import_export, runs
@@ -53,8 +55,84 @@ def health_check() -> dict:
     Health check endpoint.
 
     Returns service status for monitoring and load balancer health checks.
+    Validates database connectivity, data directory writability, and service configuration.
     """
-    return {"status": "healthy", "service": "brasilintel"}
+    checks = {}
+    overall_status = "healthy"
+
+    # Check database connectivity
+    try:
+        with SessionLocal() as session:
+            session.execute(text("SELECT 1"))
+        checks["database"] = {
+            "status": "healthy",
+            "message": "Database connection successful"
+        }
+    except Exception as e:
+        checks["database"] = {
+            "status": "unhealthy",
+            "message": f"Database connection failed: {str(e)}"
+        }
+        overall_status = "unhealthy"
+
+    # Check data directory writability
+    data_dir = "data"
+    try:
+        os.makedirs(data_dir, exist_ok=True)
+        test_file = os.path.join(data_dir, ".health_check")
+        with open(test_file, "w") as f:
+            f.write("health_check")
+        os.remove(test_file)
+        checks["data_directory"] = {
+            "status": "healthy",
+            "message": f"Data directory writable: {os.path.abspath(data_dir)}"
+        }
+    except Exception as e:
+        checks["data_directory"] = {
+            "status": "unhealthy",
+            "message": f"Data directory not writable: {str(e)}"
+        }
+        overall_status = "unhealthy"
+
+    # Check external services configuration
+    services_config = {
+        "azure_openai": {
+            "endpoint": os.getenv("AZURE_OPENAI_ENDPOINT"),
+            "api_key": os.getenv("AZURE_OPENAI_API_KEY"),
+            "deployment": os.getenv("AZURE_OPENAI_DEPLOYMENT")
+        },
+        "microsoft_graph": {
+            "client_id": os.getenv("MICROSOFT_CLIENT_ID"),
+            "client_secret": os.getenv("MICROSOFT_CLIENT_SECRET"),
+            "tenant_id": os.getenv("MICROSOFT_TENANT_ID")
+        },
+        "apify": {
+            "api_token": os.getenv("APIFY_API_TOKEN")
+        }
+    }
+
+    checks["external_services"] = {}
+    for service_name, config in services_config.items():
+        missing_keys = [k for k, v in config.items() if not v]
+        if missing_keys:
+            checks["external_services"][service_name] = {
+                "status": "warning",
+                "message": f"Missing configuration: {', '.join(missing_keys)}"
+            }
+            if overall_status == "healthy":
+                overall_status = "degraded"
+        else:
+            checks["external_services"][service_name] = {
+                "status": "configured",
+                "message": "All configuration keys present"
+            }
+
+    return {
+        "status": overall_status,
+        "service": "brasilintel",
+        "timestamp": datetime.utcnow().isoformat(),
+        "checks": checks
+    }
 
 
 @app.get("/", include_in_schema=False)
