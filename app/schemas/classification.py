@@ -8,6 +8,20 @@ from pydantic import BaseModel, Field
 from typing import Literal
 
 
+CategoryIndicator = Literal[
+    "financial_crisis",      # Crise financeira, risco de falência
+    "regulatory_action",     # Intervenção ANS, ações regulatórias
+    "m_and_a",              # Fusões e aquisições
+    "leadership_change",     # Mudanças de liderança
+    "fraud_criminal",        # Fraude, acusações criminais
+    "rate_change",          # Mudanças de tarifa
+    "network_change",       # Alterações na rede
+    "market_expansion",     # Expansão de mercado
+    "partnership",          # Parcerias
+    "routine_operations"    # Operações rotineiras
+]
+
+
 class NewsClassification(BaseModel):
     """
     Classification result for a single news item.
@@ -29,6 +43,10 @@ class NewsClassification(BaseModel):
     )
     reasoning: str = Field(
         description="Brief explanation (1-2 sentences) of why this status was assigned"
+    )
+    category_indicators: list[CategoryIndicator] = Field(
+        default_factory=list,
+        description="Categories detected in the news content that influenced the status"
     )
 
 
