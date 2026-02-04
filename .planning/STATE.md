@@ -4,21 +4,21 @@
 See: .planning/PROJECT.md (updated 2026-02-04)
 
 **Core value:** Senior management at Marsh Brasil receives actionable intelligence reports on their monitored insurers daily, with zero manual effort.
-**Current focus:** Phase 5 - Professional Reporting
+**Current focus:** Phase 5 Complete - Ready for Phase 6
 
 ## Current Position
-Phase: 5 of 8 (Professional Reporting)
-Plan: 4 of 5
-Status: In Progress
-Progress: [█████░░░░░] 50% (4/8 phases complete, 4/5 plans in phase 5)
-Last activity: 2026-02-04 - Completed 05-04 ReportService Enhancement
+Phase: 5 of 8 (Professional Reporting) - COMPLETE
+Plan: 5 of 5
+Status: Phase Complete
+Progress: [██████░░░░] 62.5% (5/8 phases complete)
+Last activity: 2026-02-04 - Completed 05-05 Report Archive API
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 21
-- Average duration: ~4.9 minutes
-- Total execution time: ~1.7 hours
+- Total plans completed: 22
+- Average duration: ~4.8 minutes
+- Total execution time: ~1.8 hours
 
 **By Phase:**
 
@@ -28,10 +28,11 @@ Last activity: 2026-02-04 - Completed 05-04 ReportService Enhancement
 | 02-vertical-slice-validation | 9 | ~42 min | ~4.7 min |
 | 03-news-collection-scale | 6 | ~32 min | ~5.3 min |
 | 04-ai-classification-pipeline | 2 | ~4 min | ~2.0 min |
+| 05-professional-reporting | 5 | ~22 min | ~4.4 min |
 
 **Recent Trend:**
-- Last 5 plans: 04-02 (~2 min), 05-01 (~2 min), 05-02 (~2 min), 05-03 (~2 min), 05-04 (~2 min)
-- Trend: Efficient reporting and archival services
+- Last 5 plans: 05-01 (~2 min), 05-02 (~2 min), 05-03 (~2 min), 05-04 (~2 min), 05-05 (~14 min)
+- Trend: Efficient reporting services, checkpoint verification added time to 05-05
 
 *Updated after each plan completion*
 
@@ -111,6 +112,9 @@ Recent decisions affecting current work:
 - Composition over inheritance for service integration in ReportService (05-04)
 - Tuple return type (html, path) for generate_professional_report() (05-04)
 - Static method get_indicator_label() for Jinja2 filter usage (05-04)
+- Router prefix /reports with /api prefix in main.py for consistent URL structure (05-05)
+- HTMLResponse for direct browser rendering of archived reports (05-05)
+- Preview endpoint uses mock data without archival for safe testing (05-05)
 
 ### Pending Todos
 
@@ -125,14 +129,10 @@ None yet.
 - Valor Economico exact search URL needs validation
 - ANS gov.br RSS feed reliability uncertain
 
-**Phase 5 Readiness:**
-- category_indicators column available in database
-- Comprehensive test coverage validates classification pipeline
-- Migration script available for production deployments
-
 **Phase 6+ Research Needs:**
 - Marsh system integration APIs (if v2 advanced analytics pursued)
 - Brazilian regulatory data sources classification
+- Dashboard framework selection (if analytics dashboard pursued)
 
 ## Phase 1 Summary - COMPLETE
 
@@ -171,28 +171,6 @@ None yet.
 | 02-08 | Import/Export | DONE |
 | 02-09 | Deployment Automation | DONE |
 
-## Phase 3 Planning - COMPLETE
-
-**Plans: 6 plans in 4 waves**
-
-| Wave | Plans | Description |
-|------|-------|-------------|
-| 1 | 03-01, 03-03 (partial) | Source abstraction + config |
-| 2 | 03-02, 03-03 | RSS sources + crawler sources |
-| 3 | 03-04, 03-05 | Batch processor + relevance scorer |
-| 4 | 03-06 | Integration and endpoint update |
-
-**Requirements covered:**
-- NEWS-02: Valor Economico (03-03)
-- NEWS-03: InfoMoney (03-02)
-- NEWS-04: CQCS (03-03)
-- NEWS-05: ANS releases (03-02)
-- NEWS-06: Estadao/Broadcast (03-02)
-- NEWS-07: Batch processing (03-04)
-- NEWS-08: Complete metadata storage (03-06)
-- NEWS-09: Insurer/run linking (03-06)
-- NEWS-10: AI relevance scoring (03-05)
-
 ## Phase 3 Progress - COMPLETE
 
 **Plans complete: 6 of 6**
@@ -217,21 +195,6 @@ None yet.
 - NEWS-09: Insurer/run linking (03-06)
 - NEWS-10: AI relevance scoring (03-05)
 
-**Next:** Continue Phase 4 - Plan 02
-
-## Phase 4 Planning - COMPLETE
-
-**Plans: 2 plans in 2 waves**
-
-| Wave | Plans | Description |
-|------|-------|-------------|
-| 1 | 04-01 | Category indicators |
-| 2 | 04-02 | Database migration and tests |
-
-**Requirements covered:**
-- CLASS-02: Explicit category indicators (04-01)
-- Testing infrastructure for classification pipeline (04-02)
-
 ## Phase 4 Progress - COMPLETE
 
 **Plans complete: 2 of 2**
@@ -247,11 +210,9 @@ None yet.
 - CLASS-05: Classification results stored with insurer records (04-01)
 - CLASS-06: LLM summarization toggle via USE_LLM_SUMMARY (04-02)
 
-**Next:** Phase 5 - Professional Reporting
+## Phase 5 Progress - COMPLETE
 
-## Phase 5 Progress - IN PROGRESS
-
-**Plans complete: 4 of 5**
+**Plans complete: 5 of 5**
 
 | Plan | Name | Status |
 |------|------|--------|
@@ -259,12 +220,28 @@ None yet.
 | 05-02 | Executive Summarizer | DONE |
 | 05-03 | Report Archiver | DONE |
 | 05-04 | ReportService Enhancement | DONE |
-| 05-05 | Integration | TODO |
+| 05-05 | Report Archive API | DONE |
+
+**Requirements fulfilled:**
+- REPT-02: Marsh branded header (05-01)
+- REPT-03: Confidential disclaimer banner (05-01)
+- REPT-04: Executive summary with key findings (05-01, 05-02)
+- REPT-05: Coverage summary table (05-01)
+- REPT-06: Status-grouped insurer sections (05-01)
+- REPT-07: Market context section (05-01, 05-04)
+- REPT-08: Category indicators with labels (05-04)
+- REPT-09: Strategic recommendations (05-01, 05-04)
+- REPT-10: AI-generated executive summary (05-02)
+- REPT-11: Mobile responsive design (05-01)
+- REPT-12: File-based archival system (05-03)
+- REPT-13: Report archive browsing API (05-05)
+
+**Next:** Phase 6 - Advanced Analytics
 
 ## Session Continuity
 
 Last session: 2026-02-04
-Stopped at: Completed 05-04 ReportService Enhancement
+Stopped at: Completed Phase 5 - Professional Reporting
 Resume file: None
 
 ### What's Available Now
@@ -288,7 +265,7 @@ From Phase 2:
 - `app.services.scraper.ApifyScraperService` - Google News scraper (02-03, delegates to sources)
 - `app.services.scraper.ScrapedNewsItem` - Scraping result dataclass (02-03, re-exported from sources)
 
-From Phase 3 (complete):
+From Phase 3:
 - `app.services.sources.NewsSource` - Abstract base class for news sources (03-01)
 - `app.services.sources.SourceRegistry` - Source discovery and management (03-01)
 - `app.services.sources.ScrapedNewsItem` - Unified news item dataclass (03-01)
@@ -329,7 +306,7 @@ From Phase 3 (complete):
 - Enhanced `/api/health` endpoint with dependency validation (02-09)
 - Database tables: insurers, runs, news_items with relationships (02-01)
 
-From Phase 5 (in progress):
+From Phase 5 (complete):
 - `app.services.report_archiver.ReportArchiver` - File-based report archival (05-03)
 - `app/storage/` - Archive storage root directory (05-03)
 - `app/storage/reports/YYYY/MM/DD/` - Date-based report hierarchy (05-03)
@@ -337,7 +314,12 @@ From Phase 5 (in progress):
 - `app.services.reporter.ReportService.generate_professional_report()` - Professional report generation (05-04)
 - `app.services.reporter.ReportService.generate_professional_report_from_db()` - DB-aware professional reports (05-04)
 - Portuguese category indicator labels via INDICATOR_LABELS mapping (05-04)
+- `app.routers.reports.router` - Report archive browsing API (05-05)
+- `/api/reports/archive` - Browse archived reports with filtering (05-05)
+- `/api/reports/archive/dates` - List available report dates (05-05)
+- `/api/reports/archive/{date}/{filename}` - Retrieve specific report (05-05)
+- `/api/reports/preview` - Preview professional template (05-05)
 
 ---
 *Initialized: 2026-02-04*
-*Last updated: 2026-02-04
+*Last updated: 2026-02-04*
