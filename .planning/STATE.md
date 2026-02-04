@@ -8,16 +8,16 @@ See: .planning/PROJECT.md (updated 2026-02-04)
 
 ## Current Position
 Phase: 4 of 8 (AI Classification Pipeline)
-Plan: 1 of 2
-Status: In progress
-Progress: [████░░░░░░] 40% (20/50 plans complete)
-Last activity: 2026-02-04 - Completed 04-01-PLAN.md
+Plan: 2 of 2
+Status: Phase complete
+Progress: [████░░░░░░] 42% (21/50 plans complete)
+Last activity: 2026-02-04 - Completed 04-02-PLAN.md
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 20
-- Average duration: ~5.0 minutes
+- Total plans completed: 21
+- Average duration: ~4.9 minutes
 - Total execution time: ~1.7 hours
 
 **By Phase:**
@@ -27,11 +27,11 @@ Last activity: 2026-02-04 - Completed 04-01-PLAN.md
 | 01-foundation | 4 | ~26 min | ~6.5 min |
 | 02-vertical-slice-validation | 9 | ~42 min | ~4.7 min |
 | 03-news-collection-scale | 6 | ~32 min | ~5.3 min |
-| 04-ai-classification-pipeline | 1 | ~2 min | ~2.0 min |
+| 04-ai-classification-pipeline | 2 | ~4 min | ~2.0 min |
 
 **Recent Trend:**
-- Last 5 plans: 03-02 (~4 min), 03-03 (~4 min), 03-04 (~4 min), 03-05 (~3 min), 04-01 (~2 min)
-- Trend: Efficient schema and database enhancements
+- Last 5 plans: 03-03 (~4 min), 03-04 (~4 min), 03-05 (~3 min), 04-01 (~2 min), 04-02 (~2 min)
+- Trend: Efficient schema enhancements, testing, and migrations
 
 *Updated after each plan completion*
 
@@ -102,6 +102,9 @@ Recent decisions affecting current work:
 - Pydantic Literal type for category indicators with 10 predefined values (04-01)
 - Comma-separated storage for category_indicators in SQLite (04-01)
 - Portuguese category descriptions in classification prompt for LLM guidance (04-01)
+- Standalone migration script for database schema changes (no alembic dependency) (04-02)
+- ASCII markers instead of Unicode checkmarks for Windows console compatibility (04-02)
+- Comprehensive test coverage (23 tests) for classification service validation (04-02)
 
 ### Pending Todos
 
@@ -116,9 +119,10 @@ None yet.
 - Valor Economico exact search URL needs validation
 - ANS gov.br RSS feed reliability uncertain
 
-**Phase 5 Research Needs:**
-- Portuguese sentiment analysis accuracy expectations
-- Executive summary prompt engineering for insurance domain
+**Phase 5 Readiness:**
+- category_indicators column available in database
+- Comprehensive test coverage validates classification pipeline
+- Migration script available for production deployments
 
 **Phase 6+ Research Needs:**
 - Marsh system integration APIs (if v2 advanced analytics pursued)
@@ -209,34 +213,34 @@ None yet.
 
 **Next:** Continue Phase 4 - Plan 02
 
-## Phase 4 Planning - IN PROGRESS
+## Phase 4 Planning - COMPLETE
 
 **Plans: 2 plans in 2 waves**
 
 | Wave | Plans | Description |
 |------|-------|-------------|
 | 1 | 04-01 | Category indicators |
-| 2 | 04-02 | Sentiment analysis enhancement |
+| 2 | 04-02 | Database migration and tests |
 
 **Requirements covered:**
 - CLASS-02: Explicit category indicators (04-01)
-- CLASS-03: Enhanced sentiment analysis (04-02)
+- Testing infrastructure for classification pipeline (04-02)
 
-## Phase 4 Progress - IN PROGRESS
+## Phase 4 Progress - COMPLETE
 
-**Plans complete: 1 of 2**
+**Plans complete: 2 of 2**
 
 | Plan | Name | Status |
 |------|------|--------|
 | 04-01 | Category Indicators | DONE |
-| 04-02 | Sentiment Analysis | PENDING |
+| 04-02 | Database Migration & Tests | DONE |
 
-**Next:** 04-02 - Sentiment Analysis Enhancement
+**Next:** Phase 5 - Report Enhancement
 
 ## Session Continuity
 
 Last session: 2026-02-04
-Stopped at: Completed 04-01-PLAN.md
+Stopped at: Completed 04-02-PLAN.md (Phase 4 complete)
 Resume file: None
 
 ### What's Available Now
@@ -286,6 +290,8 @@ From Phase 3 (complete):
 - `app.services.classifier.ClassificationService` - Azure OpenAI classification (02-04)
 - `app.schemas.classification.*` - NewsClassification, InsurerClassification (02-04)
 - `app.schemas.classification.CategoryIndicator` - Literal type with 10 category values (04-01)
+- `scripts/migrate_004_category_indicators.py` - Database migration for category_indicators column (04-02)
+- `tests/test_classifier.py` - Comprehensive classification service tests (23 tests) (04-02)
 - `app.services.emailer.GraphEmailService` - Microsoft Graph email sender (02-05)
 - `app.services.reporter.ReportService` - HTML report generator with Jinja2 (02-06)
 - `app.services.reporter.ReportData` - Report data container dataclass (02-06)
