@@ -89,6 +89,9 @@ Recent decisions affecting current work:
 - playwright:firefox for CQCS (anti-bot compatibility) (03-03)
 - max_concurrency=2 for CQCS to avoid rate limiting (03-03)
 - Over-fetch then filter pattern for website crawlers (03-03)
+- feedparser + aiohttp for RSS feed parsing with async fetching (03-02)
+- GET instead of HEAD for health checks (some servers block HEAD) (03-02)
+- G1 Economia RSS used for EstadaoSource (Estadao deprecated their feeds) (03-02)
 
 ### Pending Todos
 
