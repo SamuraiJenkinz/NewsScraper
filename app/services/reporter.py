@@ -537,7 +537,7 @@ class ReportService:
         context_items = [
             ReportContext(
                 title=f"Categoria {category}",
-                description=f"Monitoramento de {total} {category_desc} registradas no banco de dados DDH da Marsh Brasil."
+                description=f"Monitoramento de {total} {category_desc} registradas no banco de dados da Marsh Brasil."
             ),
             ReportContext(
                 title="Distribuicao de Status",

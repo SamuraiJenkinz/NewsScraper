@@ -703,14 +703,14 @@
 <body>
     <!-- Confidential Banner - REPT-03 -->
     <div class="confidential-banner">
-        CONFIDENCIAL - SOMENTE PARA USO INTERNO - {{ company_name|upper }} DDH INTELIGENCIA DE SEGURADORAS
+        CONFIDENCIAL - SOMENTE PARA USO INTERNO - {{ company_name|upper }} INTELIGENCIA DE SEGURADORAS
     </div>
 
     <!-- Header - REPT-02 -->
     <header class="header">
         <div class="header-content">
             <h1>{{ category }} Intelligence Report</h1>
-            <p class="subtitle">Mercado Brasileiro de Seguros - Analise de Parceiros DDH</p>
+            <p class="subtitle">Mercado Brasileiro de Seguros - Analise de Parceiros</p>
             <div class="date-badge">Data do Relatorio: {{ report_date }}</div>
         </div>
     </header>
@@ -719,7 +719,7 @@
         <!-- Executive Summary - REPT-04 -->
         <section class="executive-summary">
             <h2>Resumo Executivo</h2>
-            <p>Este relatorio analisa os desenvolvimentos recentes que afetam as seguradoras registradas no banco de dados de parceiros DDH da {{ company_name }}. O relatorio cobre <strong>{{ total_insurers }}</strong> seguradoras na categoria <strong>{{ category }}</strong>.</p>
+            <p>Este relatorio analisa os desenvolvimentos recentes que afetam as seguradoras registradas no banco de dados de parceiros da {{ company_name }}. O relatorio cobre <strong>{{ total_insurers }}</strong> seguradoras na categoria <strong>{{ category }}</strong>.</p>
 
             <div class="key-findings">
                 <div class="finding-card critical">
@@ -747,7 +747,7 @@
 
         <!-- Coverage Summary Table - REPT-05 -->
         <section class="coverage-table">
-            <h2>Resumo de Cobertura DDH</h2>
+            <h2>Resumo de Cobertura</h2>
             <table>
                 <thead>
                     <tr>
@@ -959,7 +959,7 @@
         <!-- Footer -->
         <footer class="footer">
             <div class="footer-divider"></div>
-            <p><strong>{{ company_name }} - Unidade de Inteligencia DDH</strong></p>
+            <p><strong>{{ company_name }} - Unidade de Inteligencia de Seguradoras</strong></p>
             <p>Relatorio Gerado: {{ generation_timestamp }} | Classificacao: Confidencial</p>
             <p style="margin-top: 15px; font-size: 0.8em;">Fontes: ANS, Google News, Valor Economico, InfoMoney, CQCS, Estadao, G1</p>
         </footer>
