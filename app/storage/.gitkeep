@@ -1,0 +1,3 @@
+# Archive storage root
+# Reports are organized by date: reports/YYYY/MM/DD/
+# Each day has metadata.json index for browsing
