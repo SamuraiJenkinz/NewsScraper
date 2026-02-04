@@ -138,7 +138,7 @@ From Phase 2:
 
 ---
 *Initialized: 2026-02-04*
-*Last updated: 2026-02-04 15:59 UTC*
+*Last updated: 2026-02-04 15:59 UTC
 
 From Phase 2 (so far):
 - `app.models.run.Run` - Scraping run tracking (02-01)
