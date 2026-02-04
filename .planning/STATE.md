@@ -10,28 +10,28 @@ See: .planning/PROJECT.md (updated 2026-02-04)
 ## Current Position
 
 Phase: 1 of 8 (Foundation & Data Layer)
-Plan: 1 of 4 in current phase
-Status: In progress
-Last activity: 2026-02-04 — Completed 01-01-PLAN.md (Project Structure and Database Foundation)
+Plan: 2 of 4 in current phase (01-02 complete)
+Status: In progress - Wave 2
+Last activity: 2026-02-04 — Completed 01-02-PLAN.md (Insurer CRUD API)
 
-Progress: [█░░░░░░░░░] 3% (1/32 plans)
+Progress: [██░░░░░░░░] 6% (2/32 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1
+- Total plans completed: 2
 - Average duration: ~3 minutes
-- Total execution time: ~0.05 hours
+- Total execution time: ~0.1 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-foundation | 1 | ~3 min | ~3 min |
+| 01-foundation | 2 | ~6 min | ~3 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (~3 min)
-- Trend: Establishing baseline
+- Last 5 plans: 01-01 (~3 min), 01-02 (~3 min)
+- Trend: Stable, consistent execution
 
 *Updated after each plan completion*
 
@@ -47,6 +47,9 @@ Recent decisions affecting current work:
 - Apify SDK for web scraping (proven infrastructure with rate limiting)
 - 3 separate scheduled jobs for staggered runs and independent failures
 - 8-phase roadmap with vertical slice validation before horizontal scaling
+- Search endpoint returns {total, results} structure for pagination-aware responses (01-02)
+- PATCH endpoint uses model_dump(exclude_unset=True) for partial updates (01-02)
+- IntegrityError caught and rolled back before raising HTTPException (01-02)
 
 ### Pending Todos
 
@@ -72,19 +75,19 @@ None yet.
 
 | Wave | Plans | Description |
 |------|-------|-------------|
-| 1 | 01-01 | Project scaffolding, database, models, schemas |
-| 2 | 01-02, 01-03 | CRUD endpoints (parallel) + Excel import (parallel) |
+| 1 | 01-01 DONE | Project scaffolding, database, models, schemas |
+| 2 | 01-02 DONE, 01-03 | CRUD endpoints + Excel import |
 | 3 | 01-04 | Excel export (depends on both 01-02 and 01-03) |
 
-**Wave 2 plans can execute in parallel** - they have no file conflicts:
-- 01-02 creates: `app/routers/insurers.py`
-- 01-03 creates: `app/services/excel_service.py`, `app/routers/import_export.py`
+**Wave 2 status:**
+- 01-02 COMPLETE: `app/routers/insurers.py` - CRUD API with search
+- 01-03 in progress (parallel execution): Excel import service
 
 ## Session Continuity
 
-Last session: 2026-02-04 12:22 UTC
-Stopped at: Completed 01-01-PLAN.md
-Resume file: .planning/phases/01-foundation-data-layer/01-02-PLAN.md (next)
+Last session: 2026-02-04 14:38 UTC
+Stopped at: Completed 01-02-PLAN.md
+Resume file: .planning/phases/01-foundation-data-layer/01-03-PLAN.md or 01-04-PLAN.md
 
 ### What's Available for Next Plans
 
@@ -95,6 +98,11 @@ From 01-01:
 - `app.schemas.insurer.*` - Pydantic schemas
 - `data/brasilintel.db` - SQLite database with insurers table
 
+From 01-02:
+- `app.routers.insurers.router` - CRUD endpoints at /api/insurers
+- Search endpoint: GET /api/insurers/search?query=&category=&enabled=
+- Router registration pattern in app/main.py
+
 ---
 *Initialized: 2026-02-04*
-*Last updated: 2026-02-04 12:22 UTC*
+*Last updated: 2026-02-04 14:38 UTC*
