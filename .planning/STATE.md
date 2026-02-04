@@ -317,6 +317,7 @@ From Phase 3 (complete):
 - `app.services.reporter.ReportService` - HTML report generator with Jinja2 (02-06)
 - `app.services.reporter.ReportData` - Report data container dataclass (02-06)
 - `app.templates/report_basic.html` - Jinja2 template with Portuguese labels (02-06)
+- `app.templates/report_professional.html` - Professional Marsh-branded template (05-01)
 - `app.routers.runs.router` - Run orchestration endpoint at /api/runs (02-07)
 - `app.routers.import_export.router` - Import/export insurers at /api/import (02-08)
 - `deploy/setup_scheduled_task.ps1` - Windows Task Scheduler setup script (02-09)
