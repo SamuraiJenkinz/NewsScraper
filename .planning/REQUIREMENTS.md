@@ -34,11 +34,11 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Classification
 
 - [x] **CLASS-01**: Azure OpenAI classifies each insurer status as Critical, Watch, Monitor, or Stable
-- [ ] **CLASS-02**: Classification based on news content analysis (financial crisis, regulatory action, M&A, leadership changes)
+- [x] **CLASS-02**: Classification based on news content analysis (financial crisis, regulatory action, M&A, leadership changes)
 - [x] **CLASS-03**: Azure OpenAI generates concise bullet-point summary for each news item
-- [ ] **CLASS-04**: Azure OpenAI assigns sentiment (positive/negative/neutral) to each news item
-- [ ] **CLASS-05**: Classification results stored with insurer records
-- [ ] **CLASS-06**: LLM summarization can be toggled via configuration (USE_LLM_SUMMARY)
+- [x] **CLASS-04**: Azure OpenAI assigns sentiment (positive/negative/neutral) to each news item
+- [x] **CLASS-05**: Classification results stored with insurer records
+- [x] **CLASS-06**: LLM summarization can be toggled via configuration (USE_LLM_SUMMARY)
 
 ### Reporting
 
@@ -172,11 +172,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | NEWS-09 | Phase 3 | Complete |
 | NEWS-10 | Phase 3 | Complete |
 | CLASS-01 | Phase 2 | Complete |
-| CLASS-02 | Phase 4 | Pending |
+| CLASS-02 | Phase 4 | Complete |
 | CLASS-03 | Phase 2 | Complete |
-| CLASS-04 | Phase 4 | Pending |
-| CLASS-05 | Phase 4 | Pending |
-| CLASS-06 | Phase 4 | Pending |
+| CLASS-04 | Phase 4 | Complete |
+| CLASS-05 | Phase 4 | Complete |
+| CLASS-06 | Phase 4 | Complete |
 | REPT-01 | Phase 2 | Complete |
 | REPT-02 | Phase 5 | Pending |
 | REPT-03 | Phase 5 | Pending |

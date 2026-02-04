@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Foundation & Data Layer** - Core persistence, insurer database, Excel import/export
 - [x] **Phase 2: Vertical Slice Validation** - Single-source end-to-end pipeline proof
 - [x] **Phase 3: News Collection Scale** - All sources, 897 insurers, production scraping
-- [ ] **Phase 4: AI Classification Pipeline** - Full Azure OpenAI classification system
+- [x] **Phase 4: AI Classification Pipeline** - Full Azure OpenAI classification system
 - [ ] **Phase 5: Professional Reporting** - Marsh-branded HTML reports with all sections
 - [ ] **Phase 6: Delivery & Critical Alerts** - Email delivery, PDF generation, alert routing
 - [ ] **Phase 7: Scheduling & Automation** - APScheduler jobs, cron config, run tracking
@@ -95,11 +95,11 @@ Plans:
   2. Azure OpenAI assigns sentiment (positive/negative/neutral) to each news item
   3. Classification results stored with insurer records and accessible in reports
   4. LLM summarization can be toggled on/off via USE_LLM_SUMMARY configuration flag
-**Plans**: TBD
+**Plans**: 2 plans in 2 waves
 
 Plans:
-- [ ] 04-01: TBD during planning
-- [ ] 04-02: TBD during planning
+- [x] 04-01-PLAN.md — Enhance classification schema with category_indicators and update storage
+- [x] 04-02-PLAN.md — Database migration and comprehensive classification tests
 
 ### Phase 5: Professional Reporting
 **Goal**: Generate complete Marsh-branded HTML reports with all sections and mobile responsiveness
@@ -184,7 +184,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 | 1. Foundation & Data Layer | 4/4 | Complete | 2026-02-04 |
 | 2. Vertical Slice Validation | 9/9 | Complete | 2026-02-04 |
 | 3. News Collection Scale | 6/6 | Complete | 2026-02-04 |
-| 4. AI Classification Pipeline | 0/TBD | Not started | - |
+| 4. AI Classification Pipeline | 2/2 | Complete | 2026-02-04 |
 | 5. Professional Reporting | 0/TBD | Not started | - |
 | 6. Delivery & Critical Alerts | 0/TBD | Not started | - |
 | 7. Scheduling & Automation | 0/TBD | Not started | - |
