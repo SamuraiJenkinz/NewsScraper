@@ -53,11 +53,18 @@ Plans:
   5. System sends report via Microsoft Graph API email to configured recipient
   6. Application runs in Docker container on Windows 11 and deploys via Windows Scheduled Task on Windows Server
   7. Health check endpoint returns system status at /api/health
-**Plans**: TBD
+**Plans**: 9 plans in 4 waves
 
 Plans:
-- [ ] 02-01: TBD during planning
-- [ ] 02-02: TBD during planning
+- [ ] 02-01-PLAN.md — Database models for NewsItem and Run tracking
+- [ ] 02-02-PLAN.md — Configuration module with pydantic-settings
+- [ ] 02-03-PLAN.md — Apify scraper service for Google News
+- [ ] 02-04-PLAN.md — Azure OpenAI classification service with structured outputs
+- [ ] 02-05-PLAN.md — Microsoft Graph email service
+- [ ] 02-06-PLAN.md — HTML report generator with Jinja2 templates
+- [ ] 02-07-PLAN.md — Run orchestration endpoint (/api/runs/execute)
+- [ ] 02-08-PLAN.md — Docker deployment (Dockerfile, docker-compose.yml)
+- [ ] 02-09-PLAN.md — Windows Scheduled Task deployment and enhanced health check
 
 ### Phase 3: News Collection Scale
 **Goal**: Scale scraping to all 6 news sources with batch processing for 897 insurers
@@ -170,8 +177,8 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Data Layer | 4/4 | Complete ✓ | 2026-02-04 |
-| 2. Vertical Slice Validation | 0/TBD | Not started | - |
+| 1. Foundation & Data Layer | 4/4 | Complete | 2026-02-04 |
+| 2. Vertical Slice Validation | 0/9 | Planned | - |
 | 3. News Collection Scale | 0/TBD | Not started | - |
 | 4. AI Classification Pipeline | 0/TBD | Not started | - |
 | 5. Professional Reporting | 0/TBD | Not started | - |
