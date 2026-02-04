@@ -15,7 +15,7 @@ from sqlalchemy import text
 from app.database import Base, engine, SessionLocal
 # Import models to register them with Base.metadata before create_all
 from app.models import insurer, run, news_item  # noqa: F401
-from app.routers import insurers, import_export, runs
+from app.routers import insurers, import_export, runs, reports
 
 # Load environment variables from .env file
 load_dotenv()
@@ -47,6 +47,7 @@ app = FastAPI(
 app.include_router(insurers.router)
 app.include_router(import_export.router)
 app.include_router(runs.router)
+app.include_router(reports.router, prefix="/api")
 
 
 @app.get("/api/health", tags=["Health"])
