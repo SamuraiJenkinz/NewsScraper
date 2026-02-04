@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ company_name }} - {{ category }} Intelligence Report</title>
+    <style>
+        :root {
+            --marsh-blue: #00263e;
+            --marsh-light-blue: #0077c8;
+            --marsh-accent: #00a3e0;
+            --alert-red: #dc3545;
+            --alert-orange: #fd7e14;
+            --alert-yellow: #ffc107;
+            --success-green: #28a745;
+            --neutral-gray: #6c757d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Confidential Banner - REPT-03 */
+        .confidential-banner {
+            background: var(--alert-red);
+            color: white;
+            text-align: center;
+            padding: 8px;
+            font-size: 0.85em;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        /* Header - REPT-02 */
+        .header {
+            background: linear-gradient(135deg, var(--marsh-blue) 0%, #005a87 100%);
+            color: white;
+            padding: 40px 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .header .date-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Executive Summary - REPT-04 */
+        .executive-summary {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-left: 5px solid var(--marsh-light-blue);
+        }
+
+        .executive-summary h2 {
+            color: var(--marsh-blue);
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .executive-summary p {
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .key-findings {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .finding-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid var(--marsh-accent);
+        }
+
+        .finding-card.critical {
+            border-left-color: var(--alert-red);
+            background: #fff5f5;
+        }
+
+        .finding-card.watch {
+            border-left-color: var(--alert-orange);
+            background: #fff8f0;
+        }
+
+        .finding-card.monitor {
+            border-left-color: var(--alert-yellow);
+            background: #fffbeb;
+        }
+
+        .finding-card.stable {
+            border-left-color: var(--success-green);
+            background: #f0fff4;
+        }
+
+        .finding-card h4 {
+            color: var(--marsh-blue);
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        .finding-card .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .finding-card.critical .stat-number { color: var(--alert-red); }
+        .finding-card.watch .stat-number { color: var(--alert-orange); }
+        .finding-card.monitor .stat-number { color: var(--alert-yellow); }
+        .finding-card.stable .stat-number { color: var(--success-green); }
+
+        .finding-card p {
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        /* Coverage Summary Table - REPT-05 */
+        .coverage-table {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .coverage-table h2 {
+            color: var(--marsh-blue);
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .coverage-table table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85em;
+        }
+
+        .coverage-table th, .coverage-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .coverage-table th {
+            background: var(--marsh-blue);
+            color: white;
+            font-weight: 500;
+        }
+
+        .coverage-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+        }
+
+        .status-critical {
+            background: var(--alert-red);
+            color: white;
+        }
+
+        .status-watch {
+            background: var(--alert-orange);
+            color: white;
+        }
+
+        .status-monitor {
+            background: var(--alert-yellow);
+            color: #333;
+        }
+
+        .status-stable {
+            background: var(--success-green);
+            color: white;
+        }
+
+        /* Status Section Headers - REPT-06 */
+        .status-section {
+            margin-bottom: 30px;
+        }
+
+        .status-section-header {
+            padding: 15px 25px;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 0;
+        }
+
+        .status-section-header.critical {
+            background: linear-gradient(135deg, var(--alert-red) 0%, #c82333 100%);
+            color: white;
+        }
+
+        .status-section-header.watch {
+            background: linear-gradient(135deg, var(--alert-orange) 0%, #e96b02 100%);
+            color: white;
+        }
+
+        .status-section-header.monitor {
+            background: linear-gradient(135deg, var(--alert-yellow) 0%, #e0a800 100%);
+            color: #333;
+        }
+
+        .status-section-header.stable {
+            background: linear-gradient(135deg, var(--success-green) 0%, #1e7e34 100%);
+            color: white;
+        }
+
+        .status-section-header h3 {
+            font-weight: 500;
+            font-size: 1.2em;
+        }
+
+        /* Insurer Sections - REPT-06, REPT-07 */
+        .insurer-section {
+            background: white;
+            border-radius: 0 0 12px 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .insurer-section.standalone {
+            border-radius: 12px;
+        }
+
+        .insurer-header {
+            padding: 25px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #eee;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .insurer-header h2 {
+            color: var(--marsh-blue);
+            font-weight: 500;
+            font-size: 1.4em;
+        }
+
+        .insurer-codes {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .code-badge {
+            background: #e9ecef;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            font-family: monospace;
+        }
+
+        .insurer-content {
+            padding: 30px;
+        }
+
+        /* News Items */
+        .news-item {
+            padding: 20px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .news-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .news-item:first-child {
+            padding-top: 0;
+        }
+
+        .news-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+
+        .news-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            flex-shrink: 0;
+        }
+
+        .icon-network { background: #e3f2fd; }
+        .icon-financial { background: #e8f5e9; }
+        .icon-regulatory { background: #fff3e0; }
+        .icon-market { background: #e0f7fa; }
+        .icon-crisis { background: #ffebee; }
+        .icon-growth { background: #e8f5e9; }
+        .icon-default { background: #f5f5f5; }
+
+        .news-title {
+            font-weight: 600;
+            color: var(--marsh-blue);
+            font-size: 1.05em;
+            margin-bottom: 4px;
+        }
+
+        .news-title a {
+            color: var(--marsh-blue);
+            text-decoration: none;
+        }
+
+        .news-title a:hover {
+            text-decoration: underline;
+            color: var(--marsh-light-blue);
+        }
+
+        .news-meta {
+            font-size: 0.85em;
+            color: var(--neutral-gray);
+        }
+
+        .news-body {
+            color: #444;
+            font-size: 0.95em;
+            margin-left: 55px;
+        }
+
+        .news-body ul {
+            margin: 10px 0 0 20px;
+        }
+
+        .news-body li {
+            margin-bottom: 6px;
+        }
+
+        .impact-tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-left: 55px;
+            margin-top: 12px;
+        }
+
+        .impact-high {
+            background: #ffebee;
+            color: var(--alert-red);
+        }
+
+        .impact-medium {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .impact-low {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .sentiment-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.75em;
+            margin-left: 10px;
+        }
+
+        .sentiment-positive {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .sentiment-negative {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .sentiment-neutral {
+            background: #e2e3e5;
+            color: #383d41;
+        }
+
+        .category-indicators {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+            margin-left: 55px;
+        }
+
+        .indicator-tag {
+            background: #e3f2fd;
+            color: var(--marsh-light-blue);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7em;
+            font-weight: 500;
+        }
+
+        .no-news {
+            text-align: center;
+            padding: 30px;
+            color: var(--neutral-gray);
+        }
+
+        /* Market Context - REPT-08 */
+        .market-context {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+        }
+
+        .market-context h2 {
+            color: var(--marsh-blue);
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .context-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .context-item {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .context-item h4 {
+            color: var(--marsh-light-blue);
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
+
+        .context-item p {
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        /* Strategic Recommendations - REPT-09 */
+        .recommendations {
+            background: var(--marsh-blue);
+            color: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+        }
+
+        .recommendations h2 {
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .recommendation-list {
+            list-style: none;
+        }
+
+        .recommendation-list li {
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .recommendation-list li:last-child {
+            border-bottom: none;
+        }
+
+        .rec-number {
+            background: var(--marsh-accent);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9em;
+            flex-shrink: 0;
+        }
+
+        .rec-content h4 {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .rec-content p {
+            font-size: 0.9em;
+            opacity: 0.85;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: var(--neutral-gray);
+            font-size: 0.85em;
+        }
+
+        .footer-divider {
+            width: 60px;
+            height: 3px;
+            background: var(--marsh-light-blue);
+            margin: 0 auto 20px;
+            border-radius: 2px;
+        }
+
+        /* Mobile Responsive - REPT-11 */
+        @media screen and (max-width: 600px) {
+            .header {
+                padding: 25px 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .header .subtitle {
+                font-size: 0.95em;
+            }
+
+            .container {
+                padding: 20px 15px;
+            }
+
+            .executive-summary,
+            .coverage-table,
+            .insurer-section,
+            .market-context,
+            .recommendations {
+                padding: 20px;
+                border-radius: 8px;
+            }
+
+            .key-findings {
+                grid-template-columns: 1fr;
+            }
+
+            .finding-card {
+                padding: 15px;
+            }
+
+            .finding-card .stat-number {
+                font-size: 2em;
+            }
+
+            .insurer-header {
+                padding: 15px 20px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .insurer-header h2 {
+                font-size: 1.2em;
+            }
+
+            .insurer-content {
+                padding: 20px;
+            }
+
+            .news-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .news-icon {
+                width: 35px;
+                height: 35px;
+            }
+
+            .news-body,
+            .impact-tag,
+            .category-indicators {
+                margin-left: 0;
+            }
+
+            .coverage-table table {
+                font-size: 0.75em;
+            }
+
+            .coverage-table th,
+            .coverage-table td {
+                padding: 8px 10px;
+            }
+
+            .context-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .recommendation-list li {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .status-badge {
+                padding: 4px 10px;
+                font-size: 0.7em;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+            }
+
+            .header {
+                background: var(--marsh-blue) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .confidential-banner {
+                background: var(--alert-red) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .insurer-section {
+                break-inside: avoid;
+            }
+
+            .recommendations {
+                background: var(--marsh-blue) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Confidential Banner - REPT-03 -->
+    <div class="confidential-banner">
+        CONFIDENCIAL - SOMENTE PARA USO INTERNO - {{ company_name|upper }} DDH INTELIGENCIA DE SEGURADORAS
+    </div>
+
+    <!-- Header - REPT-02 -->
+    <header class="header">
+        <div class="header-content">
+            <h1>{{ category }} Intelligence Report</h1>
+            <p class="subtitle">Mercado Brasileiro de Seguros - Analise de Parceiros DDH</p>
+            <div class="date-badge">Data do Relatorio: {{ report_date }}</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Executive Summary - REPT-04 -->
+        <section class="executive-summary">
+            <h2>Resumo Executivo</h2>
+            <p>Este relatorio analisa os desenvolvimentos recentes que afetam as seguradoras registradas no banco de dados de parceiros DDH da {{ company_name }}. O relatorio cobre <strong>{{ total_insurers }}</strong> seguradoras na categoria <strong>{{ category }}</strong>.</p>
+
+            <div class="key-findings">
+                <div class="finding-card critical">
+                    <h4>Critico</h4>
+                    <div class="stat-number">{{ status_counts.Critical }}</div>
+                    <p>Seguradoras requerem atencao imediata</p>
+                </div>
+                <div class="finding-card watch">
+                    <h4>Observacao</h4>
+                    <div class="stat-number">{{ status_counts.Watch }}</div>
+                    <p>Seguradoras em monitoramento ativo</p>
+                </div>
+                <div class="finding-card monitor">
+                    <h4>Monitorar</h4>
+                    <div class="stat-number">{{ status_counts.Monitor }}</div>
+                    <p>Seguradoras em acompanhamento</p>
+                </div>
+                <div class="finding-card stable">
+                    <h4>Estavel</h4>
+                    <div class="stat-number">{{ status_counts.Stable }}</div>
+                    <p>Seguradoras em situacao estavel</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Coverage Summary Table - REPT-05 -->
+        <section class="coverage-table">
+            <h2>Resumo de Cobertura DDH</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Seguradora</th>
+                        <th>Codigo ANS</th>
+                        <th>Categoria</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for status in ['Critical', 'Watch', 'Monitor', 'Stable'] %}
+                    {% set status_insurers = insurers_by_status.get(status, []) %}
+                    {% for insurer in status_insurers %}
+                    <tr>
+                        <td>{{ insurer.name }}</td>
+                        <td>{{ insurer.ans_code }}</td>
+                        <td>{{ insurer.category }}</td>
+                        <td>
+                            {% if status == 'Critical' %}
+                            <span class="status-badge status-critical">Critico</span>
+                            {% elif status == 'Watch' %}
+                            <span class="status-badge status-watch">Observacao</span>
+                            {% elif status == 'Monitor' %}
+                            <span class="status-badge status-monitor">Monitorar</span>
+                            {% else %}
+                            <span class="status-badge status-stable">Estavel</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Insurer Sections by Status - REPT-06, REPT-07 -->
+        {% for status in ['Critical', 'Watch', 'Monitor', 'Stable'] %}
+        {% set status_insurers = insurers_by_status.get(status, []) %}
+        {% if status_insurers %}
+        <div class="status-section">
+            <div class="status-section-header {{ status|lower }}">
+                <h3>
+                    {% if status == 'Critical' %}Critico{% elif status == 'Watch' %}Observacao{% elif status == 'Monitor' %}Monitorar{% else %}Estavel{% endif %}
+                    ({{ status_insurers|length }} {% if status_insurers|length == 1 %}seguradora{% else %}seguradoras{% endif %})
+                </h3>
+            </div>
+
+            {% for insurer in status_insurers %}
+            <section class="insurer-section">
+                <div class="insurer-header">
+                    <div>
+                        <h2>{{ insurer.name }}</h2>
+                        <div class="insurer-codes">
+                            <span class="code-badge">ANS: {{ insurer.ans_code }}</span>
+                            {% if insurer.market_master_code %}
+                            <span class="code-badge">MM: {{ insurer.market_master_code }}</span>
+                            {% endif %}
+                            {% if insurer.cnpj %}
+                            <span class="code-badge">CNPJ: {{ insurer.cnpj }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if status == 'Critical' %}
+                    <span class="status-badge status-critical">Critico</span>
+                    {% elif status == 'Watch' %}
+                    <span class="status-badge status-watch">Observacao</span>
+                    {% elif status == 'Monitor' %}
+                    <span class="status-badge status-monitor">Monitorar</span>
+                    {% else %}
+                    <span class="status-badge status-stable">Estavel</span>
+                    {% endif %}
+                </div>
+                <div class="insurer-content">
+                    {% if insurer.news_items %}
+                    {% for item in insurer.news_items %}
+                    <div class="news-item">
+                        <div class="news-header">
+                            <div class="news-icon icon-default">
+                                {% if item.sentiment == 'negative' %}
+                                &#9888;
+                                {% elif item.sentiment == 'positive' %}
+                                &#10003;
+                                {% else %}
+                                &#9679;
+                                {% endif %}
+                            </div>
+                            <div>
+                                <div class="news-title">
+                                    {% if item.source_url %}
+                                    <a href="{{ item.source_url }}" target="_blank">{{ item.title }}</a>
+                                    {% else %}
+                                    {{ item.title }}
+                                    {% endif %}
+                                </div>
+                                <div class="news-meta">
+                                    {% if item.published_at %}{{ item.published_at }}{% endif %}
+                                    {% if item.source_name %} | Fonte: {{ item.source_name }}{% endif %}
+                                    {% if item.sentiment %}
+                                    <span class="sentiment-badge sentiment-{{ item.sentiment }}">
+                                        {% if item.sentiment == 'positive' %}Positivo{% elif item.sentiment == 'negative' %}Negativo{% else %}Neutro{% endif %}
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% if item.summary %}
+                        <div class="news-body">
+                            <ul>
+                                {% for bullet in item.summary.split('\n') if bullet.strip() %}
+                                <li>{{ bullet.strip().lstrip('*').lstrip('-').strip() }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                        {% if item.status %}
+                        <span class="impact-tag {% if item.status == 'Critical' %}impact-high{% elif item.status == 'Watch' %}impact-medium{% else %}impact-low{% endif %}">
+                            {% if item.status == 'Critical' %}ALTO IMPACTO{% elif item.status == 'Watch' %}MEDIO IMPACTO{% else %}BAIXO IMPACTO{% endif %}
+                        </span>
+                        {% endif %}
+                        {% if item.category_indicators %}
+                        <div class="category-indicators">
+                            {% for indicator in item.category_indicators.split(',') if indicator.strip() %}
+                            <span class="indicator-tag">{{ indicator.strip() }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <div class="no-news">
+                        <p><strong>Nenhuma noticia significativa no periodo</strong><br>
+                        Operacoes desta seguradora permanecem estaveis sem desenvolvimentos materiais.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </section>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endfor %}
+
+        <!-- Market Context - REPT-08 -->
+        <section class="market-context">
+            <h2>Contexto do Mercado de Seguros Brasileiro</h2>
+            <div class="context-grid">
+                <div class="context-item">
+                    <h4>Categoria {{ category }}</h4>
+                    <p>Este relatorio cobre <strong>{{ total_insurers }}</strong> seguradoras da categoria {{ category }} monitoradas pela {{ company_name }}.</p>
+                </div>
+                <div class="context-item">
+                    <h4>Distribuicao de Status</h4>
+                    <p>
+                        <strong>{{ status_counts.Critical }}</strong> critico |
+                        <strong>{{ status_counts.Watch }}</strong> observacao |
+                        <strong>{{ status_counts.Monitor }}</strong> monitorar |
+                        <strong>{{ status_counts.Stable }}</strong> estavel
+                    </p>
+                </div>
+                <div class="context-item">
+                    <h4>Periodo do Relatorio</h4>
+                    <p>Data do relatorio: <strong>{{ report_date }}</strong>. Noticias e desenvolvimentos sao coletados e classificados automaticamente.</p>
+                </div>
+                <div class="context-item">
+                    <h4>Metodologia</h4>
+                    <p>Noticias classificadas por IA usando Azure OpenAI. Status baseado em analise de sentimento e impacto potencial.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Strategic Recommendations - REPT-09 -->
+        <section class="recommendations">
+            <h2>Recomendacoes Estrategicas</h2>
+            <ul class="recommendation-list">
+                {% if status_counts.Critical > 0 %}
+                <li>
+                    <span class="rec-number">1</span>
+                    <div class="rec-content">
+                        <h4>Monitorar Seguradoras Criticas de Perto</h4>
+                        <p>Ha {{ status_counts.Critical }} seguradora(s) em status critico requerendo atencao imediata. Avalie exposicao e considere planos de contingencia para clientes afetados.</p>
+                    </div>
+                </li>
+                {% endif %}
+                {% if status_counts.Watch > 0 %}
+                <li>
+                    <span class="rec-number">{% if status_counts.Critical > 0 %}2{% else %}1{% endif %}</span>
+                    <div class="rec-content">
+                        <h4>Revisar Seguradoras em Observacao</h4>
+                        <p>{{ status_counts.Watch }} seguradora(s) estao em observacao ativa. Comunicar proativamente com clientes afetados e avaliar alternativas se necessario.</p>
+                    </div>
+                </li>
+                {% endif %}
+                <li>
+                    <span class="rec-number">{% if status_counts.Critical > 0 and status_counts.Watch > 0 %}3{% elif status_counts.Critical > 0 or status_counts.Watch > 0 %}2{% else %}1{% endif %}</span>
+                    <div class="rec-content">
+                        <h4>Posicionar Seguradoras Estaveis para Crescimento</h4>
+                        <p>Com {{ status_counts.Stable }} seguradora(s) em status estavel, considere-as para novas colocacoes de clientes buscando estabilidade.</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="rec-number">{% if status_counts.Critical > 0 and status_counts.Watch > 0 %}4{% elif status_counts.Critical > 0 or status_counts.Watch > 0 %}3{% else %}2{% endif %}</span>
+                    <div class="rec-content">
+                        <h4>Continuar Monitoramento de Inteligencia</h4>
+                        <p>Mantenha monitoramento diario via BrasilIntel para desenvolimentos que possam impactar seus clientes e operacoes.</p>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-divider"></div>
+            <p><strong>{{ company_name }} - Unidade de Inteligencia DDH</strong></p>
+            <p>Relatorio Gerado: {{ generation_timestamp }} | Classificacao: Confidencial</p>
+            <p style="margin-top: 15px; font-size: 0.8em;">Fontes: ANS, Google News, Valor Economico, InfoMoney, CQCS, Estadao, G1</p>
+        </footer>
+    </div>
+</body>
+</html>
