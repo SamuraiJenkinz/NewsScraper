@@ -25,6 +25,18 @@ Critérios de classificação:
 - MONITOR: Mudanças de tarifa, alterações na rede, expansão de mercado, anúncios de parcerias
 - STABLE: Sem notícias significativas ou apenas atualizações operacionais rotineiras
 
+Indicadores de categoria (inclua todos que se aplicam):
+- financial_crisis: Crise financeira, problemas de solvência, risco de falência
+- regulatory_action: Intervenção da ANS, multas, sanções, ações regulatórias
+- m_and_a: Fusões, aquisições, vendas de operações
+- leadership_change: Mudança de CEO, diretoria, conselho
+- fraud_criminal: Fraude, investigações criminais, acusações
+- rate_change: Reajustes de preços, mudanças tarifárias
+- network_change: Alterações na rede credenciada, hospitais, médicos
+- market_expansion: Novos mercados, expansão geográfica, novos produtos
+- partnership: Parcerias, acordos comerciais, alianças
+- routine_operations: Operações normais, sem eventos significativos
+
 Responda em português brasileiro para todos os campos de texto."""
 
 SYSTEM_PROMPT_AGGREGATE = """Você é um analista financeiro especializado em seguradoras brasileiras.
@@ -173,6 +185,7 @@ Determine o status geral da seguradora e forneça os principais achados."""
             summary_bullets=["Classificação automática indisponível"],
             sentiment="neutral",
             reasoning="Classificação de fallback - LLM não configurado ou desabilitado",
+            category_indicators=["routine_operations"],
         )
 
     def _fallback_insurer_classification(self) -> InsurerClassification:
