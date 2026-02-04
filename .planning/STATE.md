@@ -4,14 +4,14 @@
 See: .planning/PROJECT.md (updated 2026-02-04)
 
 **Core value:** Senior management at Marsh Brasil receives actionable intelligence reports on their monitored insurers daily, with zero manual effort.
-**Current focus:** Phase 6 - Delivery & Critical Alerts
+**Current focus:** Phase 6 COMPLETE - Ready for Phase 7
 
 ## Current Position
-Phase: 6 of 8 (Delivery & Critical Alerts)
-Plan: 4 of 5
-Status: In Progress
-Progress: [███████░░░] 74.3% (26/35 plans complete)
-Last activity: 2026-02-04 - Completed 06-04 Critical Alerts
+Phase: 6 of 8 (Delivery & Critical Alerts) - COMPLETE
+Plan: 5 of 5
+Status: Phase Complete
+Progress: [████████░░] 77.1% (27/35 plans complete)
+Last activity: 2026-02-04 - Completed 06-05 Delivery Integration
 
 ## Performance Metrics
 
@@ -29,11 +29,11 @@ Last activity: 2026-02-04 - Completed 06-04 Critical Alerts
 | 03-news-collection-scale | 6 | ~32 min | ~5.3 min |
 | 04-ai-classification-pipeline | 2 | ~4 min | ~2.0 min |
 | 05-professional-reporting | 5 | ~22 min | ~4.4 min |
-| 06-delivery-critical-alerts | 4 | ~13 min | ~3.3 min |
+| 06-delivery-critical-alerts | 5 | ~17 min | ~3.4 min |
 
 **Recent Trend:**
-- Last 5 plans: 06-01 (~2 min), 06-02 (~3 min), 06-03 (~4 min), 06-04 (~4 min)
-- Trend: Fast implementation, Phase 6 averaging 3.3 min/plan
+- Last 5 plans: 06-02 (~3 min), 06-03 (~4 min), 06-04 (~4 min), 06-05 (~4 min)
+- Trend: Fast implementation, Phase 6 complete at 3.4 min/plan average
 
 *Updated after each plan completion*
 
@@ -132,6 +132,10 @@ Recent decisions affecting current work:
 - [CRITICAL ALERT] prefix in subject for email filter rules (06-04)
 - Red theme design for urgency in alert template (06-04)
 - Only Critical status news items loaded for alert (not Watch/Monitor) (06-04)
+- Critical alerts sent immediately after classification, before daily digest (06-05)
+- Professional reports with PDF attachment as default (06-05)
+- Run completion updates all delivery tracking fields (06-05)
+- GET /api/runs/{run_id}/delivery endpoint for delivery status monitoring (06-05)
 
 ### Pending Todos
 
@@ -253,11 +257,9 @@ None yet.
 - REPT-12: File-based archival system (05-03)
 - REPT-13: Report archive browsing API (05-05)
 
-**Next:** 06-05 Delivery Integration
+## Phase 6 Progress - COMPLETE
 
-## Phase 6 Progress - IN PROGRESS
-
-**Plans complete: 4 of 5**
+**Plans complete: 5 of 5**
 
 | Plan | Name | Status |
 |------|------|--------|
@@ -265,12 +267,21 @@ None yet.
 | 06-02 | PDF Generation | DONE |
 | 06-03 | Email Enhancements | DONE |
 | 06-04 | Critical Alerts | DONE |
-| 06-05 | Delivery Integration | pending |
+| 06-05 | Delivery Integration | DONE |
+
+**Requirements fulfilled:**
+- DELV-01: PDF report attachment (06-02, 06-03)
+- DELV-02: Critical alert immediate notification (06-04, 06-05)
+- DELV-03: Delivery tracking in Run model (06-01, 06-05)
+- DELV-04: Professional reports as default (06-05)
+- DELV-05: Delivery status endpoint (06-05)
+
+**Next:** Phase 7 - Monitoring & Analytics |
 
 ## Session Continuity
 
 Last session: 2026-02-04
-Stopped at: Completed 06-04 Critical Alerts
+Stopped at: Completed 06-05 Delivery Integration (Phase 6 COMPLETE)
 Resume file: None
 
 ### What's Available Now
@@ -349,7 +360,7 @@ From Phase 5 (complete):
 - `/api/reports/archive/{date}/{filename}` - Retrieve specific report (05-05)
 - `/api/reports/preview` - Preview professional template (05-05)
 
-From Phase 6 (in progress):
+From Phase 6 (complete):
 - `app.schemas.delivery.EmailRecipients` - Structured TO/CC/BCC recipient handling (06-01)
 - `app.schemas.delivery.DeliveryStatus` - Delivery status enum (pending/sent/failed/skipped) (06-01)
 - `app.config.Settings.get_email_recipients()` - Returns EmailRecipients for category (06-01)
@@ -365,6 +376,9 @@ From Phase 6 (in progress):
 - `CriticalAlertService.find_critical_insurers()` - Query Critical status insurers from run (06-04)
 - `CriticalAlertService.check_and_send_alert()` - Main entry point for alert workflow (06-04)
 - `app/templates/alert_critical.html` - Portuguese critical alert template (06-04)
+- `scripts/migrate_005_delivery_tracking.py` - Migration for 9 delivery tracking columns (06-05)
+- `/api/runs/{run_id}/delivery` - Delivery status endpoint (06-05)
+- Run orchestration integrated with critical alerts and PDF delivery (06-05)
 
 ---
 *Initialized: 2026-02-04*
