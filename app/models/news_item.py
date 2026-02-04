@@ -37,6 +37,7 @@ class NewsItem(Base):
     status = Column(String(50), nullable=True)  # Critical, Watch, Monitor, Stable
     sentiment = Column(String(20), nullable=True)  # positive, negative, neutral
     summary = Column(Text, nullable=True)  # Bullet-point summary
+    category_indicators = Column(String(500), nullable=True)  # Comma-separated list
 
     created_at = Column(DateTime, default=datetime.utcnow)
 

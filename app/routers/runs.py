@@ -158,6 +158,7 @@ async def _execute_single_insurer_run(
             status=classification.status if classification else None,
             sentiment=classification.sentiment if classification else None,
             summary="\n".join(classification.summary_bullets) if classification else None,
+            category_indicators=",".join(classification.category_indicators) if classification and classification.category_indicators else None,
         )
         db.add(news_item)
         items_stored += 1
@@ -233,6 +234,7 @@ async def _execute_category_run(
             item.status = classification.status
             item.sentiment = classification.sentiment
             item.summary = "\n".join(classification.summary_bullets)
+            item.category_indicators = ",".join(classification.category_indicators) if classification.category_indicators else None
 
     db.commit()
     logger.info(f"Classified {len(news_items)} items")
