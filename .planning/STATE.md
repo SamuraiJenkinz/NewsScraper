@@ -4,20 +4,20 @@
 See: .planning/PROJECT.md (updated 2026-02-04)
 
 **Core value:** Senior management at Marsh Brasil receives actionable intelligence reports on their monitored insurers daily, with zero manual effort.
-**Current focus:** Phase 3 - News Collection Scale
+**Current focus:** Phase 4 - AI Classification Pipeline
 
 ## Current Position
-Phase: 3 of 8 (News Collection Scale)
-Plan: 6 of 6
-Status: Complete
-Progress: [███░░░░░░░] 37.5% (3/8 phases complete)
-Last activity: 2026-02-04 - Completed Phase 3
+Phase: 4 of 8 (AI Classification Pipeline)
+Plan: 1 of 2
+Status: In progress
+Progress: [████░░░░░░] 40% (20/50 plans complete)
+Last activity: 2026-02-04 - Completed 04-01-PLAN.md
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 19
-- Average duration: ~5.2 minutes
+- Total plans completed: 20
+- Average duration: ~5.0 minutes
 - Total execution time: ~1.7 hours
 
 **By Phase:**
@@ -27,10 +27,11 @@ Last activity: 2026-02-04 - Completed Phase 3
 | 01-foundation | 4 | ~26 min | ~6.5 min |
 | 02-vertical-slice-validation | 9 | ~42 min | ~4.7 min |
 | 03-news-collection-scale | 6 | ~32 min | ~5.3 min |
+| 04-ai-classification-pipeline | 1 | ~2 min | ~2.0 min |
 
 **Recent Trend:**
-- Last 5 plans: 03-01 (~2 min), 03-02 (~4 min), 03-03 (~4 min), 03-04 (~4 min), 03-05 (~3 min)
-- Trend: Wave 3 relevance scorer with two-pass filtering
+- Last 5 plans: 03-02 (~4 min), 03-03 (~4 min), 03-04 (~4 min), 03-05 (~3 min), 04-01 (~2 min)
+- Trend: Efficient schema and database enhancements
 
 *Updated after each plan completion*
 
@@ -98,6 +99,9 @@ Recent decisions affecting current work:
 - Two-pass filtering: keyword first (free), AI second (paid) (03-05)
 - Fail-open error handling for relevance scoring (03-05)
 - Portuguese prompts for AI relevance scoring (03-05)
+- Pydantic Literal type for category indicators with 10 predefined values (04-01)
+- Comma-separated storage for category_indicators in SQLite (04-01)
+- Portuguese category descriptions in classification prompt for LLM guidance (04-01)
 
 ### Pending Todos
 
@@ -203,12 +207,36 @@ None yet.
 - NEWS-09: Insurer/run linking (03-06)
 - NEWS-10: AI relevance scoring (03-05)
 
-**Next:** Phase 4 - AI Classification Pipeline
+**Next:** Continue Phase 4 - Plan 02
+
+## Phase 4 Planning - IN PROGRESS
+
+**Plans: 2 plans in 2 waves**
+
+| Wave | Plans | Description |
+|------|-------|-------------|
+| 1 | 04-01 | Category indicators |
+| 2 | 04-02 | Sentiment analysis enhancement |
+
+**Requirements covered:**
+- CLASS-02: Explicit category indicators (04-01)
+- CLASS-03: Enhanced sentiment analysis (04-02)
+
+## Phase 4 Progress - IN PROGRESS
+
+**Plans complete: 1 of 2**
+
+| Plan | Name | Status |
+|------|------|--------|
+| 04-01 | Category Indicators | DONE |
+| 04-02 | Sentiment Analysis | PENDING |
+
+**Next:** 04-02 - Sentiment Analysis Enhancement
 
 ## Session Continuity
 
 Last session: 2026-02-04
-Stopped at: Completed Phase 3
+Stopped at: Completed 04-01-PLAN.md
 Resume file: None
 
 ### What's Available Now
@@ -257,6 +285,7 @@ From Phase 3 (complete):
 - `/api/runs/health/scraper` - Scraper health endpoint (03-06)
 - `app.services.classifier.ClassificationService` - Azure OpenAI classification (02-04)
 - `app.schemas.classification.*` - NewsClassification, InsurerClassification (02-04)
+- `app.schemas.classification.CategoryIndicator` - Literal type with 10 category values (04-01)
 - `app.services.emailer.GraphEmailService` - Microsoft Graph email sender (02-05)
 - `app.services.reporter.ReportService` - HTML report generator with Jinja2 (02-06)
 - `app.services.reporter.ReportData` - Report data container dataclass (02-06)
