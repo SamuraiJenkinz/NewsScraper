@@ -10,28 +10,28 @@ See: .planning/PROJECT.md (updated 2026-02-04)
 ## Current Position
 
 Phase: 1 of 8 (Foundation & Data Layer)
-Plan: 2 of 4 in current phase (01-02 complete)
-Status: In progress - Wave 2
-Last activity: 2026-02-04 — Completed 01-02-PLAN.md (Insurer CRUD API)
+Plan: 3 of 4 in current phase (01-02, 01-03 complete)
+Status: In progress - Wave 2 complete
+Last activity: 2026-02-04 — Completed 01-03-PLAN.md (Excel Import with Preview)
 
-Progress: [██░░░░░░░░] 6% (2/32 plans)
+Progress: [███░░░░░░░] 9% (3/32 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2
-- Average duration: ~3 minutes
-- Total execution time: ~0.1 hours
+- Total plans completed: 3
+- Average duration: ~6 minutes
+- Total execution time: ~0.3 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-foundation | 2 | ~6 min | ~3 min |
+| 01-foundation | 3 | ~18 min | ~6 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (~3 min), 01-02 (~3 min)
-- Trend: Stable, consistent execution
+- Last 5 plans: 01-01 (~3 min), 01-02 (~3 min), 01-03 (~12 min)
+- Trend: Stable execution, 01-03 slightly longer due to end-to-end testing
 
 *Updated after each plan completion*
 
@@ -50,6 +50,9 @@ Recent decisions affecting current work:
 - Search endpoint returns {total, results} structure for pagination-aware responses (01-02)
 - PATCH endpoint uses model_dump(exclude_unset=True) for partial updates (01-02)
 - IntegrityError caught and rolled back before raising HTTPException (01-02)
+- In-memory session storage for MVP import preview (30-minute TTL) (01-03)
+- Merge mode default for import - updates existing records (01-03)
+- Portuguese category normalization auto-mapped to English standard (01-03)
 
 ### Pending Todos
 
@@ -76,18 +79,21 @@ None yet.
 | Wave | Plans | Description |
 |------|-------|-------------|
 | 1 | 01-01 DONE | Project scaffolding, database, models, schemas |
-| 2 | 01-02 DONE, 01-03 | CRUD endpoints + Excel import |
+| 2 | 01-02 DONE, 01-03 DONE | CRUD endpoints + Excel import |
 | 3 | 01-04 | Excel export (depends on both 01-02 and 01-03) |
 
-**Wave 2 status:**
+**Wave 2 complete:**
 - 01-02 COMPLETE: `app/routers/insurers.py` - CRUD API with search
-- 01-03 in progress (parallel execution): Excel import service
+- 01-03 COMPLETE: `app/services/excel_service.py` + `app/routers/import_export.py` - Excel import
+
+**Wave 3 ready to execute:**
+- 01-04: Excel export endpoint (all dependencies satisfied)
 
 ## Session Continuity
 
-Last session: 2026-02-04 14:38 UTC
-Stopped at: Completed 01-02-PLAN.md
-Resume file: .planning/phases/01-foundation-data-layer/01-03-PLAN.md or 01-04-PLAN.md
+Last session: 2026-02-04 14:42 UTC
+Stopped at: Completed 01-03-PLAN.md
+Resume file: .planning/phases/01-foundation-data-layer/01-04-PLAN.md (next)
 
 ### What's Available for Next Plans
 
@@ -103,6 +109,13 @@ From 01-02:
 - Search endpoint: GET /api/insurers/search?query=&category=&enabled=
 - Router registration pattern in app/main.py
 
+From 01-03:
+- `app.services.excel_service.parse_excel_insurers` - Excel parsing with validation
+- `app.services.excel_service.generate_excel_export` - Excel file generation (ready for 01-04)
+- `app.routers.import_export.router` - Import endpoints at /api/import
+- Preview-before-commit pattern with session management
+- Column normalization for Portuguese/English Excel headers
+
 ---
 *Initialized: 2026-02-04*
-*Last updated: 2026-02-04 14:38 UTC*
+*Last updated: 2026-02-04 14:42 UTC*
