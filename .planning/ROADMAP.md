@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation & Data Layer** - Core persistence, insurer database, Excel import/export
 - [x] **Phase 2: Vertical Slice Validation** - Single-source end-to-end pipeline proof
-- [ ] **Phase 3: News Collection Scale** - All sources, 897 insurers, production scraping
+- [x] **Phase 3: News Collection Scale** - All sources, 897 insurers, production scraping
 - [ ] **Phase 4: AI Classification Pipeline** - Full Azure OpenAI classification system
 - [ ] **Phase 5: Professional Reporting** - Marsh-branded HTML reports with all sections
 - [ ] **Phase 6: Delivery & Critical Alerts** - Email delivery, PDF generation, alert routing
@@ -76,11 +76,15 @@ Plans:
   3. System stores news items with complete metadata (title, summary, URL, source, date)
   4. System links each news item to specific insurer and run record for traceability
   5. AI relevance scoring filters out low-value content before classification
-**Plans**: TBD
+**Plans**: 6 plans in 4 waves
 
 Plans:
-- [ ] 03-01: TBD during planning
-- [ ] 03-02: TBD during planning
+- [x] 03-01-PLAN.md — Source abstraction base and Google News refactor
+- [x] 03-02-PLAN.md — RSS sources (InfoMoney, Estadao/G1, ANS)
+- [x] 03-03-PLAN.md — Website crawler sources (Valor, CQCS) and batch config
+- [x] 03-04-PLAN.md — Batch processor with semaphore-based rate limiting
+- [x] 03-05-PLAN.md — AI relevance scoring pre-filter
+- [x] 03-06-PLAN.md — Scraper integration and run endpoint update
 
 ### Phase 4: AI Classification Pipeline
 **Goal**: Complete Azure OpenAI classification with sentiment analysis and configurable toggle
@@ -179,7 +183,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 |-------|----------------|--------|-----------|
 | 1. Foundation & Data Layer | 4/4 | Complete | 2026-02-04 |
 | 2. Vertical Slice Validation | 9/9 | Complete | 2026-02-04 |
-| 3. News Collection Scale | 0/TBD | Not started | - |
+| 3. News Collection Scale | 6/6 | Complete | 2026-02-04 |
 | 4. AI Classification Pipeline | 0/TBD | Not started | - |
 | 5. Professional Reporting | 0/TBD | Not started | - |
 | 6. Delivery & Critical Alerts | 0/TBD | Not started | - |

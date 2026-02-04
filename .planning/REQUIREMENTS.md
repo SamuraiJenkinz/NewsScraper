@@ -21,15 +21,15 @@ Requirements for initial release. Each maps to roadmap phases.
 ### News Collection
 
 - [x] **NEWS-01**: System scrapes Google News for each enabled insurer using name + ANS code
-- [ ] **NEWS-02**: System scrapes Valor Econômico for insurance-related news
-- [ ] **NEWS-03**: System scrapes InfoMoney for insurance-related news
-- [ ] **NEWS-04**: System scrapes CQCS for insurance industry news
-- [ ] **NEWS-05**: System scrapes ANS official releases
-- [ ] **NEWS-06**: System scrapes Broadcast/Estadão for insurance news
-- [ ] **NEWS-07**: System processes insurers in batches (30-50) with rate limiting
-- [ ] **NEWS-08**: System stores news items with title, summary, source URL, source name, published date
-- [ ] **NEWS-09**: System links news items to specific insurers and run records
-- [ ] **NEWS-10**: System uses AI relevance scoring to filter low-value content
+- [x] **NEWS-02**: System scrapes Valor Econômico for insurance-related news
+- [x] **NEWS-03**: System scrapes InfoMoney for insurance-related news
+- [x] **NEWS-04**: System scrapes CQCS for insurance industry news
+- [x] **NEWS-05**: System scrapes ANS official releases
+- [x] **NEWS-06**: System scrapes Broadcast/Estadão for insurance news
+- [x] **NEWS-07**: System processes insurers in batches (30-50) with rate limiting
+- [x] **NEWS-08**: System stores news items with title, summary, source URL, source name, published date
+- [x] **NEWS-09**: System links news items to specific insurers and run records
+- [x] **NEWS-10**: System uses AI relevance scoring to filter low-value content
 
 ### Classification
 
@@ -162,15 +162,15 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DATA-07 | Phase 1 | Complete |
 | DATA-08 | Phase 1 | Complete |
 | NEWS-01 | Phase 2 | Complete |
-| NEWS-02 | Phase 3 | Pending |
-| NEWS-03 | Phase 3 | Pending |
-| NEWS-04 | Phase 3 | Pending |
-| NEWS-05 | Phase 3 | Pending |
-| NEWS-06 | Phase 3 | Pending |
-| NEWS-07 | Phase 3 | Pending |
-| NEWS-08 | Phase 3 | Pending |
-| NEWS-09 | Phase 3 | Pending |
-| NEWS-10 | Phase 3 | Pending |
+| NEWS-02 | Phase 3 | Complete |
+| NEWS-03 | Phase 3 | Complete |
+| NEWS-04 | Phase 3 | Complete |
+| NEWS-05 | Phase 3 | Complete |
+| NEWS-06 | Phase 3 | Complete |
+| NEWS-07 | Phase 3 | Complete |
+| NEWS-08 | Phase 3 | Complete |
+| NEWS-09 | Phase 3 | Complete |
+| NEWS-10 | Phase 3 | Complete |
 | CLASS-01 | Phase 2 | Complete |
 | CLASS-02 | Phase 4 | Pending |
 | CLASS-03 | Phase 2 | Complete |

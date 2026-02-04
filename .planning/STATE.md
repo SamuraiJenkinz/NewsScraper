@@ -8,17 +8,17 @@ See: .planning/PROJECT.md (updated 2026-02-04)
 
 ## Current Position
 Phase: 3 of 8 (News Collection Scale)
-Plan: 5 of 6
-Status: In progress
-Progress: [███░░░░░░░] 35% (2.83/8 phases complete)
-Last activity: 2026-02-04 - Completed 03-05-PLAN.md
+Plan: 6 of 6
+Status: Complete
+Progress: [███░░░░░░░] 37.5% (3/8 phases complete)
+Last activity: 2026-02-04 - Completed Phase 3
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 18
-- Average duration: ~4.6 minutes
-- Total execution time: ~1.4 hours
+- Total plans completed: 19
+- Average duration: ~5.2 minutes
+- Total execution time: ~1.7 hours
 
 **By Phase:**
 
@@ -26,7 +26,7 @@ Last activity: 2026-02-04 - Completed 03-05-PLAN.md
 |-------|-------|-------|----------|
 | 01-foundation | 4 | ~26 min | ~6.5 min |
 | 02-vertical-slice-validation | 9 | ~42 min | ~4.7 min |
-| 03-news-collection-scale | 5 | ~17 min | ~3.4 min |
+| 03-news-collection-scale | 6 | ~32 min | ~5.3 min |
 
 **Recent Trend:**
 - Last 5 plans: 03-01 (~2 min), 03-02 (~4 min), 03-03 (~4 min), 03-04 (~4 min), 03-05 (~3 min)
@@ -179,9 +179,9 @@ None yet.
 - NEWS-09: Insurer/run linking (03-06)
 - NEWS-10: AI relevance scoring (03-05)
 
-## Phase 3 Progress - IN PROGRESS
+## Phase 3 Progress - COMPLETE
 
-**Plans complete: 5 of 6**
+**Plans complete: 6 of 6**
 
 | Plan | Name | Status |
 |------|------|--------|
@@ -190,14 +190,25 @@ None yet.
 | 03-03 | Crawler Sources | DONE |
 | 03-04 | Batch Processor | DONE |
 | 03-05 | Relevance Scorer | DONE |
-| 03-06 | Integration | PENDING |
+| 03-06 | Integration | DONE |
 
-**Next:** Execute 03-06 (Integration) in Wave 4
+**Requirements fulfilled:**
+- NEWS-02: Valor Economico (03-03)
+- NEWS-03: InfoMoney (03-02)
+- NEWS-04: CQCS (03-03)
+- NEWS-05: ANS releases (03-02)
+- NEWS-06: Estadao/G1 (03-02)
+- NEWS-07: Batch processing (03-04)
+- NEWS-08: Complete metadata storage (03-06)
+- NEWS-09: Insurer/run linking (03-06)
+- NEWS-10: AI relevance scoring (03-05)
+
+**Next:** Phase 4 - AI Classification Pipeline
 
 ## Session Continuity
 
 Last session: 2026-02-04
-Stopped at: Completed 03-05-PLAN.md
+Stopped at: Completed Phase 3
 Resume file: None
 
 ### What's Available Now
@@ -221,7 +232,7 @@ From Phase 2:
 - `app.services.scraper.ApifyScraperService` - Google News scraper (02-03, delegates to sources)
 - `app.services.scraper.ScrapedNewsItem` - Scraping result dataclass (02-03, re-exported from sources)
 
-From Phase 3 (in progress):
+From Phase 3 (complete):
 - `app.services.sources.NewsSource` - Abstract base class for news sources (03-01)
 - `app.services.sources.SourceRegistry` - Source discovery and management (03-01)
 - `app.services.sources.ScrapedNewsItem` - Unified news item dataclass (03-01)
@@ -240,6 +251,10 @@ From Phase 3 (in progress):
 - `app.services.relevance_scorer.RelevanceScorer` - Two-pass relevance filtering (03-05)
 - `tests/test_relevance_scorer.py` - Relevance scorer unit tests (03-05)
 - `app.config.use_ai_relevance_scoring, relevance_keyword_threshold, relevance_ai_batch_size` - Relevance config (03-05)
+- `app.services.scraper.ScraperService` - Unified multi-source scraper (03-06)
+- `/api/runs/execute` - Execute endpoint with process_all flag (03-06)
+- `/api/runs/execute/category` - Dedicated category processing endpoint (03-06)
+- `/api/runs/health/scraper` - Scraper health endpoint (03-06)
 - `app.services.classifier.ClassificationService` - Azure OpenAI classification (02-04)
 - `app.schemas.classification.*` - NewsClassification, InsurerClassification (02-04)
 - `app.services.emailer.GraphEmailService` - Microsoft Graph email sender (02-05)
