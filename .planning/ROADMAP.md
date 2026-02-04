@@ -117,11 +117,11 @@ Plans:
 **Plans**: 5 plans in 3 waves
 
 Plans:
-- [ ] 05-01-PLAN.md — Professional Jinja2 template with Marsh branding and responsive CSS
-- [ ] 05-02-PLAN.md — Executive summary AI service with Azure OpenAI structured outputs
-- [ ] 05-03-PLAN.md — Report archival service with date hierarchy and metadata index
-- [ ] 05-04-PLAN.md — ReportService enhancement with professional template integration
-- [ ] 05-05-PLAN.md — Archive browsing API endpoints and visual verification
+- [x] 05-01-PLAN.md — Professional Jinja2 template with Marsh branding and responsive CSS
+- [x] 05-02-PLAN.md — Executive summary AI service with Azure OpenAI structured outputs
+- [x] 05-03-PLAN.md — Report archival service with date hierarchy and metadata index
+- [x] 05-04-PLAN.md — ReportService enhancement with professional template integration
+- [x] 05-05-PLAN.md — Archive browsing API endpoints and visual verification
 
 ### Phase 6: Delivery & Critical Alerts
 **Goal**: Reliable email delivery with PDF attachment, recipient management, and immediate critical alerts
@@ -134,11 +134,14 @@ Plans:
   4. Critical alerts sent separately from daily digest reports
   5. System generates PDF version of each report and attaches to email
   6. System tracks email delivery status per run and reports success/failure
-**Plans**: TBD
+**Plans**: 5 plans in 3 waves
 
 Plans:
-- [ ] 06-01: TBD during planning
-- [ ] 06-02: TBD during planning
+- [ ] 06-01-PLAN.md — Delivery schemas and config extension (CC/BCC, Run tracking fields)
+- [ ] 06-02-PLAN.md — PDF generation service with WeasyPrint
+- [ ] 06-03-PLAN.md — Email service enhancement with PDF attachment support
+- [ ] 06-04-PLAN.md — Critical alert service for immediate notifications
+- [ ] 06-05-PLAN.md — Run orchestration integration and delivery tracking
 
 ### Phase 7: Scheduling & Automation
 **Goal**: Automated daily runs with APScheduler, configurable cron, manual triggers, and run tracking
@@ -189,7 +192,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 | 3. News Collection Scale | 6/6 | Complete | 2026-02-04 |
 | 4. AI Classification Pipeline | 2/2 | Complete | 2026-02-04 |
 | 5. Professional Reporting | 5/5 | Complete | 2026-02-04 |
-| 6. Delivery & Critical Alerts | 0/TBD | Not started | - |
+| 6. Delivery & Critical Alerts | 0/5 | Not started | - |
 | 7. Scheduling & Automation | 0/TBD | Not started | - |
 | 8. Admin Interface | 0/TBD | Not started | - |
 
