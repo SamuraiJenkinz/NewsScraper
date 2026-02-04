@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Vertical Slice Validation** - Single-source end-to-end pipeline proof
 - [x] **Phase 3: News Collection Scale** - All sources, 897 insurers, production scraping
 - [x] **Phase 4: AI Classification Pipeline** - Full Azure OpenAI classification system
-- [ ] **Phase 5: Professional Reporting** - Marsh-branded HTML reports with all sections
+- [x] **Phase 5: Professional Reporting** - Marsh-branded HTML reports with all sections
 - [ ] **Phase 6: Delivery & Critical Alerts** - Email delivery, PDF generation, alert routing
 - [ ] **Phase 7: Scheduling & Automation** - APScheduler jobs, cron config, run tracking
 - [ ] **Phase 8: Admin Interface** - Complete web dashboard with all management pages
@@ -114,11 +114,14 @@ Plans:
   6. Azure OpenAI generates executive summary paragraph for each report
   7. Reports render correctly on mobile devices (responsive HTML)
   8. Admin can browse and view historical reports by date and category in archive
-**Plans**: TBD
+**Plans**: 5 plans in 3 waves
 
 Plans:
-- [ ] 05-01: TBD during planning
-- [ ] 05-02: TBD during planning
+- [ ] 05-01-PLAN.md — Professional Jinja2 template with Marsh branding and responsive CSS
+- [ ] 05-02-PLAN.md — Executive summary AI service with Azure OpenAI structured outputs
+- [ ] 05-03-PLAN.md — Report archival service with date hierarchy and metadata index
+- [ ] 05-04-PLAN.md — ReportService enhancement with professional template integration
+- [ ] 05-05-PLAN.md — Archive browsing API endpoints and visual verification
 
 ### Phase 6: Delivery & Critical Alerts
 **Goal**: Reliable email delivery with PDF attachment, recipient management, and immediate critical alerts
@@ -185,7 +188,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 | 2. Vertical Slice Validation | 9/9 | Complete | 2026-02-04 |
 | 3. News Collection Scale | 6/6 | Complete | 2026-02-04 |
 | 4. AI Classification Pipeline | 2/2 | Complete | 2026-02-04 |
-| 5. Professional Reporting | 0/TBD | Not started | - |
+| 5. Professional Reporting | 5/5 | Complete | 2026-02-04 |
 | 6. Delivery & Critical Alerts | 0/TBD | Not started | - |
 | 7. Scheduling & Automation | 0/TBD | Not started | - |
 | 8. Admin Interface | 0/TBD | Not started | - |

@@ -43,18 +43,18 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Reporting
 
 - [x] **REPT-01**: System generates 3 separate daily reports (Health, Dental, Group Life)
-- [ ] **REPT-02**: Reports match Marsh branding (colors, layout) from reference HTML designs
-- [ ] **REPT-03**: Reports include confidential banner with classification level
-- [ ] **REPT-04**: Reports include executive summary with key findings cards (Critical/Warning/Positive)
-- [ ] **REPT-05**: Reports include coverage summary table with all insurers and status badges
-- [ ] **REPT-06**: Reports group insurers by status priority (Critical first, then Watch, Monitor, Stable)
-- [ ] **REPT-07**: Each insurer section shows news items with icons, titles, impact tags
-- [ ] **REPT-08**: Reports include market context section with regulatory updates
-- [ ] **REPT-09**: Reports include strategic recommendations section
-- [ ] **REPT-10**: Azure OpenAI generates executive summary paragraph for each report
-- [ ] **REPT-11**: Reports render correctly on mobile devices (responsive HTML)
-- [ ] **REPT-12**: System stores generated reports in archive with date-based organization
-- [ ] **REPT-13**: Admin can browse and view historical reports by date and category
+- [x] **REPT-02**: Reports match Marsh branding (colors, layout) from reference HTML designs
+- [x] **REPT-03**: Reports include confidential banner with classification level
+- [x] **REPT-04**: Reports include executive summary with key findings cards (Critical/Warning/Positive)
+- [x] **REPT-05**: Reports include coverage summary table with all insurers and status badges
+- [x] **REPT-06**: Reports group insurers by status priority (Critical first, then Watch, Monitor, Stable)
+- [x] **REPT-07**: Each insurer section shows news items with icons, titles, impact tags
+- [x] **REPT-08**: Reports include market context section with regulatory updates
+- [x] **REPT-09**: Reports include strategic recommendations section
+- [x] **REPT-10**: Azure OpenAI generates executive summary paragraph for each report
+- [x] **REPT-11**: Reports render correctly on mobile devices (responsive HTML)
+- [x] **REPT-12**: System stores generated reports in archive with date-based organization
+- [x] **REPT-13**: Admin can browse and view historical reports by date and category
 
 ### Delivery
 
