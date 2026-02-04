@@ -4,10 +4,11 @@ Run orchestration router for BrasilIntel.
 Provides endpoints to execute the end-to-end pipeline:
 - Single insurer processing (Phase 2 compatibility)
 - Full category processing (Phase 3 scale)
+- Critical alerts and PDF delivery (Phase 6)
 """
 import logging
 from datetime import datetime
-from typing import Optional
+from typing import Any, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
@@ -21,8 +22,10 @@ from app.services.scraper import ApifyScraperService, ScraperService
 from app.services.classifier import ClassificationService
 from app.services.emailer import GraphEmailService
 from app.services.reporter import ReportService
+from app.services.alert_service import CriticalAlertService
 from app.schemas.run import RunRead, RunStatus
 from app.schemas.news import NewsItemWithClassification
+from app.schemas.delivery import DeliveryStatus
 
 logger = logging.getLogger(__name__)
 
@@ -45,6 +48,10 @@ class ExecuteResponse(BaseModel):
     insurers_processed: int
     items_found: int
     email_sent: bool
+    email_status: str = "pending"
+    pdf_generated: bool = False
+    pdf_size_bytes: int = 0
+    critical_alerts_sent: int = 0
     message: str
     errors: list[str] = Field(default_factory=list)
 
@@ -166,16 +173,34 @@ async def _execute_single_insurer_run(
     db.commit()
     logger.info(f"Stored {items_stored} news items")
 
+    # Check for critical alerts and send immediately
+    logger.info("Checking for critical alerts...")
+    alert_service = CriticalAlertService()
+    alert_result = await alert_service.check_and_send_alert(
+        run_id=run.id,
+        category=request.category,
+        db_session=db,
+    )
+    critical_alerts_sent = alert_result.get("critical_count", 0)
+    if critical_alerts_sent > 0:
+        logger.info(f"Critical alert sent for {critical_alerts_sent} insurer(s)")
+
     # Generate and send report
-    email_sent = await _generate_and_send_report(
+    delivery_result = await _generate_and_send_report(
         request.category, run.id, db, request.send_email
     )
 
-    # Update run status
+    # Update run status and delivery tracking
     run.status = RunStatus.COMPLETED.value
     run.completed_at = datetime.utcnow()
     run.insurers_processed = 1
     run.items_found = items_stored
+    run.email_status = delivery_result.get("email_status")
+    run.email_sent_at = datetime.utcnow() if delivery_result.get("email_sent") else None
+    run.email_recipients_count = delivery_result.get("recipients", 0)
+    run.email_error_message = delivery_result.get("error_message")
+    run.pdf_generated = delivery_result.get("pdf_generated", False)
+    run.pdf_size_bytes = delivery_result.get("pdf_size", 0)
     db.commit()
 
     return ExecuteResponse(
@@ -183,7 +208,11 @@ async def _execute_single_insurer_run(
         status=run.status,
         insurers_processed=1,
         items_found=items_stored,
-        email_sent=email_sent,
+        email_sent=delivery_result.get("email_sent", False),
+        email_status=delivery_result.get("email_status", "pending"),
+        pdf_generated=delivery_result.get("pdf_generated", False),
+        pdf_size_bytes=delivery_result.get("pdf_size", 0),
+        critical_alerts_sent=critical_alerts_sent,
         message=f"Successfully processed {insurer.name} with {items_stored} news items",
     )
 
@@ -239,14 +268,32 @@ async def _execute_category_run(
     db.commit()
     logger.info(f"Classified {len(news_items)} items")
 
+    # Check for critical alerts and send immediately
+    logger.info("Checking for critical alerts...")
+    alert_service = CriticalAlertService()
+    alert_result = await alert_service.check_and_send_alert(
+        run_id=run.id,
+        category=request.category,
+        db_session=db,
+    )
+    critical_alerts_sent = alert_result.get("critical_count", 0)
+    if critical_alerts_sent > 0:
+        logger.info(f"Critical alert sent for {critical_alerts_sent} insurer(s)")
+
     # Generate and send report
-    email_sent = await _generate_and_send_report(
+    delivery_result = await _generate_and_send_report(
         request.category, run.id, db, request.send_email
     )
 
-    # Update run status
+    # Update run status and delivery tracking
     run.status = RunStatus.COMPLETED.value
     run.completed_at = datetime.utcnow()
+    run.email_status = delivery_result.get("email_status")
+    run.email_sent_at = datetime.utcnow() if delivery_result.get("email_sent") else None
+    run.email_recipients_count = delivery_result.get("recipients", 0)
+    run.email_error_message = delivery_result.get("error_message")
+    run.pdf_generated = delivery_result.get("pdf_generated", False)
+    run.pdf_size_bytes = delivery_result.get("pdf_size", 0)
     db.commit()
 
     return ExecuteResponse(
@@ -254,7 +301,11 @@ async def _execute_category_run(
         status=run.status,
         insurers_processed=progress.processed_insurers,
         items_found=progress.total_items_found,
-        email_sent=email_sent,
+        email_sent=delivery_result.get("email_sent", False),
+        email_status=delivery_result.get("email_status", "pending"),
+        pdf_generated=delivery_result.get("pdf_generated", False),
+        pdf_size_bytes=delivery_result.get("pdf_size", 0),
+        critical_alerts_sent=critical_alerts_sent,
         message=f"Processed {progress.processed_insurers} insurers with {progress.total_items_found} news items",
         errors=progress.errors[:10],  # Limit errors in response
     )
@@ -265,34 +316,53 @@ async def _generate_and_send_report(
     run_id: int,
     db: Session,
     send_email: bool,
-) -> bool:
-    """Generate HTML report and optionally send via email."""
-    logger.info("Generating HTML report...")
+) -> dict[str, Any]:
+    """Generate professional HTML report with PDF and optionally send via email."""
+    logger.info("Generating professional HTML report...")
     report_service = ReportService()
-    html_report = report_service.generate_report_from_db(
+
+    # Generate professional report with archival
+    html_report, archive_path = report_service.generate_professional_report_from_db(
         category=category,
         run_id=run_id,
         db_session=db,
+        use_ai_summary=True,
+        archive_report=True,
     )
 
-    email_sent = False
+    result = {
+        "email_sent": False,
+        "email_status": DeliveryStatus.SKIPPED.value if not send_email else DeliveryStatus.PENDING.value,
+        "pdf_size": 0,
+        "pdf_generated": False,
+        "archive_path": str(archive_path) if archive_path else None,
+        "recipients": 0,
+    }
+
     if send_email:
-        logger.info("Sending email report...")
+        logger.info("Sending email report with PDF attachment...")
         email_service = GraphEmailService()
         report_date = datetime.now().strftime("%Y-%m-%d")
-        email_result = await email_service.send_report_email(
+
+        email_result = await email_service.send_report_email_with_pdf(
             category=category,
             html_content=html_report,
             report_date=report_date,
         )
 
-        if email_result.get("status") == "ok":
-            email_sent = True
-            logger.info("Email sent successfully")
+        result["email_sent"] = email_result.get("status") in ["ok", "sent"]
+        result["email_status"] = DeliveryStatus.SENT.value if result["email_sent"] else DeliveryStatus.FAILED.value
+        result["pdf_size"] = email_result.get("pdf_size", 0)
+        result["pdf_generated"] = email_result.get("pdf_generated", False)
+        result["recipients"] = email_result.get("recipients", 0)
+        result["error_message"] = email_result.get("message") if not result["email_sent"] else None
+
+        if result["email_sent"]:
+            logger.info(f"Email sent successfully with PDF ({result['pdf_size']} bytes)")
         else:
             logger.warning(f"Email not sent: {email_result.get('message')}")
 
-    return email_sent
+    return result
 
 
 @router.post("/execute/category", response_model=ExecuteResponse)
