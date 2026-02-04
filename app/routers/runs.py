@@ -454,6 +454,44 @@ def get_run_news(
     return news_items
 
 
+@router.get("/{run_id}/delivery", response_model=dict)
+def get_run_delivery_status(
+    run_id: int,
+    db: Session = Depends(get_db),
+) -> dict:
+    """
+    Get delivery status for a specific run.
+
+    Returns email delivery details, PDF generation status,
+    and critical alert information.
+    """
+    run = db.query(Run).filter(Run.id == run_id).first()
+
+    if not run:
+        raise HTTPException(status_code=404, detail=f"Run {run_id} not found")
+
+    return {
+        "run_id": run.id,
+        "category": run.category,
+        "status": run.status,
+        "email": {
+            "status": run.email_status,
+            "sent_at": run.email_sent_at.isoformat() if run.email_sent_at else None,
+            "recipients_count": run.email_recipients_count or 0,
+            "error_message": run.email_error_message,
+        },
+        "pdf": {
+            "generated": run.pdf_generated or False,
+            "size_bytes": run.pdf_size_bytes or 0,
+        },
+        "critical_alert": {
+            "sent": run.critical_alert_sent or False,
+            "sent_at": run.critical_alert_sent_at.isoformat() if run.critical_alert_sent_at else None,
+            "insurers_count": run.critical_insurers_count or 0,
+        }
+    }
+
+
 @router.get("/health/scraper", tags=["Health"])
 def scraper_health() -> dict:
     """
