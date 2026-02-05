@@ -4,14 +4,14 @@
 See: .planning/PROJECT.md (updated 2026-02-04)
 
 **Core value:** Senior management at Marsh Brasil receives actionable intelligence reports on their monitored insurers daily, with zero manual effort.
-**Current focus:** Phase 8 Plan 01 COMPLETE - Admin foundation with HTTP Basic Auth
+**Current focus:** Phase 8 Plan 03 COMPLETE - Insurers management page with filters and bulk ops
 
 ## Current Position
 Phase: 8 of 8 (Admin Interface) - IN PROGRESS
-Plan: 1 of 6
+Plan: 3 of 6
 Status: In Progress
-Progress: [█████████░] 91.4% (32/35 plans complete)
-Last activity: 2026-02-04 - Completed 08-01 Admin Foundation
+Progress: [█████████░] 94.3% (33/35 plans complete)
+Last activity: 2026-02-04 - Completed 08-03 Insurers Management
 
 ## Performance Metrics
 
@@ -148,6 +148,9 @@ Recent decisions affecting current work:
 - Empty admin_password default forces env var configuration for security (08-01)
 - Jinja2 template inheritance for admin pages (08-01)
 - Named routes with url_for() for template navigation (08-01)
+- HTMX partial response pattern: HX-Request header detection for partial vs full page (08-03)
+- 50 insurers per page with pagination controls (08-03)
+- Checkbox-based bulk selection with Form(...) parsing (08-03)
 
 ### Pending Todos
 
@@ -314,13 +317,13 @@ None yet.
 
 ## Phase 8 Progress - IN PROGRESS
 
-**Plans complete: 1 of 6**
+**Plans complete: 3 of 6**
 
 | Plan | Name | Status |
 |------|------|--------|
 | 08-01 | Admin Foundation | DONE |
-| 08-02 | Dashboard Content | - |
-| 08-03 | Insurers Management | - |
+| 08-02 | Dashboard Content | DONE |
+| 08-03 | Insurers Management | DONE |
 | 08-04 | Recipients Page | - |
 | 08-05 | Schedules Page | - |
 | 08-06 | Settings Page | - |
@@ -328,13 +331,15 @@ None yet.
 **Requirements addressed:**
 - ADMN-01: Web dashboard accessible (partial, content in 08-02)
 - ADMN-02: Basic authentication for admin pages (08-01)
+- ADMN-06: Category tabs, search, status filters (08-03)
+- ADMN-07: Bulk enable/disable operations (08-03)
 
-**Next:** Plan 08-02 - Dashboard Content
+**Next:** Plan 08-04 - Recipients Page
 
 ## Session Continuity
 
 Last session: 2026-02-04
-Stopped at: Completed 08-01 Admin Foundation
+Stopped at: Completed 08-03 Insurers Management
 Resume file: None
 
 ### What's Available Now
@@ -476,6 +481,11 @@ From Phase 8 (in progress):
 - `app.templates/admin/dashboard.html` - Dashboard placeholder (08-01)
 - `app.templates/admin/placeholder.html` - Generic page placeholder (08-01)
 - Named admin routes: admin_dashboard, admin_insurers, admin_import, admin_recipients, admin_schedules, admin_settings (08-01)
+- `app.templates/admin/insurers.html` - Insurers page with tabs and filters (08-03)
+- `app.templates/admin/partials/insurer_table.html` - HTMX partial for table with pagination (08-03)
+- `GET /admin/insurers` - Insurers listing with category, search, enabled, page params (08-03)
+- `POST /admin/insurers/bulk-enable` - Bulk enable selected insurers (08-03)
+- `POST /admin/insurers/bulk-disable` - Bulk disable selected insurers (08-03)
 
 ---
 *Initialized: 2026-02-04*
