@@ -3,6 +3,7 @@ BrasilIntel API - Competitive intelligence for Brazilian insurers.
 
 FastAPI application entry point with database initialization and health check.
 """
+import logging
 import os
 from contextlib import asynccontextmanager
 from datetime import datetime
@@ -15,10 +16,13 @@ from sqlalchemy import text
 from app.database import Base, engine, SessionLocal
 # Import models to register them with Base.metadata before create_all
 from app.models import insurer, run, news_item  # noqa: F401
-from app.routers import insurers, import_export, runs, reports
+from app.routers import insurers, import_export, runs, reports, schedules
+from app.services.scheduler_service import SchedulerService
 
 # Load environment variables from .env file
 load_dotenv()
+
+logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
@@ -26,14 +30,30 @@ async def lifespan(app: FastAPI):
     """
     Application lifespan handler.
 
-    Creates database tables on startup, yields control during app lifetime,
-    and handles cleanup on shutdown.
+    Creates database tables on startup, starts the scheduler,
+    yields control during app lifetime, and handles cleanup on shutdown.
     """
     # Startup: Create data directory and database tables
     os.makedirs("data", exist_ok=True)
     Base.metadata.create_all(bind=engine)
+
+    # Start scheduler for automated category runs
+    scheduler_service = SchedulerService()
+    try:
+        await scheduler_service.start()
+        logger.info("Scheduler started successfully")
+    except Exception as e:
+        logger.error(f"Failed to start scheduler: {e}")
+        # Don't block app startup if scheduler fails
+
     yield
-    # Shutdown: Nothing to clean up for SQLite
+
+    # Shutdown: Stop scheduler gracefully
+    try:
+        scheduler_service.shutdown(wait=False)
+        logger.info("Scheduler shutdown complete")
+    except Exception as e:
+        logger.error(f"Error during scheduler shutdown: {e}")
 
 
 app = FastAPI(
@@ -48,6 +68,7 @@ app.include_router(insurers.router)
 app.include_router(import_export.router)
 app.include_router(runs.router)
 app.include_router(reports.router, prefix="/api")
+app.include_router(schedules.router)
 
 
 @app.get("/api/health", tags=["Health"])
@@ -127,6 +148,29 @@ def health_check() -> dict:
                 "status": "configured",
                 "message": "All configuration keys present"
             }
+
+    # Check scheduler status
+    try:
+        scheduler_service = SchedulerService()
+        if scheduler_service._scheduler and scheduler_service._scheduler.running:
+            jobs_count = len(scheduler_service._scheduler.get_jobs())
+            checks["scheduler"] = {
+                "status": "healthy",
+                "message": f"Scheduler running with {jobs_count} jobs"
+            }
+        else:
+            checks["scheduler"] = {
+                "status": "warning",
+                "message": "Scheduler not running"
+            }
+            if overall_status == "healthy":
+                overall_status = "degraded"
+    except Exception as e:
+        checks["scheduler"] = {
+            "status": "unhealthy",
+            "message": f"Scheduler error: {str(e)}"
+        }
+        overall_status = "unhealthy"
 
     return {
         "status": overall_status,
