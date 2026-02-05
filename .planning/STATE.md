@@ -4,14 +4,14 @@
 See: .planning/PROJECT.md (updated 2026-02-04)
 
 **Core value:** Senior management at Marsh Brasil receives actionable intelligence reports on their monitored insurers daily, with zero manual effort.
-**Current focus:** Phase 8 Plan 04 COMPLETE - Import page with drag-drop and preview
+**Current focus:** Phase 8 Plan 02 COMPLETE - Dashboard with category cards and system status
 
 ## Current Position
 Phase: 8 of 8 (Admin Interface) - IN PROGRESS
 Plan: 4 of 6
 Status: In Progress
 Progress: [█████████░] 97.1% (34/35 plans complete)
-Last activity: 2026-02-04 - Completed 08-04 Import Page
+Last activity: 2026-02-04 - Completed 08-02 Dashboard Content
 
 ## Performance Metrics
 
@@ -329,8 +329,11 @@ None yet.
 | 08-06 | Settings Page | - |
 
 **Requirements addressed:**
-- ADMN-01: Web dashboard accessible (partial, content in 08-02)
+- ADMN-01: Web dashboard accessible (08-01, 08-02)
 - ADMN-02: Basic authentication for admin pages (08-01)
+- ADMN-03: Category summary cards with insurer count, run status (08-02)
+- ADMN-04: Recent reports list with view links (08-02)
+- ADMN-05: System status indicators (healthy/warning/error) (08-02)
 - ADMN-06: Category tabs, search, status filters (08-03)
 - ADMN-07: Bulk enable/disable operations (08-03)
 - ADMN-08: Drag-and-drop file upload (08-04)
@@ -483,6 +486,15 @@ From Phase 8 (in progress):
 - `app.templates/admin/dashboard.html` - Dashboard placeholder (08-01)
 - `app.templates/admin/placeholder.html` - Generic page placeholder (08-01)
 - Named admin routes: admin_dashboard, admin_insurers, admin_import, admin_recipients, admin_schedules, admin_settings (08-01)
+- `app.routers.admin.get_category_stats()` - Helper function for category statistics (08-02)
+- `app.routers.admin.get_system_health()` - Helper function for system health status (08-02)
+- `app.routers.admin.get_recent_reports()` - Helper function for recent report list (08-02)
+- Template filters: format_datetime, timeago, status_color registered on Jinja2 env (08-02)
+- `GET /admin/dashboard/card/{category}` - HTMX partial for category card refresh (08-02)
+- `GET /admin/dashboard/reports` - HTMX partial for recent reports refresh (08-02)
+- `app.templates/admin/dashboard.html` - Full dashboard with cards, status, reports (08-02)
+- `app.templates/admin/partials/category_card.html` - Category card partial (08-02)
+- `app.templates/admin/partials/recent_reports.html` - Recent reports list partial (08-02)
 - `app.templates/admin/insurers.html` - Insurers page with tabs and filters (08-03)
 - `app.templates/admin/partials/insurer_table.html` - HTMX partial for table with pagination (08-03)
 - `GET /admin/insurers` - Insurers listing with category, search, enabled, page params (08-03)
