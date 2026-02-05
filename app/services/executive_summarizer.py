@@ -3,12 +3,15 @@ AI-powered executive summary generation using Azure OpenAI.
 
 Generates concise Portuguese executive summaries for insurance intelligence reports
 using structured outputs with Pydantic schemas.
+
+Supports both standard Azure OpenAI endpoints and corporate proxy endpoints.
 """
+import re
 import time
 from typing import Optional
 import logging
 
-from openai import AzureOpenAI
+from openai import AzureOpenAI, OpenAI
 
 from app.config import get_settings
 from app.models.insurer import Insurer
@@ -34,12 +37,37 @@ class ExecutiveSummarizer:
             self.client = None
             self.model = None
         else:
-            self.client = AzureOpenAI(
-                api_key=self.settings.azure_openai_api_key,
-                api_version=self.settings.azure_openai_api_version,
-                azure_endpoint=self.settings.azure_openai_endpoint
-            )
-            self.model = self.settings.azure_openai_deployment
+            endpoint = self.settings.azure_openai_endpoint
+            api_key = self.settings.get_azure_openai_key()
+
+            # Detect corporate proxy URL format (contains full path to chat/completions)
+            if "/deployments/" in endpoint and "/chat/completions" in endpoint:
+                # Extract base URL up to deployment (includes /deployments/{model})
+                # Format: .../v1/deployments/{deployment}/chat/completions
+                # OpenAI client will append /chat/completions to base_url
+                match = re.search(r"(.+/deployments/[^/]+)/chat/completions", endpoint)
+                if match:
+                    base_url = match.group(1)
+                    # Extract model name for logging
+                    model_match = re.search(r"/deployments/([^/]+)", endpoint)
+                    self.model = model_match.group(1) if model_match else "unknown"
+                    logger.info(f"ExecutiveSummarizer using proxy: {base_url}, model: {self.model}")
+                    self.client = OpenAI(
+                        base_url=base_url,
+                        api_key=api_key,
+                    )
+                else:
+                    logger.error(f"Could not parse proxy endpoint: {endpoint}")
+                    self.client = None
+                    self.model = None
+            else:
+                # Standard Azure OpenAI endpoint
+                self.client = AzureOpenAI(
+                    api_key=api_key,
+                    api_version=self.settings.azure_openai_api_version,
+                    azure_endpoint=endpoint
+                )
+                self.model = self.settings.azure_openai_deployment
 
         self.use_llm = self.settings.use_llm_summary
 

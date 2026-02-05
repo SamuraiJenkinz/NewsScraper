@@ -75,14 +75,17 @@ class ClassificationService:
 
             # Detect corporate proxy URL format (contains full path to chat/completions)
             if "/deployments/" in endpoint and "/chat/completions" in endpoint:
-                # Extract base URL and deployment from full proxy URL
+                # Extract base URL up to deployment (includes /deployments/{model})
                 # Format: .../v1/deployments/{deployment}/chat/completions
+                # OpenAI client will append /chat/completions to base_url
                 import re
-                match = re.search(r"(.+/v1)/deployments/([^/]+)/chat/completions", endpoint)
+                match = re.search(r"(.+/deployments/[^/]+)/chat/completions", endpoint)
                 if match:
                     base_url = match.group(1)
-                    self.model = match.group(2)
-                    logger.info(f"Using proxy endpoint: {base_url}, deployment: {self.model}")
+                    # Extract model name for logging
+                    model_match = re.search(r"/deployments/([^/]+)", endpoint)
+                    self.model = model_match.group(1) if model_match else "unknown"
+                    logger.info(f"Using proxy endpoint: {base_url}, model: {self.model}")
                     self.client = OpenAI(
                         base_url=base_url,
                         api_key=api_key,
