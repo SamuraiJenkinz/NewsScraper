@@ -407,10 +407,18 @@ async def execute_category_run(
 def list_runs(
     category: Optional[str] = None,
     status: Optional[str] = None,
+    trigger_type: Optional[str] = None,
     limit: int = 20,
     db: Session = Depends(get_db),
 ) -> list[Run]:
-    """List runs with optional filtering."""
+    """
+    List runs with optional filtering.
+
+    Filters:
+    - category: Health, Dental, or Group Life
+    - status: pending, running, completed, failed
+    - trigger_type: scheduled or manual
+    """
     query = db.query(Run)
 
     if category:
@@ -419,9 +427,80 @@ def list_runs(
     if status:
         query = query.filter(Run.status == status)
 
+    if trigger_type:
+        query = query.filter(Run.trigger_type == trigger_type)
+
     runs = query.order_by(Run.started_at.desc()).limit(limit).all()
 
     return runs
+
+
+@router.get("/latest", response_model=dict)
+def get_latest_runs(
+    db: Session = Depends(get_db),
+) -> dict:
+    """
+    Get the latest run for each category.
+
+    Useful for dashboard display showing last run status per category.
+    """
+    categories = ["Health", "Dental", "Group Life"]
+    latest = {}
+
+    for category in categories:
+        run = db.query(Run).filter(
+            Run.category == category
+        ).order_by(Run.started_at.desc()).first()
+
+        if run:
+            latest[category] = {
+                "id": run.id,
+                "status": run.status,
+                "trigger_type": run.trigger_type,
+                "started_at": run.started_at.isoformat() if run.started_at else None,
+                "completed_at": run.completed_at.isoformat() if run.completed_at else None,
+                "items_found": run.items_found,
+                "email_status": run.email_status,
+            }
+        else:
+            latest[category] = None
+
+    return {"latest_runs": latest}
+
+
+@router.get("/stats", response_model=dict)
+def get_run_stats(
+    days: int = 7,
+    db: Session = Depends(get_db),
+) -> dict:
+    """
+    Get run statistics for the past N days.
+
+    Returns counts by status, trigger_type, and category.
+    """
+    from datetime import timedelta
+
+    cutoff = datetime.utcnow() - timedelta(days=days)
+
+    runs = db.query(Run).filter(Run.started_at >= cutoff).all()
+
+    stats = {
+        "period_days": days,
+        "total_runs": len(runs),
+        "by_status": {},
+        "by_trigger_type": {},
+        "by_category": {},
+    }
+
+    for run in runs:
+        # Count by status
+        stats["by_status"][run.status] = stats["by_status"].get(run.status, 0) + 1
+        # Count by trigger_type
+        stats["by_trigger_type"][run.trigger_type] = stats["by_trigger_type"].get(run.trigger_type, 0) + 1
+        # Count by category
+        stats["by_category"][run.category] = stats["by_category"].get(run.category, 0) + 1
+
+    return stats
 
 
 @router.get("/{run_id}", response_model=RunRead)
