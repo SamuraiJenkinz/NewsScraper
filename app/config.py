@@ -75,6 +75,10 @@ class Settings(BaseSettings):
     relevance_keyword_threshold: int = 20  # Items below this skip AI scoring
     relevance_ai_batch_size: int = 10  # Items per AI scoring request
 
+    # Admin interface settings (Phase 8)
+    admin_username: str = "admin"
+    admin_password: str = ""  # Must be set via env var for security
+
     # Scheduler settings (Phase 7)
     scheduler_enabled: bool = True
     schedule_health_cron: str = "0 6 * * *"  # 6:00 AM Sao Paulo
