@@ -4,14 +4,14 @@
 See: .planning/PROJECT.md (updated 2026-02-04)
 
 **Core value:** Senior management at Marsh Brasil receives actionable intelligence reports on their monitored insurers daily, with zero manual effort.
-**Current focus:** Phase 8 Plan 03 COMPLETE - Insurers management page with filters and bulk ops
+**Current focus:** Phase 8 Plan 04 COMPLETE - Import page with drag-drop and preview
 
 ## Current Position
 Phase: 8 of 8 (Admin Interface) - IN PROGRESS
-Plan: 3 of 6
+Plan: 4 of 6
 Status: In Progress
-Progress: [█████████░] 94.3% (33/35 plans complete)
-Last activity: 2026-02-04 - Completed 08-03 Insurers Management
+Progress: [█████████░] 97.1% (34/35 plans complete)
+Last activity: 2026-02-04 - Completed 08-04 Import Page
 
 ## Performance Metrics
 
@@ -317,14 +317,14 @@ None yet.
 
 ## Phase 8 Progress - IN PROGRESS
 
-**Plans complete: 3 of 6**
+**Plans complete: 4 of 6**
 
 | Plan | Name | Status |
 |------|------|--------|
 | 08-01 | Admin Foundation | DONE |
 | 08-02 | Dashboard Content | DONE |
 | 08-03 | Insurers Management | DONE |
-| 08-04 | Recipients Page | - |
+| 08-04 | Import Page | DONE |
 | 08-05 | Schedules Page | - |
 | 08-06 | Settings Page | - |
 
@@ -333,13 +333,15 @@ None yet.
 - ADMN-02: Basic authentication for admin pages (08-01)
 - ADMN-06: Category tabs, search, status filters (08-03)
 - ADMN-07: Bulk enable/disable operations (08-03)
+- ADMN-08: Drag-and-drop file upload (08-04)
+- ADMN-09: Preview with validation errors (08-04)
 
-**Next:** Plan 08-04 - Recipients Page
+**Next:** Plan 08-05 - Schedules Page
 
 ## Session Continuity
 
 Last session: 2026-02-04
-Stopped at: Completed 08-03 Insurers Management
+Stopped at: Completed 08-04 Import Page
 Resume file: None
 
 ### What's Available Now
