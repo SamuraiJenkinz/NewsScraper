@@ -4,14 +4,14 @@
 See: .planning/PROJECT.md (updated 2026-02-04)
 
 **Core value:** Senior management at Marsh Brasil receives actionable intelligence reports on their monitored insurers daily, with zero manual effort.
-**Current focus:** Phase 8 Plan 02 COMPLETE - Dashboard with category cards and system status
+**Current focus:** Phase 8 Plan 05 COMPLETE - Recipients and Schedules pages with HTMX toggle controls
 
 ## Current Position
 Phase: 8 of 8 (Admin Interface) - IN PROGRESS
-Plan: 4 of 6
+Plan: 5 of 6
 Status: In Progress
-Progress: [█████████░] 97.1% (34/35 plans complete)
-Last activity: 2026-02-04 - Completed 08-02 Dashboard Content
+Progress: [█████████░] 97.2% (35/36 plans complete)
+Last activity: 2026-02-04 - Completed 08-05 Recipients and Schedules Pages
 
 ## Performance Metrics
 
@@ -151,6 +151,11 @@ Recent decisions affecting current work:
 - HTMX partial response pattern: HX-Request header detection for partial vs full page (08-03)
 - 50 insurers per page with pagination controls (08-03)
 - Checkbox-based bulk selection with Form(...) parsing (08-03)
+- Read-only recipient display with env var reference (not editable via UI) (08-05)
+- HTMX form-switch toggle inverts enabled state on each click (08-05)
+- Schedule card partial enables zero-refresh toggle updates (08-05)
+- Toggle endpoint returns partial HTML for HTMX swap (08-05)
+- Trigger endpoint returns inline HTML feedback span (08-05)
 
 ### Pending Todos
 
@@ -317,7 +322,7 @@ None yet.
 
 ## Phase 8 Progress - IN PROGRESS
 
-**Plans complete: 4 of 6**
+**Plans complete: 5 of 6**
 
 | Plan | Name | Status |
 |------|------|--------|
@@ -325,8 +330,8 @@ None yet.
 | 08-02 | Dashboard Content | DONE |
 | 08-03 | Insurers Management | DONE |
 | 08-04 | Import Page | DONE |
-| 08-05 | Schedules Page | - |
-| 08-06 | Settings Page | - |
+| 08-05 | Recipients & Schedules | DONE |
+| 08-06 | Settings Page | DONE |
 
 **Requirements addressed:**
 - ADMN-01: Web dashboard accessible (08-01, 08-02)
@@ -338,13 +343,20 @@ None yet.
 - ADMN-07: Bulk enable/disable operations (08-03)
 - ADMN-08: Drag-and-drop file upload (08-04)
 - ADMN-09: Preview with validation errors (08-04)
+- ADMN-10: Recipients with TO/CC/BCC per category (08-05)
+- ADMN-11: Env var reference for recipient configuration (08-05)
+- ADMN-12: Schedules with cron, next run, toggle (08-05)
+- ADMN-13: Manual trigger button (08-05)
+- ADMN-14: Company branding display (08-06)
+- ADMN-15: Scraping configuration display (08-06)
+- ADMN-16: Masked API keys (08-06)
 
-**Next:** Plan 08-05 - Schedules Page
+**Next:** Phase 8 COMPLETE - All plans done
 
 ## Session Continuity
 
 Last session: 2026-02-04
-Stopped at: Completed 08-04 Import Page
+Stopped at: Completed 08-05 Recipients and Schedules Pages
 Resume file: None
 
 ### What's Available Now
@@ -500,6 +512,15 @@ From Phase 8 (in progress):
 - `GET /admin/insurers` - Insurers listing with category, search, enabled, page params (08-03)
 - `POST /admin/insurers/bulk-enable` - Bulk enable selected insurers (08-03)
 - `POST /admin/insurers/bulk-disable` - Bulk disable selected insurers (08-03)
+- `app.templates/admin/recipients.html` - Recipients display page with TO/CC/BCC (08-05)
+- `app.templates/admin/schedules.html` - Schedules management page (08-05)
+- `app.templates/admin/partials/schedule_card.html` - HTMX partial for toggle/trigger (08-05)
+- `GET /admin/recipients` - Recipients configuration display (08-05)
+- `GET /admin/schedules` - Schedules management page (08-05)
+- `POST /admin/schedules/{category}/toggle` - HTMX toggle endpoint (08-05)
+- `POST /admin/schedules/{category}/trigger` - Manual trigger endpoint (08-05)
+- `app.templates/admin/settings.html` - Settings page with masked API keys (08-06)
+- `mask_key()` - Helper to mask sensitive API keys (08-06)
 
 ---
 *Initialized: 2026-02-04*
