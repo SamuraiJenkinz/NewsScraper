@@ -1,0 +1,105 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Import Insurers{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2><i class="bi bi-upload me-2"></i>Import Insurers</h2>
+</div>
+
+<!-- Instructions Card -->
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="bi bi-info-circle me-2"></i>File Format Instructions
+    </div>
+    <div class="card-body">
+        <p class="mb-2">Upload an Excel file (.xlsx or .xls) with the following columns:</p>
+        <ul class="mb-0">
+            <li><strong>ANS Code</strong> (required) - 6-digit ANS registration number</li>
+            <li><strong>Name</strong> (required) - Insurer name</li>
+            <li><strong>Category</strong> (required) - Health, Dental, or Group Life</li>
+            <li><strong>CNPJ</strong> (optional) - Company registration number</li>
+            <li><strong>Market Master</strong> (optional) - Parent company name</li>
+            <li><strong>Status</strong> (optional) - Registration status</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Upload Form -->
+<form id="import-form"
+      hx-post="{{ url_for('admin_import_preview') }}"
+      hx-encoding="multipart/form-data"
+      hx-target="#preview-section"
+      hx-indicator="#upload-indicator">
+
+    <div id="drop-zone"
+         class="border border-2 border-dashed rounded p-5 text-center mb-3"
+         style="border-color: #dee2e6; cursor: pointer; transition: border-color 0.2s ease;"
+         ondrop="handleDrop(event)"
+         ondragover="handleDragOver(event)"
+         ondragleave="handleDragLeave(event)"
+         onclick="document.getElementById('file-input').click()">
+
+        <input type="file" name="file" id="file-input"
+               accept=".xlsx,.xls"
+               required
+               class="d-none"
+               onchange="fileSelected(this)">
+
+        <div class="mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="text-muted" viewBox="0 0 16 16">
+                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+            </svg>
+        </div>
+        <p class="mb-2" id="file-name">Drag Excel file here or click to select</p>
+        <small class="text-muted">Accepts .xlsx or .xls files</small>
+    </div>
+
+    <button type="submit" class="btn btn-marsh" id="preview-btn" disabled>
+        <span id="upload-indicator" class="htmx-indicator spinner-border spinner-border-sm me-1"></span>
+        Preview Import
+    </button>
+</form>
+
+<!-- Preview Section Container -->
+<div id="preview-section" class="mt-4">
+    <!-- HTMX swaps preview content here -->
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function handleDrop(e) {
+        e.preventDefault();
+        document.getElementById('drop-zone').style.borderColor = '#dee2e6';
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            document.getElementById('file-input').files = files;
+            fileSelected(document.getElementById('file-input'));
+        }
+    }
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        document.getElementById('drop-zone').style.borderColor = '#0077c8';
+        document.getElementById('drop-zone').style.backgroundColor = '#f8f9fa';
+    }
+
+    function handleDragLeave(e) {
+        e.preventDefault();
+        document.getElementById('drop-zone').style.borderColor = '#dee2e6';
+        document.getElementById('drop-zone').style.backgroundColor = '';
+    }
+
+    function fileSelected(input) {
+        const fileName = input.files[0]?.name || 'Drag Excel file here or click to select';
+        document.getElementById('file-name').textContent = fileName;
+        document.getElementById('preview-btn').disabled = !input.files.length;
+        if (input.files.length) {
+            document.getElementById('drop-zone').style.borderColor = '#198754';
+            document.getElementById('drop-zone').style.backgroundColor = '#f8fff8';
+        }
+    }
+</script>
+{% endblock %}
