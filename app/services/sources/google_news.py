@@ -61,8 +61,7 @@ class GoogleNewsSource(NewsSource):
 
         run_input = {
             "queries": query,
-            "language": "pt",
-            "country": "BR",
+            "language": "BR:pt",  # Combined country:language format
             "maxItems": max_results,
             "timeRange": "7d",
         }
