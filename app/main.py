@@ -16,7 +16,7 @@ from sqlalchemy import text
 from app.database import Base, engine, SessionLocal
 # Import models to register them with Base.metadata before create_all
 from app.models import insurer, run, news_item  # noqa: F401
-from app.routers import insurers, import_export, runs, reports, schedules
+from app.routers import insurers, import_export, runs, reports, schedules, admin
 from app.services.scheduler_service import SchedulerService
 
 # Load environment variables from .env file
@@ -69,6 +69,7 @@ app.include_router(import_export.router)
 app.include_router(runs.router)
 app.include_router(reports.router, prefix="/api")
 app.include_router(schedules.router)
+app.include_router(admin.router)
 
 
 @app.get("/api/health", tags=["Health"])
