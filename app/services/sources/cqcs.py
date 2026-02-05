@@ -16,7 +16,7 @@ from typing import Any
 from apify_client import ApifyClient
 
 from app.config import get_settings
-from app.services.sources.base import NewsSource, ScrapedNewsItem, SourceRegistry
+from app.services.sources.base import NewsSource, ScrapedNewsItem, SourceRegistry, filter_by_recency
 
 logger = logging.getLogger(__name__)
 
@@ -126,10 +126,10 @@ class CQCSSource(NewsSource):
             for item in parsed:
                 if self._matches_query(item, query_terms):
                     filtered.append(item)
-                    if len(filtered) >= max_results:
-                        break
 
-            return filtered
+            # Filter to last 24 hours only
+            filtered = filter_by_recency(filtered)
+            return filtered[:max_results]
 
         except Exception as e:
             logger.error(f"CQCS scraping failed: {e}")

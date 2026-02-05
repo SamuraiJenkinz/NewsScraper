@@ -9,8 +9,11 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import ClassVar
+
+# Default time window for news (24 hours)
+NEWS_TIME_WINDOW_HOURS = 24
 
 
 @dataclass
@@ -32,6 +35,36 @@ class ScrapedNewsItem:
     def __repr__(self) -> str:
         title_preview = self.title[:50] if self.title else "No title"
         return f"ScrapedNewsItem(title={title_preview}..., source={self.source})"
+
+
+def filter_by_recency(
+    items: list[ScrapedNewsItem],
+    hours: int = NEWS_TIME_WINDOW_HOURS
+) -> list[ScrapedNewsItem]:
+    """
+    Filter news items to only include those from the last N hours.
+
+    Items without a published_at date are included (benefit of doubt).
+
+    Args:
+        items: List of news items to filter
+        hours: Maximum age in hours (default: 24)
+
+    Returns:
+        Filtered list of recent items
+    """
+    cutoff = datetime.now() - timedelta(hours=hours)
+
+    filtered = []
+    for item in items:
+        # Include items without date (can't determine age)
+        if item.published_at is None:
+            filtered.append(item)
+        # Include items within time window
+        elif item.published_at >= cutoff:
+            filtered.append(item)
+
+    return filtered
 
 
 class NewsSource(ABC):

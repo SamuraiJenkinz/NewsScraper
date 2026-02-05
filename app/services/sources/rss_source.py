@@ -12,7 +12,7 @@ from typing import ClassVar
 import aiohttp
 import feedparser
 
-from app.services.sources.base import NewsSource, ScrapedNewsItem
+from app.services.sources.base import NewsSource, ScrapedNewsItem, filter_by_recency
 
 logger = logging.getLogger(__name__)
 
@@ -55,6 +55,9 @@ class RSSNewsSource(NewsSource):
 
         # Filter by query
         filtered = self._filter_by_query(all_items, query)
+
+        # Filter to last 24 hours only
+        filtered = filter_by_recency(filtered)
 
         # Sort by date (newest first) and limit
         filtered.sort(key=lambda x: x.published_at or datetime.min, reverse=True)

@@ -16,7 +16,7 @@ from typing import Any
 from apify_client import ApifyClient
 
 from app.config import get_settings
-from app.services.sources.base import NewsSource, ScrapedNewsItem, SourceRegistry
+from app.services.sources.base import NewsSource, ScrapedNewsItem, SourceRegistry, filter_by_recency
 
 logger = logging.getLogger(__name__)
 
@@ -113,8 +113,9 @@ class ValorSource(NewsSource):
 
             parsed = self._parse_results(items, query)
 
-            # Filter and limit results
+            # Filter to valid articles and last 24 hours only
             filtered = [item for item in parsed if self._is_valid_article(item)]
+            filtered = filter_by_recency(filtered)
             return filtered[:max_results]
 
         except Exception as e:
