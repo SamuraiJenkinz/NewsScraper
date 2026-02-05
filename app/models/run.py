@@ -46,9 +46,15 @@ class Run(Base):
     critical_alert_sent_at = Column(DateTime, nullable=True)
     critical_insurers_count = Column(Integer, default=0)
 
+    # Scheduled job tracking (Phase 7)
+    scheduled_job_id = Column(String(100), nullable=True)  # APScheduler job ID that triggered this run
+    scheduled_time = Column(DateTime, nullable=True)  # Originally scheduled time
+    actual_start_delay_seconds = Column(Integer, nullable=True)  # Delay from scheduled to actual start
+
     # Relationships
     news_items = relationship("NewsItem", back_populates="run")
 
     def __repr__(self) -> str:
         email_info = f", email='{self.email_status}'" if self.email_status else ""
-        return f"<Run(id={self.id}, category='{self.category}', status='{self.status}'{email_info})>"
+        sched_info = f", job='{self.scheduled_job_id}'" if self.scheduled_job_id else ""
+        return f"<Run(id={self.id}, category='{self.category}', status='{self.status}'{email_info}{sched_info})>"
