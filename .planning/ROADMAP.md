@@ -19,7 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 5: Professional Reporting** - Marsh-branded HTML reports with all sections
 - [x] **Phase 6: Delivery & Critical Alerts** - Email delivery, PDF generation, alert routing
 - [x] **Phase 7: Scheduling & Automation** - APScheduler jobs, cron config, run tracking
-- [ ] **Phase 8: Admin Interface** - Complete web dashboard with all management pages
+- [x] **Phase 8: Admin Interface** - Complete web dashboard with all management pages
 
 ## Phase Details
 
@@ -176,11 +176,15 @@ Plans:
   7. Schedules page shows each category with cron expression, next run time, enable/disable toggle, and manual trigger button
   8. Settings page configures company branding (name, classification level) and scraping config (batch size, timeout, lookback days)
   9. API keys displayed masked with reveal toggle for security
-**Plans**: TBD
+**Plans**: 6 plans in 3 waves
 
 Plans:
-- [ ] 08-01: TBD during planning
-- [ ] 08-02: TBD during planning
+- [x] 08-01-PLAN.md — Admin foundation: HTTP Basic Auth, base template, router setup
+- [x] 08-02-PLAN.md — Dashboard page with category cards, system status, recent reports
+- [x] 08-03-PLAN.md — Insurers page with tabs, search, filters, bulk operations
+- [x] 08-04-PLAN.md — Import page with drag-drop upload, preview, validation
+- [x] 08-05-PLAN.md — Recipients display and Schedules management pages
+- [x] 08-06-PLAN.md — Settings page with masked API keys and reveal toggle
 
 ## Progress
 
@@ -196,7 +200,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 | 5. Professional Reporting | 5/5 | Complete | 2026-02-04 |
 | 6. Delivery & Critical Alerts | 5/5 | Complete | 2026-02-04 |
 | 7. Scheduling & Automation | 4/4 | Complete | 2026-02-04 |
-| 8. Admin Interface | 0/TBD | Not started | - |
+| 8. Admin Interface | 6/6 | Complete | 2026-02-04 |
 
 ---
 *Roadmap created: 2026-02-04*

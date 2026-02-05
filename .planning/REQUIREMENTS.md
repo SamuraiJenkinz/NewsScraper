@@ -79,22 +79,22 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Admin UI
 
-- [ ] **ADMN-01**: Web dashboard accessible at configured port (default 3000)
-- [ ] **ADMN-02**: Basic authentication with username/password from environment variables
-- [ ] **ADMN-03**: Dashboard shows summary cards per category (insurer count, last run, next run)
-- [ ] **ADMN-04**: Dashboard shows recent reports list with quick view links
-- [ ] **ADMN-05**: Dashboard shows system status indicators (healthy/warning/error)
-- [ ] **ADMN-06**: Insurers page with category tabs, search, status filters
-- [ ] **ADMN-07**: Insurers page supports bulk enable/disable operations
-- [ ] **ADMN-08**: Import page with drag-and-drop file upload
-- [ ] **ADMN-09**: Import page shows preview before commit with validation errors
-- [ ] **ADMN-10**: Recipients page with subscription checkboxes per category
-- [ ] **ADMN-11**: Recipients page supports add/edit/remove recipient
-- [ ] **ADMN-12**: Schedules page shows each category with cron expression, next runs, toggle
-- [ ] **ADMN-13**: Schedules page has manual trigger button per category
-- [ ] **ADMN-14**: Settings page for company branding (name, classification level)
-- [ ] **ADMN-15**: Settings page for scraping config (batch size, timeout, lookback days)
-- [ ] **ADMN-16**: API keys displayed masked with reveal toggle
+- [x] **ADMN-01**: Web dashboard accessible at configured port (default 3000)
+- [x] **ADMN-02**: Basic authentication with username/password from environment variables
+- [x] **ADMN-03**: Dashboard shows summary cards per category (insurer count, last run, next run)
+- [x] **ADMN-04**: Dashboard shows recent reports list with quick view links
+- [x] **ADMN-05**: Dashboard shows system status indicators (healthy/warning/error)
+- [x] **ADMN-06**: Insurers page with category tabs, search, status filters
+- [x] **ADMN-07**: Insurers page supports bulk enable/disable operations
+- [x] **ADMN-08**: Import page with drag-and-drop file upload
+- [x] **ADMN-09**: Import page shows preview before commit with validation errors
+- [~] **ADMN-10**: Recipients page with subscription checkboxes per category (read-only display)
+- [~] **ADMN-11**: Recipients page supports add/edit/remove recipient (env var config)
+- [x] **ADMN-12**: Schedules page shows each category with cron expression, next runs, toggle
+- [x] **ADMN-13**: Schedules page has manual trigger button per category
+- [x] **ADMN-14**: Settings page for company branding (name, classification level)
+- [x] **ADMN-15**: Settings page for scraping config (batch size, timeout, lookback days)
+- [x] **ADMN-16**: API keys displayed masked with reveal toggle
 
 ### Deployment
 
@@ -205,22 +205,22 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SCHD-05 | Phase 7 | Complete |
 | SCHD-06 | Phase 7 | Complete |
 | SCHD-07 | Phase 7 | Complete |
-| ADMN-01 | Phase 8 | Pending |
-| ADMN-02 | Phase 8 | Pending |
-| ADMN-03 | Phase 8 | Pending |
-| ADMN-04 | Phase 8 | Pending |
-| ADMN-05 | Phase 8 | Pending |
-| ADMN-06 | Phase 8 | Pending |
-| ADMN-07 | Phase 8 | Pending |
-| ADMN-08 | Phase 8 | Pending |
-| ADMN-09 | Phase 8 | Pending |
-| ADMN-10 | Phase 8 | Pending |
-| ADMN-11 | Phase 8 | Pending |
-| ADMN-12 | Phase 8 | Pending |
-| ADMN-13 | Phase 8 | Pending |
-| ADMN-14 | Phase 8 | Pending |
-| ADMN-15 | Phase 8 | Pending |
-| ADMN-16 | Phase 8 | Pending |
+| ADMN-01 | Phase 8 | Complete |
+| ADMN-02 | Phase 8 | Complete |
+| ADMN-03 | Phase 8 | Complete |
+| ADMN-04 | Phase 8 | Complete |
+| ADMN-05 | Phase 8 | Complete |
+| ADMN-06 | Phase 8 | Complete |
+| ADMN-07 | Phase 8 | Complete |
+| ADMN-08 | Phase 8 | Complete |
+| ADMN-09 | Phase 8 | Complete |
+| ADMN-10 | Phase 8 | Partial (read-only) |
+| ADMN-11 | Phase 8 | Partial (env var config) |
+| ADMN-12 | Phase 8 | Complete |
+| ADMN-13 | Phase 8 | Complete |
+| ADMN-14 | Phase 8 | Complete |
+| ADMN-15 | Phase 8 | Complete |
+| ADMN-16 | Phase 8 | Complete |
 | DEPL-01 | Phase 2 | Complete |
 | DEPL-02 | Phase 2 | Complete |
 | DEPL-03 | Phase 2 | Complete |
