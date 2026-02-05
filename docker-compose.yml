@@ -1,8 +1,6 @@
 # BrasilIntel Docker Compose Configuration
 # For local development on Windows 11
 
-version: "3.8"
-
 services:
   brasilintel:
     build:
