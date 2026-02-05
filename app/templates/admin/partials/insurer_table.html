@@ -1,0 +1,158 @@
+<!-- Insurer table partial - loaded via HTMX for filtering -->
+<table class="table table-hover table-striped mb-0">
+    <thead>
+        <tr>
+            <th style="width: 40px;">
+                <input type="checkbox" id="select-all" onclick="toggleAll(this)" class="form-check-input">
+            </th>
+            <th>ANS Code</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th style="width: 100px;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for insurer in insurers %}
+        <tr>
+            <td>
+                <input type="checkbox" name="selected" value="{{ insurer.ans_code }}" class="form-check-input">
+            </td>
+            <td><code>{{ insurer.ans_code }}</code></td>
+            <td>{{ insurer.name }}</td>
+            <td>
+                {% if insurer.category == 'Health' %}
+                <span class="badge bg-primary">Health</span>
+                {% elif insurer.category == 'Dental' %}
+                <span class="badge bg-info">Dental</span>
+                {% elif insurer.category == 'Group Life' %}
+                <span class="badge bg-secondary">Group Life</span>
+                {% else %}
+                <span class="badge bg-dark">{{ insurer.category }}</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if insurer.enabled %}
+                <span class="badge bg-success">Enabled</span>
+                {% else %}
+                <span class="badge bg-warning text-dark">Disabled</span>
+                {% endif %}
+            </td>
+            <td>
+                <button class="btn btn-sm btn-outline-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#insurer-modal"
+                        hx-get="/api/insurers/{{ insurer.ans_code }}"
+                        hx-target="#modal-body"
+                        hx-swap="innerHTML">
+                    <i class="bi bi-eye"></i>
+                </button>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="6" class="text-center text-muted py-4">
+                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                No insurers found matching your criteria
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Pagination -->
+{% if total_pages > 1 %}
+<div class="card-footer bg-white">
+    <nav aria-label="Insurer pagination">
+        <ul class="pagination justify-content-center mb-0">
+            <!-- Previous -->
+            <li class="page-item {% if page <= 1 %}disabled{% endif %}">
+                <a class="page-link"
+                   href="#"
+                   hx-get="{{ url_for('admin_insurers') }}?page={{ page - 1 }}{% if category %}&category={{ category }}{% endif %}{% if search %}&search={{ search }}{% endif %}{% if enabled_filter %}&enabled={{ enabled_filter }}{% endif %}"
+                   hx-target="#insurer-list"
+                   hx-push-url="true">
+                    <i class="bi bi-chevron-left"></i> Previous
+                </a>
+            </li>
+
+            <!-- Page numbers -->
+            {% set start_page = [page - 2, 1] | max %}
+            {% set end_page = [page + 2, total_pages] | min %}
+
+            {% if start_page > 1 %}
+            <li class="page-item">
+                <a class="page-link"
+                   href="#"
+                   hx-get="{{ url_for('admin_insurers') }}?page=1{% if category %}&category={{ category }}{% endif %}{% if search %}&search={{ search }}{% endif %}{% if enabled_filter %}&enabled={{ enabled_filter }}{% endif %}"
+                   hx-target="#insurer-list"
+                   hx-push-url="true">1</a>
+            </li>
+            {% if start_page > 2 %}
+            <li class="page-item disabled"><span class="page-link">...</span></li>
+            {% endif %}
+            {% endif %}
+
+            {% for p in range(start_page, end_page + 1) %}
+            <li class="page-item {% if p == page %}active{% endif %}">
+                <a class="page-link"
+                   href="#"
+                   hx-get="{{ url_for('admin_insurers') }}?page={{ p }}{% if category %}&category={{ category }}{% endif %}{% if search %}&search={{ search }}{% endif %}{% if enabled_filter %}&enabled={{ enabled_filter }}{% endif %}"
+                   hx-target="#insurer-list"
+                   hx-push-url="true">{{ p }}</a>
+            </li>
+            {% endfor %}
+
+            {% if end_page < total_pages %}
+            {% if end_page < total_pages - 1 %}
+            <li class="page-item disabled"><span class="page-link">...</span></li>
+            {% endif %}
+            <li class="page-item">
+                <a class="page-link"
+                   href="#"
+                   hx-get="{{ url_for('admin_insurers') }}?page={{ total_pages }}{% if category %}&category={{ category }}{% endif %}{% if search %}&search={{ search }}{% endif %}{% if enabled_filter %}&enabled={{ enabled_filter }}{% endif %}"
+                   hx-target="#insurer-list"
+                   hx-push-url="true">{{ total_pages }}</a>
+            </li>
+            {% endif %}
+
+            <!-- Next -->
+            <li class="page-item {% if page >= total_pages %}disabled{% endif %}">
+                <a class="page-link"
+                   href="#"
+                   hx-get="{{ url_for('admin_insurers') }}?page={{ page + 1 }}{% if category %}&category={{ category }}{% endif %}{% if search %}&search={{ search }}{% endif %}{% if enabled_filter %}&enabled={{ enabled_filter }}{% endif %}"
+                   hx-target="#insurer-list"
+                   hx-push-url="true">
+                    Next <i class="bi bi-chevron-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="text-center text-muted small mt-2">
+        Showing {{ ((page - 1) * 50) + 1 }}-{{ [page * 50, total] | min }} of {{ total }} insurers
+    </div>
+</div>
+{% endif %}
+
+<!-- Insurer Detail Modal -->
+<div class="modal fade" id="insurer-modal" tabindex="-1" aria-labelledby="insurer-modal-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="insurer-modal-label">Insurer Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <div class="text-center py-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

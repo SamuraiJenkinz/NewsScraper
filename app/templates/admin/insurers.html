@@ -1,0 +1,160 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Insurers{% endblock %}
+
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+        <h2><i class="bi bi-building me-2"></i>Insurers</h2>
+        <p class="text-muted mb-0">Manage monitored insurance companies</p>
+    </div>
+    <span class="badge bg-secondary fs-6">{{ total }} total</span>
+</div>
+
+<!-- Category Tabs -->
+<ul class="nav nav-tabs mb-3" id="category-tabs">
+    <li class="nav-item">
+        <a class="nav-link {% if not category %}active{% endif %}"
+           href="#"
+           hx-get="{{ url_for('admin_insurers') }}"
+           hx-target="#insurer-list"
+           hx-push-url="true"
+           hx-include="#search-input, #status-filter">All</a>
+    </li>
+    {% for cat in categories %}
+    <li class="nav-item">
+        <a class="nav-link {% if category == cat %}active{% endif %}"
+           href="#"
+           hx-get="{{ url_for('admin_insurers') }}?category={{ cat }}"
+           hx-target="#insurer-list"
+           hx-push-url="true"
+           hx-include="#search-input, #status-filter">{{ cat }}</a>
+    </li>
+    {% endfor %}
+</ul>
+
+<!-- Filter Row -->
+<div class="card mb-3">
+    <div class="card-body py-2">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-5">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="text"
+                           class="form-control"
+                           id="search-input"
+                           name="search"
+                           placeholder="Search by name or ANS code..."
+                           value="{{ search }}"
+                           hx-get="{{ url_for('admin_insurers') }}{% if category %}?category={{ category }}{% endif %}"
+                           hx-trigger="keyup changed delay:300ms"
+                           hx-target="#insurer-list"
+                           hx-include="#status-filter"
+                           hx-push-url="true">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <select class="form-select"
+                        id="status-filter"
+                        name="enabled"
+                        hx-get="{{ url_for('admin_insurers') }}{% if category %}?category={{ category }}{% endif %}"
+                        hx-trigger="change"
+                        hx-target="#insurer-list"
+                        hx-include="#search-input"
+                        hx-push-url="true">
+                    <option value="" {% if not enabled_filter %}selected{% endif %}>All Status</option>
+                    <option value="true" {% if enabled_filter == 'true' %}selected{% endif %}>Enabled</option>
+                    <option value="false" {% if enabled_filter == 'false' %}selected{% endif %}>Disabled</option>
+                </select>
+            </div>
+            <div class="col-md-4 text-end">
+                <button class="btn btn-outline-success btn-sm me-1"
+                        id="bulk-enable"
+                        hx-post="{{ url_for('admin_bulk_enable') }}"
+                        hx-include="[name='selected']:checked"
+                        hx-target="#bulk-result"
+                        hx-swap="innerHTML"
+                        disabled>
+                    <i class="bi bi-check-circle me-1"></i>Enable Selected
+                </button>
+                <button class="btn btn-outline-warning btn-sm"
+                        id="bulk-disable"
+                        hx-post="{{ url_for('admin_bulk_disable') }}"
+                        hx-include="[name='selected']:checked"
+                        hx-target="#bulk-result"
+                        hx-swap="innerHTML"
+                        disabled>
+                    <i class="bi bi-x-circle me-1"></i>Disable Selected
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bulk Action Result -->
+<div id="bulk-result"></div>
+
+<!-- Insurer Table -->
+<div class="card">
+    <div class="card-body p-0">
+        <div id="insurer-list">
+            {% include "admin/partials/insurer_table.html" %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Toggle all checkboxes
+function toggleAll(source) {
+    const checkboxes = document.querySelectorAll('[name="selected"]');
+    checkboxes.forEach(cb => cb.checked = source.checked);
+    updateBulkButtons();
+}
+
+// Update bulk action button states
+function updateBulkButtons() {
+    const checkboxes = document.querySelectorAll('[name="selected"]:checked');
+    const count = checkboxes.length;
+    document.getElementById('bulk-enable').disabled = count === 0;
+    document.getElementById('bulk-disable').disabled = count === 0;
+}
+
+// Listen for checkbox changes
+document.addEventListener('change', function(e) {
+    if (e.target.name === 'selected' || e.target.id === 'select-all') {
+        updateBulkButtons();
+    }
+});
+
+// Handle tab clicks - update active state
+document.querySelectorAll('#category-tabs .nav-link').forEach(link => {
+    link.addEventListener('click', function(e) {
+        document.querySelectorAll('#category-tabs .nav-link').forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+    });
+});
+
+// Re-initialize after HTMX swaps
+document.body.addEventListener('htmx:afterSwap', function(e) {
+    if (e.detail.target.id === 'insurer-list') {
+        // Reset select-all checkbox
+        const selectAll = document.getElementById('select-all');
+        if (selectAll) selectAll.checked = false;
+        updateBulkButtons();
+    }
+});
+
+// Refresh table after bulk operations
+document.body.addEventListener('htmx:afterRequest', function(e) {
+    if (e.detail.pathInfo.requestPath.includes('bulk-')) {
+        // Refresh the table
+        htmx.trigger('#insurer-list', 'htmx:load');
+        const currentUrl = new URL(window.location.href);
+        htmx.ajax('GET', '{{ url_for("admin_insurers") }}' + currentUrl.search, {target: '#insurer-list'});
+    }
+});
+</script>
+{% endblock %}

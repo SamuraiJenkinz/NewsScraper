@@ -67,24 +67,152 @@ async def dashboard(
 @router.get("/insurers", response_class=HTMLResponse, name="admin_insurers")
 async def insurers(
     request: Request,
-    username: str = Depends(verify_admin)
+    category: str | None = None,
+    search: str | None = None,
+    enabled: str | None = None,
+    page: int = 1,
+    username: str = Depends(verify_admin),
+    db: Session = Depends(get_db)
 ) -> HTMLResponse:
     """
     Insurers management page.
 
-    Lists all insurers with filtering and management capabilities.
-    Content detailed in Plan 08-03.
+    Lists all insurers with filtering, search, and management capabilities.
+    Supports HTMX partial updates for category tabs, search, and status filter.
+
+    Args:
+        request: FastAPI request object
+        category: Filter by category (Health, Dental, Group Life)
+        search: Search term for name or ANS code
+        enabled: Filter by enabled status ("true", "false", or None for all)
+        page: Pagination page number
+        username: Authenticated admin username
+        db: Database session
+
+    Returns:
+        Full page for direct navigation, partial for HTMX requests
     """
-    return templates.TemplateResponse(
-        "admin/placeholder.html",
-        {
-            "request": request,
-            "username": username,
-            "active": "insurers",
-            "page_title": "Insurers",
-            "page_icon": "bi-building",
-            "plan_number": "08-03"
-        }
+    # Build query with filters
+    q = db.query(Insurer)
+
+    if category:
+        q = q.filter(Insurer.category == category)
+    if search:
+        search_pattern = f"%{search}%"
+        q = q.filter(or_(
+            Insurer.name.ilike(search_pattern),
+            Insurer.ans_code.contains(search)
+        ))
+    if enabled is not None and enabled != "":
+        enabled_bool = enabled.lower() == "true"
+        q = q.filter(Insurer.enabled == enabled_bool)
+
+    # Order by name for consistent display
+    q = q.order_by(Insurer.name)
+
+    # Pagination
+    per_page = 50
+    total = q.count()
+    insurers_list = q.offset((page - 1) * per_page).limit(per_page).all()
+    total_pages = (total + per_page - 1) // per_page if total > 0 else 1
+
+    context = {
+        "request": request,
+        "username": username,
+        "active": "insurers",
+        "insurers": insurers_list,
+        "category": category,
+        "search": search or "",
+        "enabled_filter": enabled,
+        "page": page,
+        "total_pages": total_pages,
+        "total": total,
+        "categories": ["Health", "Dental", "Group Life"],
+    }
+
+    # Return partial for HTMX, full page for direct navigation
+    if request.headers.get("HX-Request"):
+        return templates.TemplateResponse("admin/partials/insurer_table.html", context)
+    return templates.TemplateResponse("admin/insurers.html", context)
+
+
+@router.post("/insurers/bulk-enable", response_class=HTMLResponse, name="admin_bulk_enable")
+async def admin_bulk_enable(
+    request: Request,
+    selected: list[str] = Form(default=[]),
+    username: str = Depends(verify_admin),
+    db: Session = Depends(get_db)
+) -> HTMLResponse:
+    """
+    Bulk enable selected insurers.
+
+    Args:
+        request: FastAPI request object
+        selected: List of ANS codes to enable
+        username: Authenticated admin username
+        db: Database session
+
+    Returns:
+        HTML alert with result message
+    """
+    if not selected:
+        return HTMLResponse(
+            '<div class="alert alert-warning alert-dismissible fade show" role="alert">'
+            'No insurers selected'
+            '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>'
+            '</div>'
+        )
+
+    updated = db.query(Insurer).filter(Insurer.ans_code.in_(selected)).update(
+        {"enabled": True}, synchronize_session=False
+    )
+    db.commit()
+
+    return HTMLResponse(
+        f'<div class="alert alert-success alert-dismissible fade show" role="alert">'
+        f'<i class="bi bi-check-circle me-2"></i>Enabled {updated} insurer(s)'
+        f'<button type="button" class="btn-close" data-bs-dismiss="alert"></button>'
+        f'</div>'
+    )
+
+
+@router.post("/insurers/bulk-disable", response_class=HTMLResponse, name="admin_bulk_disable")
+async def admin_bulk_disable(
+    request: Request,
+    selected: list[str] = Form(default=[]),
+    username: str = Depends(verify_admin),
+    db: Session = Depends(get_db)
+) -> HTMLResponse:
+    """
+    Bulk disable selected insurers.
+
+    Args:
+        request: FastAPI request object
+        selected: List of ANS codes to disable
+        username: Authenticated admin username
+        db: Database session
+
+    Returns:
+        HTML alert with result message
+    """
+    if not selected:
+        return HTMLResponse(
+            '<div class="alert alert-warning alert-dismissible fade show" role="alert">'
+            'No insurers selected'
+            '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>'
+            '</div>'
+        )
+
+    updated = db.query(Insurer).filter(Insurer.ans_code.in_(selected)).update(
+        {"enabled": False}, synchronize_session=False
+    )
+    db.commit()
+
+    return HTMLResponse(
+        f'<div class="alert alert-warning alert-dismissible fade show" role="alert">'
+        f'<i class="bi bi-exclamation-triangle me-2"></i>Disabled {updated} insurer(s)'
+        f'<button type="button" class="btn-close" data-bs-dismiss="alert"></button>'
+        f'</div>'
     )
 
 
@@ -142,7 +270,7 @@ async def admin_import_preview(
     try:
         content = await file.read()
         from io import BytesIO
-        insurers, errors = parse_excel_insurers(BytesIO(content))
+        insurers_data, errors = parse_excel_insurers(BytesIO(content))
     except Exception as e:
         return templates.TemplateResponse(
             "admin/partials/import_preview.html",
@@ -152,7 +280,7 @@ async def admin_import_preview(
     # Store in session for commit
     session_id = str(uuid.uuid4())
     import_sessions[session_id] = {
-        "data": insurers,
+        "data": insurers_data,
         "errors": errors,
         "expires": datetime.now() + timedelta(minutes=30)
     }
@@ -162,8 +290,8 @@ async def admin_import_preview(
         {
             "request": request,
             "session_id": session_id,
-            "insurers": insurers[:100],  # Preview first 100
-            "total": len(insurers),
+            "insurers": insurers_data[:100],  # Preview first 100
+            "total": len(insurers_data),
             "errors": errors,
             "has_errors": len(errors) > 0,
         }
@@ -201,11 +329,11 @@ async def admin_import_commit(
             '<div class="alert alert-danger">Session expired. Please upload again.</div>'
         )
 
-    insurers = session["data"]
+    insurers_data = session["data"]
     created, updated, skipped = 0, 0, 0
 
     try:
-        for data in insurers:
+        for data in insurers_data:
             existing = db.query(Insurer).filter(Insurer.ans_code == data["ans_code"]).first()
             if existing:
                 if mode == "merge":
