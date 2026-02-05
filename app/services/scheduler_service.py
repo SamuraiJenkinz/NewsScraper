@@ -402,6 +402,34 @@ class SchedulerService:
         """Check if scheduler is currently running."""
         return self._scheduler is not None and self._scheduler.running
 
+    def get_health_status(self) -> dict:
+        """
+        Get scheduler health status.
+
+        Returns:
+            Dict with scheduler_running, jobs_count, timezone, and next_jobs
+        """
+        jobs = self._scheduler.get_jobs() if self._scheduler else []
+
+        next_jobs = []
+        for job in jobs:
+            if job.next_run_time:
+                next_jobs.append({
+                    "job_id": job.id,
+                    "name": job.name,
+                    "next_run_time": job.next_run_time.isoformat(),
+                })
+
+        # Sort by next run time
+        next_jobs.sort(key=lambda x: x["next_run_time"])
+
+        return {
+            "scheduler_running": self._scheduler.running if self._scheduler else False,
+            "jobs_count": len(jobs),
+            "timezone": str(self.SAO_PAULO_TZ),
+            "next_jobs": next_jobs[:5],  # Top 5 upcoming jobs
+        }
+
     @classmethod
     def reset_instance(cls) -> None:
         """
