@@ -1,0 +1,84 @@
+{% if error %}
+<div class="alert alert-danger">
+    <i class="bi bi-exclamation-triangle me-2"></i>{{ error }}
+</div>
+{% elif errors %}
+<div class="alert alert-warning mb-3">
+    <strong><i class="bi bi-exclamation-triangle me-2"></i>Validation Issues ({{ errors|length }}):</strong>
+    <ul class="mb-0 mt-2">
+        {% for err in errors[:10] %}
+        <li>Row {{ err.row }}: {{ err.error }}</li>
+        {% endfor %}
+        {% if errors|length > 10 %}
+        <li>...and {{ errors|length - 10 }} more issues</li>
+        {% endif %}
+    </ul>
+</div>
+{% endif %}
+
+{% if insurers %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span>
+            <i class="bi bi-table me-2"></i>
+            Preview ({{ insurers|length }}{% if total > 100 %} of {{ total }}{% endif %} insurers)
+        </span>
+        <form hx-post="{{ url_for('admin_import_commit') }}"
+              hx-target="#preview-section"
+              class="d-flex gap-2 align-items-center">
+            <input type="hidden" name="session_id" value="{{ session_id }}">
+            <select name="mode" class="form-select form-select-sm" style="width: auto;">
+                <option value="merge">Merge (update existing)</option>
+                <option value="skip">Skip existing</option>
+            </select>
+            <button type="submit" class="btn btn-success btn-sm"
+                    {% if has_errors %}disabled title="Fix validation errors first"{% endif %}>
+                <span class="htmx-indicator spinner-border spinner-border-sm me-1"></span>
+                Commit Import
+            </button>
+        </form>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+            <table class="table table-sm table-striped mb-0">
+                <thead class="sticky-top bg-light">
+                    <tr>
+                        <th>ANS Code</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>CNPJ</th>
+                        <th>Market Master</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ins in insurers %}
+                    <tr>
+                        <td><code>{{ ins.ans_code }}</code></td>
+                        <td>{{ ins.name }}</td>
+                        <td>
+                            {% if ins.category == 'Health' %}
+                            <span class="badge bg-primary">Health</span>
+                            {% elif ins.category == 'Dental' %}
+                            <span class="badge bg-info">Dental</span>
+                            {% elif ins.category == 'Group Life' %}
+                            <span class="badge bg-secondary">Group Life</span>
+                            {% else %}
+                            {{ ins.category }}
+                            {% endif %}
+                        </td>
+                        <td>{{ ins.cnpj or '-' }}</td>
+                        <td>{{ ins.market_master or '-' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% if has_errors %}
+    <div class="card-footer text-danger">
+        <i class="bi bi-info-circle me-1"></i>
+        Please fix the validation errors above before committing.
+    </div>
+    {% endif %}
+</div>
+{% endif %}
