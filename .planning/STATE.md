@@ -4,14 +4,14 @@
 See: .planning/PROJECT.md (updated 2026-02-04)
 
 **Core value:** Senior management at Marsh Brasil receives actionable intelligence reports on their monitored insurers daily, with zero manual effort.
-**Current focus:** Phase 6 COMPLETE - Ready for Phase 7
+**Current focus:** Phase 7 In Progress - Scheduling & Automation
 
 ## Current Position
-Phase: 6 of 8 (Delivery & Critical Alerts) - COMPLETE
-Plan: 5 of 5
-Status: Phase Complete
-Progress: [████████░░] 77.1% (27/35 plans complete)
-Last activity: 2026-02-04 - Completed 06-05 Delivery Integration
+Phase: 7 of 8 (Scheduling & Automation)
+Plan: 2 of 4
+Status: In Progress
+Progress: [████████░░] 82.9% (29/35 plans complete)
+Last activity: 2026-02-04 - Completed 07-02 Schedule Schemas & Run Model Enhancement
 
 ## Performance Metrics
 
@@ -32,8 +32,8 @@ Last activity: 2026-02-04 - Completed 06-05 Delivery Integration
 | 06-delivery-critical-alerts | 5 | ~17 min | ~3.4 min |
 
 **Recent Trend:**
-- Last 5 plans: 06-02 (~3 min), 06-03 (~4 min), 06-04 (~4 min), 06-05 (~4 min)
-- Trend: Fast implementation, Phase 6 complete at 3.4 min/plan average
+- Last 5 plans: 06-03 (~4 min), 06-04 (~4 min), 06-05 (~4 min), 07-01 (~3 min), 07-02 (~3 min)
+- Trend: Fast implementation, Phase 7 started at ~3 min/plan average
 
 *Updated after each plan completion*
 
@@ -136,6 +136,9 @@ Recent decisions affecting current work:
 - Professional reports with PDF attachment as default (06-05)
 - Run completion updates all delivery tracking fields (06-05)
 - GET /api/runs/{run_id}/delivery endpoint for delivery status monitoring (06-05)
+- Schedule schemas define API contracts for schedule management (07-02)
+- Run model tracks scheduled job metadata (scheduled_job_id, scheduled_time, actual_start_delay_seconds) (07-02)
+- RunRead schema includes all scheduled and delivery tracking fields (07-02)
 
 ### Pending Todos
 
@@ -276,12 +279,23 @@ None yet.
 - DELV-04: Professional reports as default (06-05)
 - DELV-05: Delivery status endpoint (06-05)
 
-**Next:** Phase 7 - Monitoring & Analytics |
+**Next:** Continue Phase 7 with 07-03 SchedulerService
+
+## Phase 7 Progress - IN PROGRESS
+
+**Plans complete: 2 of 4**
+
+| Plan | Name | Status |
+|------|------|--------|
+| 07-01 | Dependencies & Config | DONE |
+| 07-02 | Schedule Schemas & Run Model | DONE |
+| 07-03 | SchedulerService | PENDING |
+| 07-04 | Schedule API Router | PENDING |
 
 ## Session Continuity
 
 Last session: 2026-02-04
-Stopped at: Completed 06-05 Delivery Integration (Phase 6 COMPLETE)
+Stopped at: Completed 07-02 Schedule Schemas & Run Model Enhancement
 Resume file: None
 
 ### What's Available Now
@@ -379,6 +393,17 @@ From Phase 6 (complete):
 - `scripts/migrate_005_delivery_tracking.py` - Migration for 9 delivery tracking columns (06-05)
 - `/api/runs/{run_id}/delivery` - Delivery status endpoint (06-05)
 - Run orchestration integrated with critical alerts and PDF delivery (06-05)
+
+From Phase 7 (in progress):
+- `app.schemas.schedule.ScheduleInfo` - Response model for schedule status (07-02)
+- `app.schemas.schedule.ScheduleUpdate` - Request model for modifying schedules (07-02)
+- `app.schemas.schedule.ScheduleList` - Response model for list of schedules (07-02)
+- `app.schemas.schedule.ManualTriggerResponse` - Response model for manual triggers (07-02)
+- `app.schemas.schedule.ScheduleHealthResponse` - Response model for scheduler health (07-02)
+- `app.models.run.Run.scheduled_job_id` - APScheduler job ID tracking (07-02)
+- `app.models.run.Run.scheduled_time` - Originally scheduled time (07-02)
+- `app.models.run.Run.actual_start_delay_seconds` - Delay from scheduled to actual start (07-02)
+- `app.schemas.run.RunRead` - Full field alignment with Run model (07-02)
 
 ---
 *Initialized: 2026-02-04*
