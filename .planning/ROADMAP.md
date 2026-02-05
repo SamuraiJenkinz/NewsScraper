@@ -18,7 +18,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 4: AI Classification Pipeline** - Full Azure OpenAI classification system
 - [x] **Phase 5: Professional Reporting** - Marsh-branded HTML reports with all sections
 - [x] **Phase 6: Delivery & Critical Alerts** - Email delivery, PDF generation, alert routing
-- [ ] **Phase 7: Scheduling & Automation** - APScheduler jobs, cron config, run tracking
+- [x] **Phase 7: Scheduling & Automation** - APScheduler jobs, cron config, run tracking
 - [ ] **Phase 8: Admin Interface** - Complete web dashboard with all management pages
 
 ## Phase Details
@@ -154,11 +154,13 @@ Plans:
   4. Admin can trigger manual run for any category via admin UI button
   5. System tracks run history (started, completed, status, items found, errors)
   6. System displays next scheduled run time for each category on dashboard
-**Plans**: TBD
+**Plans**: 4 plans in 2 waves
 
 Plans:
-- [ ] 07-01: TBD during planning
-- [ ] 07-02: TBD during planning
+- [x] 07-01-PLAN.md — SchedulerService singleton with APScheduler and config extension
+- [x] 07-02-PLAN.md — Schedule schemas and Run model enhancement
+- [x] 07-03-PLAN.md — Schedule API endpoints and main.py lifespan integration
+- [x] 07-04-PLAN.md — Run history filtering and integration tests
 
 ### Phase 8: Admin Interface
 **Goal**: Complete web dashboard with all management pages, authentication, and settings
@@ -193,7 +195,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 | 4. AI Classification Pipeline | 2/2 | Complete | 2026-02-04 |
 | 5. Professional Reporting | 5/5 | Complete | 2026-02-04 |
 | 6. Delivery & Critical Alerts | 5/5 | Complete | 2026-02-04 |
-| 7. Scheduling & Automation | 0/TBD | Not started | - |
+| 7. Scheduling & Automation | 4/4 | Complete | 2026-02-04 |
 | 8. Admin Interface | 0/TBD | Not started | - |
 
 ---

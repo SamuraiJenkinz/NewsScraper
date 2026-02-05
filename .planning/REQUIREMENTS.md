@@ -69,13 +69,13 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Scheduling
 
-- [ ] **SCHD-01**: System runs 3 scheduled jobs (one per product category)
-- [ ] **SCHD-02**: Default schedule: Health 6 AM, Dental 7 AM, Group Life 8 AM (São Paulo time)
-- [ ] **SCHD-03**: Admin can modify cron expression for each category
-- [ ] **SCHD-04**: Admin can enable/disable each scheduled job
-- [ ] **SCHD-05**: Admin can trigger manual run for any category via UI
-- [ ] **SCHD-06**: System tracks run history (started, completed, status, items found, errors)
-- [ ] **SCHD-07**: System shows next scheduled run time for each category
+- [x] **SCHD-01**: System runs 3 scheduled jobs (one per product category)
+- [x] **SCHD-02**: Default schedule: Health 6 AM, Dental 7 AM, Group Life 8 AM (São Paulo time)
+- [x] **SCHD-03**: Admin can modify cron expression for each category
+- [x] **SCHD-04**: Admin can enable/disable each scheduled job
+- [x] **SCHD-05**: Admin can trigger manual run for any category via UI
+- [x] **SCHD-06**: System tracks run history (started, completed, status, items found, errors)
+- [x] **SCHD-07**: System shows next scheduled run time for each category
 
 ### Admin UI
 
@@ -198,13 +198,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DELV-06 | Phase 6 | Complete |
 | DELV-07 | Phase 6 | Complete |
 | DELV-08 | Phase 6 | Complete |
-| SCHD-01 | Phase 7 | Pending |
-| SCHD-02 | Phase 7 | Pending |
-| SCHD-03 | Phase 7 | Pending |
-| SCHD-04 | Phase 7 | Pending |
-| SCHD-05 | Phase 7 | Pending |
-| SCHD-06 | Phase 7 | Pending |
-| SCHD-07 | Phase 7 | Pending |
+| SCHD-01 | Phase 7 | Complete |
+| SCHD-02 | Phase 7 | Complete |
+| SCHD-03 | Phase 7 | Complete |
+| SCHD-04 | Phase 7 | Complete |
+| SCHD-05 | Phase 7 | Complete |
+| SCHD-06 | Phase 7 | Complete |
+| SCHD-07 | Phase 7 | Complete |
 | ADMN-01 | Phase 8 | Pending |
 | ADMN-02 | Phase 8 | Pending |
 | ADMN-03 | Phase 8 | Pending |

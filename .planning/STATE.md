@@ -4,14 +4,14 @@
 See: .planning/PROJECT.md (updated 2026-02-04)
 
 **Core value:** Senior management at Marsh Brasil receives actionable intelligence reports on their monitored insurers daily, with zero manual effort.
-**Current focus:** Phase 7 In Progress - Scheduling & Automation
+**Current focus:** Phase 7 COMPLETE - Ready for Phase 8
 
 ## Current Position
-Phase: 7 of 8 (Scheduling & Automation)
-Plan: 3 of 4
-Status: In Progress
-Progress: [████████░░] 85.7% (30/35 plans complete)
-Last activity: 2026-02-05 - Completed 07-03 Schedule API Router
+Phase: 7 of 8 (Scheduling & Automation) - COMPLETE
+Plan: 4 of 4
+Status: Phase Complete
+Progress: [█████████░] 88.6% (31/35 plans complete)
+Last activity: 2026-02-04 - Completed 07-04 Run History & Integration Tests
 
 ## Performance Metrics
 
@@ -30,10 +30,11 @@ Last activity: 2026-02-05 - Completed 07-03 Schedule API Router
 | 04-ai-classification-pipeline | 2 | ~4 min | ~2.0 min |
 | 05-professional-reporting | 5 | ~22 min | ~4.4 min |
 | 06-delivery-critical-alerts | 5 | ~17 min | ~3.4 min |
+| 07-scheduling-automation | 4 | ~19 min | ~4.8 min |
 
 **Recent Trend:**
-- Last 5 plans: 06-03 (~4 min), 06-04 (~4 min), 06-05 (~4 min), 07-01 (~3 min), 07-02 (~3 min)
-- Trend: Fast implementation, Phase 7 started at ~3 min/plan average
+- Last 5 plans: 06-05 (~4 min), 07-01 (~7 min), 07-02 (~3 min), 07-03 (~4 min), 07-04 (~5 min)
+- Trend: Phase 7 complete at 4.8 min/plan average
 
 *Updated after each plan completion*
 
@@ -283,23 +284,34 @@ None yet.
 - DELV-04: Professional reports as default (06-05)
 - DELV-05: Delivery status endpoint (06-05)
 
-**Next:** Continue Phase 7 with 07-03 SchedulerService
+**Next:** Phase 7 - Scheduling & Automation (COMPLETE)
 
-## Phase 7 Progress - IN PROGRESS
+## Phase 7 Progress - COMPLETE
 
-**Plans complete: 3 of 4**
+**Plans complete: 4 of 4**
 
 | Plan | Name | Status |
 |------|------|--------|
 | 07-01 | SchedulerService Core | DONE |
 | 07-02 | Schedule Schemas & Run Model | DONE |
 | 07-03 | Schedule API Router | DONE |
-| 07-04 | Integration Testing | PENDING |
+| 07-04 | Integration Testing | DONE |
+
+**Requirements fulfilled:**
+- SCHD-01: 3 scheduled jobs (Health, Dental, Group Life) (07-01, 07-03)
+- SCHD-02: Default 6/7/8 AM São Paulo time (07-01)
+- SCHD-03: Modify cron expression (07-01, 07-03)
+- SCHD-04: Enable/disable jobs (07-03)
+- SCHD-05: Manual trigger via API (07-03)
+- SCHD-06: Run history tracking (07-02, 07-04)
+- SCHD-07: Next run time display (07-03)
+
+**Next:** Phase 8 - Admin Interface
 
 ## Session Continuity
 
-Last session: 2026-02-05
-Stopped at: Completed 07-03 Schedule API Router
+Last session: 2026-02-04
+Stopped at: Phase 7 Complete - Ready for Phase 8
 Resume file: None
 
 ### What's Available Now
@@ -398,7 +410,7 @@ From Phase 6 (complete):
 - `/api/runs/{run_id}/delivery` - Delivery status endpoint (06-05)
 - Run orchestration integrated with critical alerts and PDF delivery (06-05)
 
-From Phase 7 (in progress):
+From Phase 7 (complete):
 - `app.services.scheduler_service.SchedulerService` - APScheduler singleton (07-01)
 - `SchedulerService.start()` - Start scheduler with default jobs (07-01)
 - `SchedulerService.get_schedule()` - Get schedule info for category (07-01)
@@ -427,7 +439,11 @@ From Phase 7 (in progress):
 - `POST /api/schedules/{category}/resume` - Resume paused job (07-03)
 - `SchedulerService.get_health_status()` - Returns scheduler running state and next jobs (07-03)
 - `/api/health` includes scheduler status check (07-03)
+- `GET /api/runs?trigger_type=scheduled|manual` - Filter runs by trigger type (07-04)
+- `GET /api/runs/latest` - Get latest run per category for dashboard (07-04)
+- `GET /api/runs/stats` - Run statistics by status, trigger_type, category (07-04)
+- `tests/test_scheduler_integration.py` - 27 integration tests for scheduler (07-04)
 
 ---
 *Initialized: 2026-02-04*
-*Last updated: 2026-02-05*
+*Last updated: 2026-02-04*
