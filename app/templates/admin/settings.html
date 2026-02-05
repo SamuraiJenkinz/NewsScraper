@@ -1,0 +1,205 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2><i class="bi bi-gear me-2"></i>Settings</h2>
+    <p class="text-muted mb-0">View system configuration. Settings are configured via environment variables.</p>
+</div>
+
+<!-- Company Branding Section (ADMN-14) -->
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="bi bi-building me-2"></i>Company Branding
+    </div>
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-4">Company Name</dt>
+            <dd class="col-sm-8">{{ branding.company_name }}</dd>
+
+            <dt class="col-sm-4">Classification Level</dt>
+            <dd class="col-sm-8">
+                <span class="badge bg-danger">{{ branding.classification_level }}</span>
+            </dd>
+        </dl>
+        <small class="text-muted mt-2 d-block">
+            Set via: <code>COMPANY_NAME</code>
+        </small>
+    </div>
+</div>
+
+<!-- Scraping Configuration Section (ADMN-15) -->
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="bi bi-search me-2"></i>Scraping Configuration
+    </div>
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-4">Batch Size</dt>
+            <dd class="col-sm-8">{{ scraping_config.batch_size }} insurers/batch</dd>
+
+            <dt class="col-sm-4">Batch Delay</dt>
+            <dd class="col-sm-8">{{ scraping_config.batch_delay_seconds }} seconds</dd>
+
+            <dt class="col-sm-4">Max Concurrent Sources</dt>
+            <dd class="col-sm-8">{{ scraping_config.max_concurrent_sources }}</dd>
+
+            <dt class="col-sm-4">Scrape Timeout</dt>
+            <dd class="col-sm-8">{{ scraping_config.scrape_timeout_seconds }} seconds</dd>
+
+            <dt class="col-sm-4">Max Results/Insurer</dt>
+            <dd class="col-sm-8">{{ scraping_config.scrape_max_results }}</dd>
+        </dl>
+        <small class="text-muted mt-2 d-block">
+            Set via: <code>BATCH_SIZE</code>, <code>BATCH_DELAY_SECONDS</code>, <code>MAX_CONCURRENT_SOURCES</code>, <code>SCRAPE_TIMEOUT_SECONDS</code>, <code>SCRAPE_MAX_RESULTS</code>
+        </small>
+    </div>
+</div>
+
+<!-- AI Configuration Section -->
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="bi bi-robot me-2"></i>AI Configuration
+    </div>
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-4">LLM Summary</dt>
+            <dd class="col-sm-8">
+                {% if use_llm_summary %}
+                <span class="badge bg-success">Enabled</span>
+                {% else %}
+                <span class="badge bg-secondary">Disabled</span>
+                {% endif %}
+            </dd>
+
+            <dt class="col-sm-4">AI Relevance Scoring</dt>
+            <dd class="col-sm-8">
+                {% if relevance_config.use_ai_relevance_scoring %}
+                <span class="badge bg-success">Enabled</span>
+                {% else %}
+                <span class="badge bg-secondary">Disabled</span>
+                {% endif %}
+            </dd>
+
+            <dt class="col-sm-4">Keyword Threshold</dt>
+            <dd class="col-sm-8">{{ relevance_config.relevance_keyword_threshold }} items</dd>
+
+            <dt class="col-sm-4">AI Batch Size</dt>
+            <dd class="col-sm-8">{{ relevance_config.relevance_ai_batch_size }} items</dd>
+        </dl>
+        <small class="text-muted mt-2 d-block">
+            Set via: <code>USE_LLM_SUMMARY</code>, <code>USE_AI_RELEVANCE_SCORING</code>, <code>RELEVANCE_KEYWORD_THRESHOLD</code>, <code>RELEVANCE_AI_BATCH_SIZE</code>
+        </small>
+    </div>
+</div>
+
+<!-- API Keys Section (ADMN-16) -->
+<div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-key me-2"></i>API Keys</span>
+        <small class="text-muted">Read-only display</small>
+    </div>
+    <div class="card-body">
+        {% for key_name, key_data in api_keys.items() %}
+        <div class="mb-3">
+            <label class="form-label d-flex justify-content-between">
+                <span>{{ key_name }}</span>
+                {% if key_data.configured %}
+                <span class="badge bg-success">Configured</span>
+                {% else %}
+                <span class="badge bg-warning text-dark">Not configured</span>
+                {% endif %}
+            </label>
+            <div class="input-group">
+                <input type="password"
+                       class="form-control"
+                       id="key-{{ loop.index }}"
+                       value="{{ key_data.value }}"
+                       readonly
+                       data-masked="{{ key_data.masked }}">
+                <button class="btn btn-outline-secondary" type="button"
+                        onclick="toggleKeyVisibility(this, 'key-{{ loop.index }}')">
+                    <span class="show-text"><i class="bi bi-eye me-1"></i>Show</span>
+                    <span class="hide-text d-none"><i class="bi bi-eye-slash me-1"></i>Hide</span>
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+        <small class="text-muted mt-2 d-block">
+            Set via: <code>AZURE_OPENAI_ENDPOINT</code>, <code>AZURE_OPENAI_API_KEY</code>, <code>AZURE_TENANT_ID</code>, <code>AZURE_CLIENT_ID</code>, <code>AZURE_CLIENT_SECRET</code>, <code>APIFY_TOKEN</code>, <code>SENDER_EMAIL</code>
+        </small>
+    </div>
+</div>
+
+<!-- Environment Variable Reference -->
+<div class="card">
+    <div class="card-header">
+        <i class="bi bi-book me-2"></i>Environment Variable Reference
+    </div>
+    <div class="card-body">
+        <p class="text-muted mb-3">All settings are configured via <code>.env</code> file or environment variables. Changes require application restart.</p>
+
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Variables</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Azure OpenAI</strong></td>
+                        <td><code>AZURE_OPENAI_ENDPOINT</code>, <code>AZURE_OPENAI_API_KEY</code>, <code>AZURE_OPENAI_DEPLOYMENT</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Microsoft Graph</strong></td>
+                        <td><code>AZURE_TENANT_ID</code>, <code>AZURE_CLIENT_ID</code>, <code>AZURE_CLIENT_SECRET</code>, <code>SENDER_EMAIL</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Apify</strong></td>
+                        <td><code>APIFY_TOKEN</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Scraping</strong></td>
+                        <td><code>BATCH_SIZE</code>, <code>BATCH_DELAY_SECONDS</code>, <code>MAX_CONCURRENT_SOURCES</code>, <code>SCRAPE_TIMEOUT_SECONDS</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>AI Features</strong></td>
+                        <td><code>USE_LLM_SUMMARY</code>, <code>USE_AI_RELEVANCE_SCORING</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Recipients</strong></td>
+                        <td><code>REPORT_RECIPIENTS_HEALTH</code>, <code>REPORT_RECIPIENTS_DENTAL</code>, <code>REPORT_RECIPIENTS_GROUP_LIFE</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Schedules</strong></td>
+                        <td><code>SCHEDULE_HEALTH_CRON</code>, <code>SCHEDULE_DENTAL_CRON</code>, <code>SCHEDULE_GROUP_LIFE_CRON</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function toggleKeyVisibility(btn, inputId) {
+    const input = document.getElementById(inputId);
+    const showText = btn.querySelector('.show-text');
+    const hideText = btn.querySelector('.hide-text');
+
+    if (input.type === 'password') {
+        input.type = 'text';
+        showText.classList.add('d-none');
+        hideText.classList.remove('d-none');
+    } else {
+        input.type = 'password';
+        showText.classList.remove('d-none');
+        hideText.classList.add('d-none');
+    }
+}
+</script>
+{% endblock %}

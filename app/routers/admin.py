@@ -669,70 +669,324 @@ async def admin_import_commit(
 @router.get("/recipients", response_class=HTMLResponse, name="admin_recipients")
 async def recipients(
     request: Request,
-    username: str = Depends(verify_admin)
+    username: str = Depends(verify_admin),
+    settings: Settings = Depends(get_settings)
 ) -> HTMLResponse:
     """
     Email recipients management page.
 
-    Configure report recipients per category.
-    Content detailed in Plan 08-04.
+    Shows current recipients per category (TO/CC/BCC) and
+    provides reference for environment variable configuration.
+
+    Args:
+        request: FastAPI request object
+        username: Authenticated admin username
+        settings: Application settings
+
+    Returns:
+        Rendered recipients HTML page
     """
+    categories = ["Health", "Dental", "Group Life"]
+    recipients_data = {}
+
+    for cat in categories:
+        email_recipients = settings.get_email_recipients(cat)
+        recipients_data[cat] = {
+            "to": email_recipients.to,
+            "cc": email_recipients.cc,
+            "bcc": email_recipients.bcc,
+            "has_recipients": email_recipients.has_recipients,
+        }
+
     return templates.TemplateResponse(
-        "admin/placeholder.html",
+        "admin/recipients.html",
         {
             "request": request,
             "username": username,
             "active": "recipients",
-            "page_title": "Recipients",
-            "page_icon": "bi-people",
-            "plan_number": "08-04"
+            "categories": categories,
+            "recipients": recipients_data,
         }
     )
 
 
 @router.get("/schedules", response_class=HTMLResponse, name="admin_schedules")
-async def schedules(
+async def admin_schedules(
     request: Request,
-    username: str = Depends(verify_admin)
+    username: str = Depends(verify_admin),
+    db: Session = Depends(get_db),
+    settings: Settings = Depends(get_settings)
 ) -> HTMLResponse:
     """
     Schedule management page.
 
-    View and modify category run schedules.
-    Content detailed in Plan 08-05.
+    View and modify category run schedules with toggle
+    and manual trigger controls.
+
+    Args:
+        request: FastAPI request object
+        username: Authenticated admin username
+        db: Database session
+        settings: Application settings
+
+    Returns:
+        Rendered schedules HTML page
     """
+    scheduler = SchedulerService()
+    categories = ["Health", "Dental", "Group Life"]
+    schedules_data = []
+
+    for cat in categories:
+        schedule_info = scheduler.get_schedule(cat)
+        config = settings.get_schedule_config(cat)
+
+        # Get latest run for this category
+        latest_run = db.query(Run).filter(
+            Run.category == cat
+        ).order_by(Run.created_at.desc()).first()
+
+        schedules_data.append({
+            "category": cat,
+            "cron_expression": config.get("cron", "Not configured"),
+            "enabled": not schedule_info.get("paused", True) if schedule_info else False,
+            "next_run_time": schedule_info.get("next_run_time") if schedule_info else None,
+            "last_run": latest_run,
+        })
+
     return templates.TemplateResponse(
-        "admin/placeholder.html",
+        "admin/schedules.html",
         {
             "request": request,
             "username": username,
             "active": "schedules",
-            "page_title": "Schedules",
-            "page_icon": "bi-calendar-check",
-            "plan_number": "08-05"
+            "schedules": schedules_data,
         }
     )
+
+
+@router.post("/schedules/{category}/toggle", response_class=HTMLResponse, name="admin_toggle_schedule")
+async def admin_toggle_schedule(
+    request: Request,
+    category: str,
+    enabled: bool = Form(...),
+    username: str = Depends(verify_admin),
+    db: Session = Depends(get_db),
+    settings: Settings = Depends(get_settings)
+) -> HTMLResponse:
+    """
+    Toggle schedule enabled/disabled via HTMX.
+
+    Args:
+        request: FastAPI request object
+        category: Category name (Health, Dental, Group Life)
+        enabled: Target state (True to enable, False to disable)
+        username: Authenticated admin username
+        db: Database session
+        settings: Application settings
+
+    Returns:
+        Rendered schedule card partial for HTMX swap
+    """
+    # Normalize category name
+    category_map = {
+        "health": "Health",
+        "dental": "Dental",
+        "group_life": "Group Life",
+        "group-life": "Group Life",
+        "group life": "Group Life",
+    }
+    normalized = category_map.get(category.lower(), category)
+
+    scheduler = SchedulerService()
+
+    try:
+        if enabled:
+            scheduler.resume_job(normalized)
+        else:
+            scheduler.pause_job(normalized)
+    except ValueError:
+        # Job may not exist, log but continue
+        pass
+
+    # Get updated schedule info
+    schedule_info = scheduler.get_schedule(normalized)
+    config = settings.get_schedule_config(normalized)
+    latest_run = db.query(Run).filter(
+        Run.category == normalized
+    ).order_by(Run.created_at.desc()).first()
+
+    return templates.TemplateResponse(
+        "admin/partials/schedule_card.html",
+        {
+            "request": request,
+            "schedule": {
+                "category": normalized,
+                "cron_expression": config.get("cron", "Not configured"),
+                "enabled": not schedule_info.get("paused", True) if schedule_info else False,
+                "next_run_time": schedule_info.get("next_run_time") if schedule_info else None,
+                "last_run": latest_run,
+            },
+            "index": normalized.lower().replace(" ", "-"),
+        }
+    )
+
+
+@router.post("/schedules/{category}/trigger", response_class=HTMLResponse, name="admin_trigger_run")
+async def admin_trigger_run(
+    request: Request,
+    category: str,
+    username: str = Depends(verify_admin)
+) -> HTMLResponse:
+    """
+    Trigger immediate manual run via HTMX.
+
+    Args:
+        request: FastAPI request object
+        category: Category name (Health, Dental, Group Life)
+        username: Authenticated admin username
+
+    Returns:
+        HTML snippet with success/error message
+    """
+    # Normalize category name
+    category_map = {
+        "health": "Health",
+        "dental": "Dental",
+        "group_life": "Group Life",
+        "group-life": "Group Life",
+        "group life": "Group Life",
+    }
+    normalized = category_map.get(category.lower(), category)
+
+    scheduler = SchedulerService()
+
+    try:
+        await scheduler.trigger_now(normalized)
+        return HTMLResponse(
+            f'<span class="text-success"><i class="bi bi-check-circle me-1"></i>Run started for {normalized}</span>'
+        )
+    except Exception as e:
+        return HTMLResponse(
+            f'<span class="text-danger"><i class="bi bi-exclamation-triangle me-1"></i>Error: {str(e)}</span>'
+        )
+
+
+# ----- Helper Functions: Settings -----
+
+def mask_key(value: str, show_chars: int = 4) -> str:
+    """
+    Mask API key showing only last N characters.
+
+    Args:
+        value: The API key or secret to mask
+        show_chars: Number of characters to show at the end
+
+    Returns:
+        Masked string with asterisks hiding most of the value
+    """
+    if not value:
+        return "(not configured)"
+    if len(value) <= show_chars:
+        return "*" * len(value)
+    return "*" * (len(value) - show_chars) + value[-show_chars:]
 
 
 @router.get("/settings", response_class=HTMLResponse, name="admin_settings")
 async def settings_page(
     request: Request,
-    username: str = Depends(verify_admin)
+    username: str = Depends(verify_admin),
+    settings: Settings = Depends(get_settings)
 ) -> HTMLResponse:
     """
     Settings page.
 
-    System configuration and status.
-    Content detailed in Plan 08-06.
+    Shows system configuration with read-only display and secure API key masking.
+    Addresses ADMN-14 (company branding), ADMN-15 (scraping config), ADMN-16 (masked API keys).
+
+    Args:
+        request: FastAPI request object
+        username: Authenticated admin username
+        settings: Application settings
+
+    Returns:
+        Rendered settings page with configuration values
     """
+    # Company branding settings (ADMN-14)
+    branding = {
+        "company_name": settings.company_name,
+        "classification_level": "CONFIDENTIAL",
+    }
+
+    # Scraping configuration (ADMN-15)
+    scraping_config = {
+        "batch_size": settings.batch_size,
+        "batch_delay_seconds": settings.batch_delay_seconds,
+        "max_concurrent_sources": settings.max_concurrent_sources,
+        "scrape_timeout_seconds": settings.scrape_timeout_seconds,
+        "scrape_max_results": settings.scrape_max_results,
+    }
+
+    # API keys - masked and unmasked for reveal toggle (ADMN-16)
+    api_keys = {
+        "Azure OpenAI Endpoint": {
+            "masked": mask_key(settings.azure_openai_endpoint, 10),
+            "value": settings.azure_openai_endpoint,
+            "configured": bool(settings.azure_openai_endpoint),
+        },
+        "Azure OpenAI API Key": {
+            "masked": mask_key(settings.azure_openai_api_key),
+            "value": settings.azure_openai_api_key,
+            "configured": bool(settings.azure_openai_api_key),
+        },
+        "Azure OpenAI Deployment": {
+            "masked": settings.azure_openai_deployment,  # Not sensitive
+            "value": settings.azure_openai_deployment,
+            "configured": bool(settings.azure_openai_deployment),
+        },
+        "Microsoft Tenant ID": {
+            "masked": mask_key(settings.azure_tenant_id, 8),
+            "value": settings.azure_tenant_id,
+            "configured": bool(settings.azure_tenant_id),
+        },
+        "Microsoft Client ID": {
+            "masked": mask_key(settings.azure_client_id, 8),
+            "value": settings.azure_client_id,
+            "configured": bool(settings.azure_client_id),
+        },
+        "Microsoft Client Secret": {
+            "masked": mask_key(settings.azure_client_secret),
+            "value": settings.azure_client_secret,
+            "configured": bool(settings.azure_client_secret),
+        },
+        "Apify Token": {
+            "masked": mask_key(settings.apify_token),
+            "value": settings.apify_token,
+            "configured": bool(settings.apify_token),
+        },
+        "Sender Email": {
+            "masked": settings.sender_email,  # Email not sensitive
+            "value": settings.sender_email,
+            "configured": bool(settings.sender_email),
+        },
+    }
+
+    # Relevance scoring configuration
+    relevance_config = {
+        "use_ai_relevance_scoring": settings.use_ai_relevance_scoring,
+        "relevance_keyword_threshold": settings.relevance_keyword_threshold,
+        "relevance_ai_batch_size": settings.relevance_ai_batch_size,
+    }
+
     return templates.TemplateResponse(
-        "admin/placeholder.html",
+        "admin/settings.html",
         {
             "request": request,
             "username": username,
             "active": "settings",
-            "page_title": "Settings",
-            "page_icon": "bi-gear",
-            "plan_number": "08-06"
+            "branding": branding,
+            "scraping_config": scraping_config,
+            "api_keys": api_keys,
+            "relevance_config": relevance_config,
+            "use_llm_summary": settings.use_llm_summary,
         }
     )
