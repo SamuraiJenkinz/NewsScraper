@@ -39,9 +39,9 @@ Phases 1-8 delivered: data foundation, vertical slice validation, 6-source news 
 **Plans**: 3 plans
 
 Plans:
-- [ ] 09-01-PLAN.md — Config expansion: MMC Core API credential fields, helper methods, tenacity dependency, .env.example
-- [ ] 09-02-PLAN.md — ORM models + migration: ApiEvent, FactivaConfig, EquityTicker models, migration 007, main.py registration
-- [ ] 09-03-PLAN.md — TokenManager + test_auth.py: OAuth2 client credentials auth, proactive refresh, event logging, validation script
+- [x] 09-01-PLAN.md — Config expansion: MMC Core API credential fields, helper methods, tenacity dependency, .env.example
+- [x] 09-02-PLAN.md — ORM models + migration: ApiEvent, FactivaConfig, EquityTicker models, migration 007, main.py registration
+- [x] 09-03-PLAN.md — TokenManager + test_auth.py: OAuth2 client credentials auth, proactive refresh, event logging, validation script
 
 #### Phase 10: Factiva News Collection
 
@@ -167,7 +167,7 @@ Note: Phase 12 depends only on Phase 9 (not Phase 10/11) and may parallelize wit
 | 6. Email Delivery & Alerts | v1.0 | 4/4 | Complete | 2026-02-05 |
 | 7. Scheduling & Automation | v1.0 | 4/4 | Complete | 2026-02-05 |
 | 8. Admin Interface | v1.0 | 6/6 | Complete | 2026-02-05 |
-| 9. Enterprise API Foundation | v1.1 | 0/3 | Planning complete | - |
+| 9. Enterprise API Foundation | v1.1 | 3/3 | Complete | 2026-02-19 |
 | 10. Factiva News Collection | v1.1 | 0/4 | Not started | - |
 | 11. Insurer Matching Pipeline | v1.1 | 0/3 | Not started | - |
 | 12. Equity Price Enrichment | v1.1 | 0/4 | Not started | - |

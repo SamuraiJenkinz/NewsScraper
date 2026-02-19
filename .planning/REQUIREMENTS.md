@@ -67,10 +67,10 @@
 
 | Requirement | Phase | Plan | Status |
 |-------------|-------|------|--------|
-| AUTH-01 | Phase 9 | 09-02 | Pending |
-| AUTH-02 | Phase 9 | 09-02 | Pending |
-| AUTH-03 | Phase 9 | 09-01, 09-02 | Pending |
-| AUTH-04 | Phase 9 | 09-02 | Pending |
+| AUTH-01 | Phase 9 | 09-03 | Complete |
+| AUTH-02 | Phase 9 | 09-03 | Complete |
+| AUTH-03 | Phase 9 | 09-01, 09-02, 09-03 | Complete |
+| AUTH-04 | Phase 9 | 09-03 | Complete |
 | FACT-01 | Phase 10 | 10-01 | Pending |
 | FACT-02 | Phase 10 | 10-01 | Pending |
 | FACT-03 | Phase 10 | 10-02 | Pending |
