@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 
 ## Current Position
 
-Phase: 9 of 15 (Enterprise API Foundation) — COMPLETE
-Plan: 3 of 3 in current phase (all plans done)
-Status: Phase complete — ready for Phase 10
-Last activity: 2026-02-19 — Completed 09-03-PLAN.md (OAuth2 TokenManager + test_auth.py)
+Phase: 10 of 15 (Factiva News Collection) — IN PROGRESS
+Plan: 2 of 3 in current phase
+Status: In progress
+Last activity: 2026-02-19 — Completed 10-02-PLAN.md (ArticleDeduplicator + sentence-transformers)
 
-Progress: v1.0 [##########] 100% | v1.1 [###.......] 30%
+Progress: v1.0 [##########] 100% | v1.1 [####......] 33%
 
 ## Performance Metrics
 
@@ -24,15 +24,16 @@ Progress: v1.0 [##########] 100% | v1.1 [###.......] 30%
 - Total execution time: ~7.0 hours
 
 **v1.1 Velocity:**
-- Total plans completed: 3
-- Average duration: 2.3 min
-- Total execution time: 7 min
+- Total plans completed: 4
+- Average duration: 2.2 min
+- Total execution time: 9.2 min
 
 **By Phase (v1.1):**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 9. Enterprise API Foundation | 3/3 COMPLETE | 7 min | 2.3 min |
+| 10. Factiva News Collection | 2/3 | 2.2 min | 2.2 min |
 
 *Updated after each plan completion*
 
@@ -56,6 +57,8 @@ v1.1 decisions:
 | ApiEvent.run_id nullable | Out-of-pipeline calls (auth test scripts) can log events without a run context | 09-02 |
 | logging_config.py absent in BrasilIntel | test_auth.py uses stdlib logging.basicConfig(WARNING) instead of configure_logging() | 09-03 |
 | structlog kept in TokenManager | structlog IS installed in BrasilIntel — no substitution needed from MDInsights port | 09-03 |
+| Lazy model loading | sentence-transformers model loads on first deduplicate() call — avoids 80MB download at app startup | 10-02 |
+| 0.85 similarity threshold | Proven in MDInsights for wire-service insurance content — balances precision/recall | 10-02 |
 
 ### Pending Todos
 
@@ -70,10 +73,10 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-19T18:53:46Z
-Stopped at: Completed 09-03-PLAN.md — OAuth2 TokenManager (app/auth/token_manager.py) + test_auth.py
-Resume file: .planning/phases/09-enterprise-api-foundation/09-03-SUMMARY.md
+Last session: 2026-02-19T19:45:32Z
+Stopped at: Completed 10-02-PLAN.md — ArticleDeduplicator (app/services/deduplicator.py) + sentence-transformers
+Resume file: .planning/phases/10-factiva-news-collection/10-02-SUMMARY.md
 
 ---
 *Initialized: 2026-02-04*
-*Last updated: 2026-02-19 after 09-03 completion (Phase 9 COMPLETE)*
+*Last updated: 2026-02-19 after 10-02 completion*
