@@ -92,6 +92,20 @@ class Settings(BaseSettings):
     scheduler_coalesce: bool = True  # Combine missed runs
     scheduler_max_instances: int = 1  # Prevent overlap
 
+    # MMC Core API (Enterprise Integration — Phase 9+)
+    # Used for Factiva news (X-Api-Key), equity prices (X-Api-Key),
+    # and enterprise email delivery (JWT Bearer + X-Api-Key)
+    mmc_api_base_url: str = ""
+    mmc_api_client_id: str = ""
+    mmc_api_client_secret: str = ""
+    mmc_api_key: str = ""
+    mmc_api_token_path: str = "/coreapi/access-management/v1/token"
+
+    # Enterprise Email Sender (Phase 13 — added now for completeness)
+    mmc_sender_email: str = ""    # Enterprise mailbox to send from
+    mmc_sender_name: str = ""     # Display name (set via MMC_SENDER_NAME env var)
+    mmc_email_path: str = "/coreapi/email/v1"
+
     def _parse_recipient_list(self, recipients_str: str) -> list[str]:
         """Parse comma-separated email list, stripping whitespace."""
         if not recipients_str:
@@ -201,6 +215,37 @@ class Settings(BaseSettings):
             },
         }
         return config_map.get(category, {"cron": "0 6 * * *", "enabled": False})
+
+    def is_mmc_auth_configured(self) -> bool:
+        """Check if MMC Core API OAuth2 (JWT) auth is fully configured.
+
+        Required for the Email API (Phase 13) which uses Bearer + X-Api-Key.
+        """
+        return bool(
+            self.mmc_api_base_url
+            and self.mmc_api_client_id
+            and self.mmc_api_client_secret
+        )
+
+    def is_mmc_api_key_configured(self) -> bool:
+        """Check if MMC Core API X-Api-Key is configured.
+
+        Required for Factiva news (Phase 10) and equity prices (Phase 12)
+        which use X-Api-Key only (no JWT needed).
+        """
+        return bool(self.mmc_api_base_url and self.mmc_api_key)
+
+    def is_mmc_email_configured(self) -> bool:
+        """Check if enterprise email delivery is fully configured.
+
+        Requires JWT auth (mmc_auth) + API key + enterprise sender email.
+        When False, pipeline uses Graph API for email delivery.
+        """
+        return bool(
+            self.is_mmc_auth_configured()
+            and self.mmc_api_key
+            and self.mmc_sender_email
+        )
 
 
 @lru_cache()
