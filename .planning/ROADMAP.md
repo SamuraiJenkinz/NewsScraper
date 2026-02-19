@@ -36,12 +36,12 @@ Phases 1-8 delivered: data foundation, vertical slice validation, 6-source news 
   2. A token acquired near expiry is automatically refreshed with 5-minute margin — pipeline never fails mid-request due to an expired token
   3. Every enterprise API call (token request, news fetch, equity lookup, email send) writes a record to the api_events table visible in the database
   4. When token acquisition fails, the pipeline continues without crashing — enterprise features are skipped and the failure is logged
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 09-01: Database migrations — api_events table, FactivaConfig table, EquityTicker table
-- [ ] 09-02: MMCAuthService — OAuth2 client credentials grant, proactive token refresh, event logging
-- [ ] 09-03: Config expansion — MMC Core API credentials, Apigee host, environment validation
+- [ ] 09-01-PLAN.md — Config expansion: MMC Core API credential fields, helper methods, tenacity dependency, .env.example
+- [ ] 09-02-PLAN.md — ORM models + migration: ApiEvent, FactivaConfig, EquityTicker models, migration 007, main.py registration
+- [ ] 09-03-PLAN.md — TokenManager + test_auth.py: OAuth2 client credentials auth, proactive refresh, event logging, validation script
 
 #### Phase 10: Factiva News Collection
 
@@ -85,7 +85,7 @@ Plans:
 **Requirements**: EQTY-01, EQTY-02, EQTY-03, EQTY-04
 **Success Criteria** (what must be TRUE):
   1. After a pipeline run, equity price data for configured B3 tickers is fetched from the MMC Core API Equity Price endpoint and stored
-  2. Admin can add, edit, and delete insurer-to-ticker mappings (e.g., "SulAmérica" → "SULA11") through the admin dashboard
+  2. Admin can add, edit, and delete insurer-to-ticker mappings (e.g., "SulAmerica" → "SULA11") through the admin dashboard
   3. Browser report pages show equity chips (ticker symbol, current price, percentage change) next to insurer sections that have a configured ticker
   4. Email reports show the same equity data in a table-compatible layout that renders correctly in Outlook and Gmail
 **Plans**: TBD
@@ -167,7 +167,7 @@ Note: Phase 12 depends only on Phase 9 (not Phase 10/11) and may parallelize wit
 | 6. Email Delivery & Alerts | v1.0 | 4/4 | Complete | 2026-02-05 |
 | 7. Scheduling & Automation | v1.0 | 4/4 | Complete | 2026-02-05 |
 | 8. Admin Interface | v1.0 | 6/6 | Complete | 2026-02-05 |
-| 9. Enterprise API Foundation | v1.1 | 0/3 | Not started | - |
+| 9. Enterprise API Foundation | v1.1 | 0/3 | Planning complete | - |
 | 10. Factiva News Collection | v1.1 | 0/4 | Not started | - |
 | 11. Insurer Matching Pipeline | v1.1 | 0/3 | Not started | - |
 | 12. Equity Price Enrichment | v1.1 | 0/4 | Not started | - |
