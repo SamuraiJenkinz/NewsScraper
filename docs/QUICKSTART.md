@@ -17,7 +17,7 @@ Get up and running in 5 minutes.
 
 ```powershell
 # Clone and setup
-git clone https://github.com/mmctech/BrasilIntel.git
+git clone https://github.com/SamuraiJenkinz/BrasilIntel.git
 cd BrasilIntel
 
 # Create virtual environment
@@ -94,17 +94,11 @@ Login with `admin` / your configured password.
 1. Go to **Schedules**
 2. Click **Run Now** for any category
 
-**Option B: Command Line**
-```powershell
-.\venv\Scripts\Activate.ps1
-python -m app.cli run --category Health --no-email
-```
-
-**Option C: API**
+**Option B: API**
 ```bash
-curl -X POST "http://localhost:8000/api/runs/execute/category" \
-  -H "Content-Type: application/json" \
-  -d '{"category": "Health", "send_email": false}'
+curl -X POST "http://localhost:8000/api/runs/execute/category" ^
+  -H "Content-Type: application/json" ^
+  -d "{\"category\": \"Health\", \"send_email\": false}"
 ```
 
 ---
@@ -136,8 +130,10 @@ Check status:
 ### Admin Dashboard
 - **Dashboard**: http://localhost:8000/admin/
 - **Insurers**: View/edit monitored insurers
-- **Schedules**: Manage automated runs
 - **Import**: Upload insurer data
+- **Recipients**: View configured email recipients per category
+- **Schedules**: Manage automated runs and trigger manual runs
+- **Settings**: View system configuration status
 
 ### Key Commands
 ```powershell
@@ -156,8 +152,11 @@ Check status:
 |----------|-------------|
 | `GET /api/health` | System health check |
 | `GET /api/insurers` | List all insurers |
+| `GET /api/insurers/search?q=` | Search insurers |
 | `POST /api/runs/execute/category` | Run a category |
-| `GET /api/reports/archive` | List archived reports |
+| `GET /api/runs/latest` | Latest run per category |
+| `GET /api/reports/archive` | Browse archived reports |
+| `GET /api/schedules` | List all schedules |
 
 ---
 
@@ -180,4 +179,4 @@ Check status:
 
 ---
 
-*BrasilIntel v1.0*
+*BrasilIntel v1.0 — [SamuraiJenkinz/BrasilIntel](https://github.com/SamuraiJenkinz/BrasilIntel)*

@@ -39,15 +39,13 @@
   - Option to delete by category or all
   - Useful for re-importing updated data
 
-- [ ] **Editable Recipients via UI** - Manage email recipients without editing .env
-  - Add recipients management page
-  - Store in database instead of env vars
-  - Support TO/CC/BCC per category
+- [x] **Recipients Viewer via UI** - View configured email recipients per category
+  - Recipients page shows TO/CC/BCC per category
+  - Reads from environment configuration
 
-- [ ] **Run History Page** - View past runs with details
-  - List all runs with status, duration, items found
-  - Filter by category, date, status
-  - Link to generated reports
+- [x] **Run History on Dashboard** - View past runs with details
+  - Dashboard cards show last run status and time
+  - Recent reports section with date and category
 
 - [ ] **Insurer Search Improvements**
   - Advanced filtering (by status, last activity)
@@ -102,6 +100,13 @@
 - [x] Docker deployment
 - [x] Windows Server deployment (venv + Scheduled Tasks)
 - [x] Comprehensive documentation
+- [x] Recipients viewer page in admin UI
+- [x] Settings/configuration status page in admin UI
+- [x] Run history on dashboard cards
+- [x] AI relevance scoring pre-filter
+- [x] Executive summary generation
+- [x] Batch processing with configurable sizes
+- [x] 7 news source adapters (Apify + RSS)
 
 ---
 
@@ -114,4 +119,4 @@
 
 ---
 
-*BrasilIntel Backlog - Updated after v1.0 release*
+*BrasilIntel Backlog - Updated 2026-02-19*

@@ -1,7 +1,7 @@
 # BrasilIntel User Guide
 
-**Version:** 1.0
-**Last Updated:** 2026-02-05
+**Version:** 1.0.1
+**Last Updated:** 2026-02-19
 
 ## Table of Contents
 
@@ -28,7 +28,7 @@ BrasilIntel is an automated competitive intelligence system for Marsh Brasil tha
 - **Group Life** (Vida em Grupo) - 145 insurers
 
 The system automatically:
-- Scrapes news from 6 sources (Google News, Valor Econômico, InfoMoney, CQCS, ANS, Estadão)
+- Scrapes news from 7 sources (Google News, Valor Econômico, InfoMoney, CQCS, ANS, Estadão, RSS feeds)
 - Uses Azure OpenAI to classify insurer status and generate summaries
 - Generates professional Marsh-branded HTML reports with PDF attachments
 - Sends daily reports via email at scheduled times
@@ -48,7 +48,7 @@ The system automatically:
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/mmctech/BrasilIntel.git
+   git clone https://github.com/SamuraiJenkinz/BrasilIntel.git
    cd BrasilIntel
    ```
 
@@ -196,6 +196,17 @@ The dashboard displays:
 3. **Recent Reports** - List of recently generated reports with:
    - Date and category
    - Quick view links
+
+### Admin Pages
+
+| Page | URL | Description |
+|------|-----|-------------|
+| Dashboard | `/admin/` | Category cards, system status, recent reports |
+| Insurers | `/admin/insurers` | View, search, enable/disable insurers |
+| Import | `/admin/import` | Upload Excel, preview, commit insurer data |
+| Recipients | `/admin/recipients` | View configured TO/CC/BCC recipients per category |
+| Schedules | `/admin/schedules` | Toggle schedules, trigger manual runs |
+| Settings | `/admin/settings` | View system configuration and service status |
 
 ---
 
@@ -379,11 +390,11 @@ Returns system health status including database, services, and scheduler.
 
 ```
 GET /api/insurers                    # List all insurers
-GET /api/insurers/{id}               # Get single insurer
-POST /api/insurers                   # Create insurer
-PATCH /api/insurers/{id}             # Update insurer
-DELETE /api/insurers/{id}            # Delete insurer
 GET /api/insurers/search?q={query}   # Search insurers
+GET /api/insurers/{ans_code}         # Get single insurer by ANS code
+POST /api/insurers                   # Create insurer
+PATCH /api/insurers/{ans_code}       # Update insurer
+DELETE /api/insurers/{ans_code}      # Delete insurer
 ```
 
 ### Import/Export
@@ -391,23 +402,31 @@ GET /api/insurers/search?q={query}   # Search insurers
 ```
 POST /api/import/preview             # Preview import (upload Excel)
 POST /api/import/commit/{session_id} # Commit import
-GET /api/import/export               # Export as Excel
+GET /api/import/sessions             # List active import sessions
+DELETE /api/import/sessions/{id}     # Delete import session
+GET /api/import/export               # Export insurers as Excel
+GET /api/import/stats                # Import statistics
 ```
 
 ### Runs
 
 ```
 GET /api/runs                        # List all runs
-GET /api/runs/{id}                   # Get run details
-GET /api/runs/{id}/delivery          # Get delivery status
+GET /api/runs/latest                 # Latest run per category
+GET /api/runs/stats                  # Run statistics
+GET /api/runs/{run_id}               # Get run details
+GET /api/runs/{run_id}/news          # Get news items for a run
+GET /api/runs/{run_id}/delivery      # Get delivery status
 POST /api/runs/execute               # Execute single insurer run
 POST /api/runs/execute/category      # Execute category run
+GET /api/runs/health/scraper         # Scraper health check
 ```
 
 ### Schedules
 
 ```
 GET /api/schedules                   # List all schedules
+GET /api/schedules/health            # Schedule health status
 GET /api/schedules/{category}        # Get schedule for category
 PUT /api/schedules/{category}        # Update schedule
 POST /api/schedules/{category}/trigger  # Trigger immediate run
@@ -418,7 +437,7 @@ POST /api/schedules/{category}/resume   # Resume schedule
 ### Reports
 
 ```
-GET /api/reports/archive             # List archived reports
+GET /api/reports/archive             # Browse archived reports
 GET /api/reports/archive/dates       # List available dates
 GET /api/reports/archive/{date}/{filename}  # Get specific report
 GET /api/reports/preview             # Preview report template
@@ -562,13 +581,14 @@ The AI classification identifies specific event types:
 
 | Source | Type | Coverage |
 |--------|------|----------|
-| Google News | Aggregator | General news mentions |
-| Valor Econômico | Website | Business/financial news |
-| InfoMoney | RSS | Financial news |
-| CQCS | Website | Insurance industry news |
-| ANS | RSS | Official regulatory releases |
-| Estadão/G1 | RSS | General news |
+| Google News | Apify Scraper | General news mentions |
+| Valor Econômico | Apify Scraper | Business/financial news |
+| InfoMoney | Apify Scraper | Financial news |
+| CQCS | Apify Scraper | Insurance industry news |
+| ANS | RSS Feed | Official regulatory releases |
+| Estadão | Apify Scraper | General news |
+| RSS (generic) | RSS Feed | Configurable RSS sources |
 
 ---
 
-*BrasilIntel v1.0 - Marsh Brasil Competitive Intelligence System*
+*BrasilIntel v1.0 — [SamuraiJenkinz/BrasilIntel](https://github.com/SamuraiJenkinz/BrasilIntel)*

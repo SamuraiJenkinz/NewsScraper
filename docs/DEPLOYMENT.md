@@ -1,7 +1,7 @@
 # BrasilIntel Deployment Guide
 
-**Version:** 1.0
-**Last Updated:** 2026-02-05
+**Version:** 1.0.1
+**Last Updated:** 2026-02-19
 
 This guide covers two deployment options:
 1. **Docker** - For local development and containerized deployments
@@ -60,7 +60,7 @@ PDF generation requires GTK3 runtime on Windows:
 ### 1.1 Clone Repository
 
 ```bash
-git clone https://github.com/mmctech/BrasilIntel.git
+git clone https://github.com/SamuraiJenkinz/BrasilIntel.git
 cd BrasilIntel
 ```
 
@@ -156,7 +156,7 @@ This is the recommended production deployment for Windows Server environments.
 
 ```powershell
 cd C:\
-git clone https://github.com/mmctech/BrasilIntel.git
+git clone https://github.com/SamuraiJenkinz/BrasilIntel.git
 cd C:\BrasilIntel
 ```
 
@@ -617,4 +617,4 @@ For issues:
 
 ---
 
-*BrasilIntel v1.0 - Deployment Guide*
+*BrasilIntel v1.0 — [SamuraiJenkinz/BrasilIntel](https://github.com/SamuraiJenkinz/BrasilIntel)*

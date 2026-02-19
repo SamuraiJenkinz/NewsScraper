@@ -22,12 +22,15 @@ BrasilIntel monitors **897 Brazilian insurers** across three product categories,
 
 ### Features
 
-- **Automated News Collection** - Scrapes 6 sources (Google News, Valor Econômico, InfoMoney, CQCS, ANS, Estadão)
+- **Automated News Collection** - Scrapes 7 sources (Google News, Valor Econômico, InfoMoney, CQCS, ANS, Estadão, RSS)
 - **AI Classification** - Azure OpenAI classifies insurer status (Critical, Watch, Monitor, Stable)
+- **AI Relevance Scoring** - Pre-filters news items for relevance before classification
+- **Executive Summaries** - AI-generated executive summaries per report
 - **Professional Reports** - Marsh-branded HTML reports with PDF attachments
 - **Email Delivery** - Automated daily delivery via Microsoft Graph API
 - **Critical Alerts** - Immediate notifications for critical status detection
-- **Admin Dashboard** - Web interface for managing insurers, schedules, and reports
+- **Admin Dashboard** - Web interface for managing insurers, schedules, recipients, and reports
+- **Batch Processing** - Configurable batch sizes and concurrent source scraping
 
 ---
 
@@ -35,7 +38,7 @@ BrasilIntel monitors **897 Brazilian insurers** across three product categories,
 
 ```bash
 # Clone repository
-git clone https://github.com/mmctech/BrasilIntel.git
+git clone https://github.com/SamuraiJenkinz/BrasilIntel.git
 cd BrasilIntel
 
 # Setup Python environment
@@ -94,14 +97,14 @@ See [Quickstart Guide](docs/QUICKSTART.md) for detailed setup instructions.
 
 ### Tech Stack
 
-- **Backend**: Python 3.11, FastAPI, SQLAlchemy
+- **Backend**: Python 3.11, FastAPI, SQLAlchemy, pydantic-settings
 - **Database**: SQLite
 - **AI**: Azure OpenAI (GPT-4o)
 - **Email**: Microsoft Graph API
-- **Scraping**: Apify SDK
+- **Scraping**: Apify SDK (7 source adapters)
 - **PDF**: WeasyPrint
-- **Scheduler**: APScheduler
-- **Frontend**: HTMX, Jinja2 Templates
+- **Scheduler**: APScheduler (in-app) + Windows Task Scheduler (production)
+- **Frontend**: Jinja2 Templates, Bootstrap 5
 
 ---
 
@@ -149,11 +152,14 @@ docker-compose up -d
 ### Windows Server (Production)
 
 ```powershell
-# Setup scheduled tasks
+# Setup scheduled tasks (Health 6 AM, Dental 7 AM, Group Life 8 AM)
 .\deploy\setup_scheduled_task.ps1
 
 # Check status
 .\deploy\manage_service.ps1 -Action status
+
+# Run a category immediately
+.\deploy\manage_service.ps1 -Action run-now -Category health
 ```
 
 See [Deployment Guide](docs/DEPLOYMENT.md) for detailed instructions.
@@ -170,9 +176,13 @@ Interactive API documentation available at `/docs` when the server is running.
 |--------|----------|-------------|
 | GET | `/api/health` | System health check |
 | GET | `/api/insurers` | List all insurers |
+| GET | `/api/insurers/search?q=` | Search insurers |
 | POST | `/api/runs/execute/category` | Execute category run |
-| GET | `/api/reports/archive` | List archived reports |
+| GET | `/api/runs/latest` | Latest run per category |
+| GET | `/api/reports/archive` | Browse archived reports |
 | GET | `/api/schedules` | List schedules |
+| POST | `/api/schedules/{category}/trigger` | Trigger immediate run |
+| GET | `/api/import/export` | Export insurers as Excel |
 
 ---
 
@@ -181,20 +191,52 @@ Interactive API documentation available at `/docs` when the server is running.
 ```
 BrasilIntel/
 ├── app/
-│   ├── api/              # FastAPI routes
-│   ├── core/             # Business logic
-│   │   ├── scraper/      # News collection
-│   │   ├── classifier/   # AI classification
-│   │   └── report/       # Report generation
-│   ├── models/           # SQLAlchemy models
-│   ├── schemas/          # Pydantic schemas
-│   ├── services/         # Service layer
-│   ├── storage/          # File storage
-│   └── templates/        # Jinja2 templates
-├── deploy/               # Deployment scripts
-├── docs/                 # Documentation
-├── data/                 # Database and logs
-└── tests/                # Test suite
+│   ├── main.py              # FastAPI app entry point + health check
+│   ├── config.py            # Pydantic Settings (all env vars)
+│   ├── database.py          # SQLAlchemy engine + session
+│   ├── dependencies.py      # Auth + session helpers
+│   ├── models/              # SQLAlchemy ORM models
+│   │   ├── insurer.py       # Insurer model
+│   │   ├── news_item.py     # NewsItem model
+│   │   └── run.py           # Run model
+│   ├── schemas/             # Pydantic request/response schemas
+│   │   ├── classification.py
+│   │   ├── delivery.py
+│   │   ├── insurer.py
+│   │   ├── news.py
+│   │   ├── report.py
+│   │   ├── run.py
+│   │   └── schedule.py
+│   ├── routers/             # FastAPI route handlers
+│   │   ├── admin.py         # Admin dashboard UI routes
+│   │   ├── import_export.py # Excel import/export API
+│   │   ├── insurers.py      # Insurer CRUD API
+│   │   ├── reports.py       # Report archive API
+│   │   ├── runs.py          # Run execution API
+│   │   └── schedules.py     # Schedule management API
+│   ├── services/            # Business logic
+│   │   ├── scraper.py       # News collection orchestrator
+│   │   ├── classifier.py    # AI classification
+│   │   ├── reporter.py      # Report generation
+│   │   ├── emailer.py       # Microsoft Graph email
+│   │   ├── alert_service.py # Critical alert notifications
+│   │   ├── batch_processor.py
+│   │   ├── executive_summarizer.py
+│   │   ├── pdf_generator.py
+│   │   ├── relevance_scorer.py
+│   │   ├── report_archiver.py
+│   │   ├── scheduler_service.py
+│   │   ├── excel_service.py
+│   │   └── sources/         # 7 news source adapters
+│   ├── storage/reports/     # Generated report archive
+│   └── templates/           # Jinja2 HTML templates
+│       ├── admin/           # Admin dashboard pages
+│       ├── report_professional.html
+│       └── alert_critical.html
+├── deploy/                  # Deployment scripts (PowerShell + batch)
+├── docs/                    # Documentation
+├── scripts/                 # Database migrations
+└── tests/                   # Test suite
 ```
 
 ---
@@ -211,4 +253,4 @@ For issues and support, contact the development team.
 
 ---
 
-*BrasilIntel v1.0*
+*BrasilIntel v1.0 — [SamuraiJenkinz/BrasilIntel](https://github.com/SamuraiJenkinz/BrasilIntel)*
