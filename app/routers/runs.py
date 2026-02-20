@@ -19,6 +19,7 @@ from app.models.run import Run
 from app.models.news_item import NewsItem
 from app.models.insurer import Insurer
 from app.models.factiva_config import FactivaConfig
+from app.models.equity_ticker import EquityTicker
 from app.collectors.factiva import FactivaCollector
 from app.services.deduplicator import ArticleDeduplicator
 from app.services.insurer_matcher import InsurerMatcher
@@ -26,6 +27,7 @@ from app.services.classifier import ClassificationService
 from app.services.emailer import GraphEmailService
 from app.services.reporter import ReportService
 from app.services.alert_service import CriticalAlertService
+from app.services.equity_client import EquityPriceClient
 from app.schemas.run import RunRead, RunStatus
 from app.schemas.news import NewsItemWithClassification
 from app.schemas.delivery import DeliveryStatus
@@ -104,6 +106,84 @@ async def execute_run(
         run.error_message = str(e)
         db.commit()
         raise HTTPException(status_code=500, detail=str(e))
+
+
+def _enrich_equity_data(
+    news_items: list[NewsItem],
+    run_id: int,
+    db: Session,
+) -> dict[int, list[dict]]:
+    """
+    Enrich news items with equity price data for insurers that have ticker mappings.
+
+    Args:
+        news_items: List of NewsItem ORM objects from the current run
+        run_id: Pipeline run ID for ApiEvent attribution
+        db: Database session
+
+    Returns:
+        Dict mapping insurer_id -> list of equity price dicts
+        Empty dict if no tickers configured or MMC API unconfigured
+    """
+    # Load all enabled ticker mappings
+    ticker_rows = db.query(EquityTicker).filter(EquityTicker.enabled == True).all()
+    if not ticker_rows:
+        logger.info("No enabled equity tickers configured - skipping enrichment")
+        return {}
+
+    # Build ticker lookup map (case-insensitive entity name -> EquityTicker)
+    ticker_map = {row.entity_name.lower(): row for row in ticker_rows}
+    logger.info(f"Loaded {len(ticker_map)} enabled equity ticker mappings")
+
+    # Check if equity client is configured
+    equity_client = EquityPriceClient()
+    if not equity_client.is_configured():
+        logger.warning("MMC API not configured - skipping equity enrichment")
+        return {}
+
+    # Build set of unique insurer IDs from news items
+    insurer_ids = {item.insurer_id for item in news_items if item.insurer_id}
+    logger.info(f"Enriching equity data for {len(insurer_ids)} unique insurers")
+
+    # Fetch prices with caching to avoid duplicate API calls
+    equity_data = {}
+    fetched_prices = {}  # Cache: "TICKER:EXCHANGE" -> price_dict
+
+    for insurer_id in insurer_ids:
+        # Query insurer name from DB
+        insurer = db.query(Insurer).filter(Insurer.id == insurer_id).first()
+        if not insurer:
+            continue
+
+        # Case-insensitive match against ticker map
+        ticker_row = ticker_map.get(insurer.name.lower())
+        if not ticker_row:
+            continue
+
+        # Check cache first
+        cache_key = f"{ticker_row.ticker}:{ticker_row.exchange}"
+        if cache_key in fetched_prices:
+            logger.debug(f"Using cached price for {cache_key}")
+            equity_data[insurer_id] = [fetched_prices[cache_key]]
+            continue
+
+        # Fetch price from MMC API
+        price_dict = equity_client.get_price(
+            ticker=ticker_row.ticker,
+            exchange=ticker_row.exchange,
+            run_id=run_id,
+        )
+
+        if price_dict:
+            fetched_prices[cache_key] = price_dict
+            equity_data[insurer_id] = [price_dict]
+            logger.info(
+                f"Fetched equity price for {insurer.name}: "
+                f"{ticker_row.ticker} = {price_dict.get('price')}"
+            )
+
+    logger.info(f"Equity enrichment complete: {len(equity_data)} insurers with price data")
+    return equity_data
 
 
 async def _execute_factiva_pipeline(
@@ -231,6 +311,12 @@ async def _execute_factiva_pipeline(
     db.commit()
     logger.info(f"Stored {items_stored} news items for {len(insurers_with_news)} insurers")
 
+    # Equity price enrichment
+    logger.info("Enriching with equity price data...")
+    all_run_items = db.query(NewsItem).filter(NewsItem.run_id == run.id).all()
+    equity_data = _enrich_equity_data(all_run_items, run.id, db)
+    logger.info(f"Equity enrichment: {len(equity_data)} insurers with price data")
+
     # Check for critical alerts and send immediately
     logger.info("Checking for critical alerts...")
     alert_service = CriticalAlertService()
@@ -245,7 +331,7 @@ async def _execute_factiva_pipeline(
 
     # Generate and send report
     delivery_result = await _generate_and_send_report(
-        request.category, run.id, db, request.send_email
+        request.category, run.id, db, request.send_email, equity_data
     )
 
     # Update run status and delivery tracking
@@ -483,10 +569,15 @@ async def _generate_and_send_report(
     run_id: int,
     db: Session,
     send_email: bool,
+    equity_data: dict[int, list[dict]] = None,
 ) -> dict[str, Any]:
     """Generate professional HTML report with PDF and optionally send via email."""
     logger.info("Generating professional HTML report...")
     report_service = ReportService()
+
+    # Pass equity_data to reporter (will be used in Plan 12-03)
+    if equity_data is None:
+        equity_data = {}
 
     # Generate professional report with archival
     html_report, archive_path = report_service.generate_professional_report_from_db(
@@ -495,6 +586,7 @@ async def _generate_and_send_report(
         db_session=db,
         use_ai_summary=True,
         archive_report=True,
+        equity_data=equity_data,
     )
 
     result = {
