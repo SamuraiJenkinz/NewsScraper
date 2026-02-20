@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 
 ## Current Position
 
-Phase: 10 of 15 (Factiva News Collection) — COMPLETE
-Plan: 3 of 3 in current phase
-Status: Phase complete
-Last activity: 2026-02-19 — Completed 10-03-PLAN.md (Factiva validation script)
+Phase: 11 of 15 (Insurer Matching Pipeline) — IN PROGRESS
+Plan: 1 of 3 in current phase
+Status: In progress
+Last activity: 2026-02-19 — Completed 11-01-PLAN.md (Deterministic insurer matching)
 
-Progress: v1.0 [##########] 100% | v1.1 [#####.....] 46%
+Progress: v1.0 [##########] 100% | v1.1 [#####.....] 53%
 
 ## Performance Metrics
 
@@ -24,9 +24,9 @@ Progress: v1.0 [##########] 100% | v1.1 [#####.....] 46%
 - Total execution time: ~7.0 hours
 
 **v1.1 Velocity:**
-- Total plans completed: 7
-- Average duration: 7.9 min
-- Total execution time: 55 min
+- Total plans completed: 8
+- Average duration: 7.1 min
+- Total execution time: 57 min
 
 **By Phase (v1.1):**
 
@@ -34,6 +34,7 @@ Progress: v1.0 [##########] 100% | v1.1 [#####.....] 46%
 |-------|-------|-------|----------|
 | 9. Enterprise API Foundation | 3/3 COMPLETE | 7 min | 2.3 min |
 | 10. Factiva News Collection | 3/3 COMPLETE | 48 min | 16 min |
+| 11. Insurer Matching Pipeline | 1/3 | 2 min | 2 min |
 
 *Updated after each plan completion*
 
@@ -66,6 +67,11 @@ v1.1 decisions:
 | Inline FactivaConfig seeding | test_factiva.py creates FactivaConfig id=1 if missing — removes seed script dependency | 10-03 |
 | URL dedup before semantic | Explicit URL dedup before embeddings — avoids embedding duplicates, ~40% speedup | 10-03 |
 | Exit 0 for unconfigured | test_factiva.py exits 0 (not error) when credentials missing — expected state for new checkouts | 10-03 |
+| 4-char threshold | Deterministic matcher skips names <4 chars (Sul, Amil, Porto) — routes to AI to avoid false positives | 11-01 |
+| NFKD normalization | unicodedata.normalize('NFKD') handles Portuguese accents (SulAmérica = SulAmerica) | 11-01 |
+| Word-boundary regex | \b{re.escape(name)}\b prevents substring false positives (Porto doesn't match 'reportar') | 11-01 |
+| Multi-match limit 2-3 | Articles mentioning 2-3 insurers return deterministic_multi; >3 routed to AI | 11-01 |
+| Confidence scoring | Single match 0.95, multi-match 0.85, unmatched 0.0 | 11-01 |
 
 ### Pending Todos
 
@@ -81,10 +87,10 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-19T21:00:27Z
-Stopped at: Completed 10-03-PLAN.md — Phase 10 COMPLETE (FactivaCollector + ArticleDeduplicator + validation script)
-Resume file: .planning/phases/10-factiva-news-collection/10-03-SUMMARY.md
+Last session: 2026-02-20T01:16:05Z
+Stopped at: Completed 11-01-PLAN.md — Deterministic insurer matching with Portuguese accent normalization
+Resume file: .planning/phases/11-insurer-matching-pipeline/11-01-SUMMARY.md
 
 ---
 *Initialized: 2026-02-04*
-*Last updated: 2026-02-19 after 10-03 completion (Phase 10 COMPLETE)*
+*Last updated: 2026-02-19 after 11-01 completion*
