@@ -232,6 +232,7 @@ python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 
 # Run enterprise API migrations (creates api_events, factiva_config, equity_tickers tables)
 python scripts/migrate_007_enterprise_api_tables.py
+python scripts/migrate_008_factiva_date_range.py
 ```
 
 ### 2.6 Import Insurer Data
@@ -501,6 +502,7 @@ MMC_API_KEY=your-api-key
 
 ```powershell
 python scripts/migrate_007_enterprise_api_tables.py
+python scripts/migrate_008_factiva_date_range.py
 ```
 
 This creates three tables:
@@ -604,6 +606,7 @@ pip install -r requirements.txt
 
 # Run any database migrations
 python scripts\migrate_007_enterprise_api_tables.py
+python scripts\migrate_008_factiva_date_range.py
 
 # Re-enable scheduled tasks
 .\deploy\manage_service.ps1 -Action start

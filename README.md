@@ -26,7 +26,6 @@ BrasilIntel monitors **897 Brazilian insurers** across three product categories,
 - **AI Insurer Matching** - Deterministic name matching with AI fallback for ambiguous articles (Azure OpenAI)
 - **Semantic Deduplication** - sentence-transformers embedding similarity removes duplicate articles before processing
 - **AI Classification** - Azure OpenAI classifies insurer status (Critical, Watch, Monitor, Stable)
-- **AI Relevance Scoring** - Pre-filters news items for relevance before classification
 - **Executive Summaries** - AI-generated executive summaries per report
 - **Equity Price Enrichment** - Inline B3 stock prices (ticker, price, change%) for tracked insurers via MMC Core API
 - **Professional Reports** - Marsh-branded HTML reports with PDF attachments and equity data chips
@@ -56,6 +55,7 @@ copy .env.example .env
 
 # Run database migrations
 python scripts/migrate_007_enterprise_api_tables.py
+python scripts/migrate_008_factiva_date_range.py
 
 # Run
 python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
@@ -252,23 +252,19 @@ BrasilIntel/
 │   │   ├── runs.py          # Run execution + pipeline API
 │   │   └── schedules.py     # Schedule management API
 │   ├── services/            # Business logic
-│   │   ├── scraper.py       # Legacy news collection (Apify - being removed)
-│   │   ├── classifier.py    # AI classification
-│   │   ├── reporter.py      # Report generation (with equity data)
-│   │   ├── emailer.py       # Microsoft Graph email
+│   │   ├── ai_matcher.py    # AI-assisted insurer matching (Azure OpenAI)
 │   │   ├── alert_service.py # Critical alert notifications
-│   │   ├── batch_processor.py
+│   │   ├── classifier.py    # AI classification
 │   │   ├── deduplicator.py  # Semantic dedup (sentence-transformers)
+│   │   ├── emailer.py       # Microsoft Graph email
 │   │   ├── equity_client.py # MMC Core API equity prices
-│   │   ├── insurer_matcher.py # Deterministic insurer matching
-│   │   ├── ai_matcher.py    # AI-assisted insurer matching
+│   │   ├── excel_service.py # Excel import/export
 │   │   ├── executive_summarizer.py
+│   │   ├── insurer_matcher.py # Deterministic insurer matching
 │   │   ├── pdf_generator.py
-│   │   ├── relevance_scorer.py
 │   │   ├── report_archiver.py
-│   │   ├── scheduler_service.py
-│   │   ├── excel_service.py
-│   │   └── sources/         # News source adapters (legacy Apify)
+│   │   ├── reporter.py      # Report generation (with equity data)
+│   │   └── scheduler_service.py
 │   ├── storage/reports/     # Generated report archive
 │   └── templates/           # Jinja2 HTML templates
 │       ├── admin/           # Admin dashboard pages (incl. equity.html)
@@ -278,6 +274,7 @@ BrasilIntel/
 ├── docs/                    # Documentation
 ├── scripts/                 # Database migrations + validation scripts
 │   ├── migrate_007_enterprise_api_tables.py
+│   ├── migrate_008_factiva_date_range.py
 │   ├── seed_factiva_config.py
 │   ├── test_auth.py         # MMC API auth validation
 │   └── test_factiva.py      # Factiva collection end-to-end test
