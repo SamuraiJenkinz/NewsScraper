@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 
 ## Current Position
 
-Phase: 13 of 14 (Admin Dashboard Extensions) — IN PROGRESS
-Plan: 2 of 3 complete (13-01, 13-03)
-Status: In progress
-Last activity: 2026-02-20 — Completed 13-03-PLAN.md (Factiva source badges in reports)
+Phase: 13 of 14 (Admin Dashboard Extensions) — COMPLETE
+Plan: 3 of 3 complete (13-01, 13-02, 13-03)
+Status: Phase complete
+Last activity: 2026-02-20 — Completed 13-02-PLAN.md (Enterprise Config & Factiva Config pages)
 
-Progress: v1.0 [##########] 100% | v1.1 [#######▪..] 73%
+Progress: v1.0 [##########] 100% | v1.1 [########..] 80%
 
 ## Performance Metrics
 
@@ -24,9 +24,9 @@ Progress: v1.0 [##########] 100% | v1.1 [#######▪..] 73%
 - Total execution time: ~7.0 hours
 
 **v1.1 Velocity:**
-- Total plans completed: 14
-- Average duration: 6.6 min
-- Total execution time: 92 min
+- Total plans completed: 15
+- Average duration: 6.7 min
+- Total execution time: 100 min
 
 **By Phase (v1.1):**
 
@@ -36,7 +36,7 @@ Progress: v1.0 [##########] 100% | v1.1 [#######▪..] 73%
 | 10. Factiva News Collection | 3/3 COMPLETE | 48 min | 16 min |
 | 11. Insurer Matching Pipeline | 3/3 COMPLETE | 17 min | 5.7 min |
 | 12. Equity Price Enrichment | 3/3 COMPLETE | 29 min | 9.7 min |
-| 13. Admin Dashboard Extensions | 2/3 IN PROGRESS | 4 min | 2.0 min |
+| 13. Admin Dashboard Extensions | 3/3 COMPLETE | 12 min | 4.0 min |
 
 *Updated after each plan completion*
 
@@ -103,6 +103,12 @@ v1.1 decisions:
 | Dow Jones blue for Factiva | #0077c8 badge color — brand consistency with MDInsights Factiva identity | 13-03 |
 | Inline badge styles only | All badge styles inline (no CSS classes) — email client compatibility for Outlook/Gmail | 13-03 |
 | Conditional Factiva badge | Badge only when source_name == 'Factiva' — backward compatible with legacy Apify sources | 13-03 |
+| Env file for credentials | MMC credentials stored in .env (not database) — consistency with existing config.py pattern | 13-02 |
+| Secret field masking | Password input with boolean placeholder — never render actual secrets in HTML source | 13-02 |
+| Blank preserves secrets | Blank secret submissions preserve existing values — admin doesn't need to re-enter secrets on every save | 13-02 |
+| Settings cache clear | get_settings.cache_clear() after .env write — pipeline reads fresh credentials on next run | 13-02 |
+| 48-hour date range default | Factiva date_range_hours default=48 — matches existing hardcoded timedelta(days=2) behavior | 13-02 |
+| Single Factiva config row | FactivaConfig id=1 is active configuration — simple, no multi-config complexity | 13-02 |
 
 ### Pending Todos
 
@@ -110,24 +116,24 @@ None.
 
 ### Blockers/Concerns
 
-- **ACTION REQUIRED before Phase 12 testing:** Staging MMC credentials must be added to .env and validated with `python scripts/test_auth.py` (Phase 9) and `python scripts/test_factiva.py` (Phase 10)
-- **Phase 12 COMPLETE:** Equity enrichment end-to-end ready — pipeline enrichment (12-01), admin UI (12-02), report display (12-03)
-- **Phase 13 Plans 13-01 and 13-03 COMPLETE:** Enterprise API health panel (13-01) and Factiva source badges (13-03) ready
-- **Enterprise Email Delivery REMOVED:** Staying with Graph API for email delivery — Phase 13 removed, phases renumbered
+- **ACTION REQUIRED before production deployment:** Run `python scripts/migrate_008_factiva_date_range.py` to add date_range_hours column
+- **ACTION REQUIRED before Phase 13 testing:** Staging MMC credentials can now be added via Enterprise Config page at `/admin/enterprise-config`
+- **Phase 13 COMPLETE:** All admin dashboard extensions ready — health panel (13-01), credential/config forms (13-02), Factiva badges (13-03)
+- **Enterprise Email Delivery REMOVED:** Staying with Graph API for email delivery — enterprise email phase removed, phases renumbered
 - **Email visual QA recommended:** Both equity chips AND Factiva badges use inline styles for Outlook/Gmail compatibility — real email client testing needed before production deployment
 - First production run will validate complete pipeline: Factiva → matcher → classifier → equity enrichment → report delivery with badges
 - Sentinel insurer may accumulate noise — admin dashboard should provide filtering/hiding
 - 3-insurer cap may be restrictive for industry-wide news — monitor in production
-- AI matching costs will increase with Factiva volume — ApiEvent monitoring critical for Phase 13
+- AI matching costs will increase with Factiva volume — ApiEvent monitoring critical
 - Old ScraperService functions remain unused (technical debt) — remove in future cleanup phase
 - Windows Long Path error with msgraph-sdk on `pip install -r requirements.txt` — pre-existing, not caused by Phase 9
 
 ## Session Continuity
 
-Last session: 2026-02-20T07:16:00Z
-Stopped at: Completed 13-03-PLAN.md — Factiva source badges in all report templates
-Resume file: .planning/phases/13-admin-dashboard-extensions/13-03-SUMMARY.md
+Last session: 2026-02-20T12:25:00Z
+Stopped at: Completed 13-02-PLAN.md — Enterprise Config & Factiva Config pages with date range
+Resume file: .planning/phases/13-admin-dashboard-extensions/13-02-SUMMARY.md
 
 ---
 *Initialized: 2026-02-04*
-*Last updated: 2026-02-20 after 13-03 completion (Phase 13: 2 of 3 plans COMPLETE)*
+*Last updated: 2026-02-20 after 13-02 completion (Phase 13: COMPLETE — 3/3 plans)*
