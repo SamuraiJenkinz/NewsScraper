@@ -1,0 +1,267 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Factiva Configuration{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .page-header h3 {
+        color: var(--marsh-blue);
+        margin-bottom: 0.25rem;
+    }
+
+    .field-hint {
+        font-size: 0.8125rem;
+        color: #6c757d;
+        margin-top: 0.375rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .reference-table {
+        font-size: 0.875rem;
+    }
+
+    .reference-table td {
+        padding: 0.5rem;
+    }
+
+    .form-check-input {
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+    <!-- Header -->
+    <div class="row mb-4 page-header">
+        <div class="col-12">
+            <h3><i class="bi bi-newspaper"></i> Factiva Configuration</h3>
+            <p class="text-muted mb-0">Configure Factiva news collection parameters for Brazilian insurance market coverage. Changes take effect on the next scheduled pipeline run.</p>
+        </div>
+    </div>
+
+    <!-- Success alert -->
+    {% if success %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>{{ success }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+
+    <!-- Error alert -->
+    {% if error %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ error }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+
+    <!-- Query Parameters Card -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-search me-2"></i>Query Parameters</h5>
+        </div>
+        <div class="card-body">
+            <form method="post" action="{{ url_for('admin_factiva_post') }}">
+
+                <!-- Industry Codes -->
+                <div class="mb-3">
+                    <label for="industry_codes" class="form-label">
+                        <i class="bi bi-building me-1"></i>Industry Codes
+                    </label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="industry_codes"
+                        name="industry_codes"
+                        value="{{ config.industry_codes }}"
+                        placeholder="i82,i8200,i82001,i82002,i82003"
+                    >
+                    <div class="field-hint">
+                        Comma-separated Factiva industry codes. Common codes: <code>i82</code> (Insurance), <code>i832</code> (Medical/Health Insurance), <code>i8200</code> (General Insurance).
+                    </div>
+                </div>
+
+                <!-- Company Codes -->
+                <div class="mb-3">
+                    <label for="company_codes" class="form-label">
+                        <i class="bi bi-briefcase me-1"></i>Company Codes
+                    </label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="company_codes"
+                        name="company_codes"
+                        value="{{ config.company_codes }}"
+                        placeholder="MM (optional)"
+                    >
+                    <div class="field-hint">
+                        Comma-separated Factiva company codes (optional). Leave blank for industry-wide search.
+                    </div>
+                </div>
+
+                <!-- Keywords -->
+                <div class="mb-3">
+                    <label for="keywords" class="form-label">
+                        <i class="bi bi-tag me-1"></i>Keywords
+                    </label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="keywords"
+                        name="keywords"
+                        value="{{ config.keywords }}"
+                        placeholder="seguro,seguradora,resseguro"
+                    >
+                    <div class="field-hint">
+                        Comma-separated Portuguese keywords for Brazilian insurance market (e.g., seguro, seguradora, resseguro, previdência, saúde suplementar).
+                    </div>
+                </div>
+
+                <!-- Results Per Page -->
+                <div class="mb-3">
+                    <label for="page_size" class="form-label">
+                        <i class="bi bi-file-earmark-text me-1"></i>Results Per Page
+                    </label>
+                    <select class="form-select" id="page_size" name="page_size">
+                        <option value="10" {% if config.page_size == 10 %}selected{% endif %}>10</option>
+                        <option value="25" {% if config.page_size == 25 %}selected{% endif %}>25 (default)</option>
+                        <option value="50" {% if config.page_size == 50 %}selected{% endif %}>50</option>
+                        <option value="100" {% if config.page_size == 100 %}selected{% endif %}>100</option>
+                    </select>
+                    <div class="field-hint">
+                        Maximum number of articles to fetch per search request (hard cap: 100).
+                    </div>
+                </div>
+
+                <!-- Date Range -->
+                <div class="mb-3">
+                    <label for="date_range_hours" class="form-label">
+                        <i class="bi bi-calendar-range me-1"></i>Date Range
+                    </label>
+                    <select class="form-select" id="date_range_hours" name="date_range_hours">
+                        <option value="24" {% if config.date_range_hours == 24 %}selected{% endif %}>Last 24 hours</option>
+                        <option value="48" {% if config.date_range_hours == 48 %}selected{% endif %}>Last 48 hours (default)</option>
+                        <option value="168" {% if config.date_range_hours == 168 %}selected{% endif %}>Last 7 days</option>
+                    </select>
+                    <div class="field-hint">
+                        Lookback window for article search. Default is 48 hours to ensure overlap between daily runs and prevent missed articles.
+                    </div>
+                </div>
+
+                <!-- Enable Factiva Collection -->
+                <div class="mb-3">
+                    <label class="form-label">
+                        <i class="bi bi-toggle-on me-1"></i>Collection Status
+                    </label>
+                    <div class="form-check form-switch">
+                        <input type="hidden" name="enabled_hidden" value="false">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            role="switch"
+                            id="enabled"
+                            name="enabled"
+                            {% if config.enabled %}checked{% endif %}
+                        >
+                        <label class="form-check-label" for="enabled">
+                            Enable Factiva news collection
+                        </label>
+                    </div>
+                    <div class="field-hint">
+                        When disabled, the pipeline skips Factiva collection entirely (existing config is preserved).
+                    </div>
+                </div>
+
+                <!-- Last Updated -->
+                {% if config.updated_at %}
+                <div class="mb-3">
+                    <small class="text-muted">
+                        <i class="bi bi-clock me-1"></i>
+                        Last updated: {{ config.updated_at.strftime('%Y-%m-%d %H:%M UTC') }}
+                        {% if config.updated_by %}by {{ config.updated_by }}{% endif %}
+                    </small>
+                </div>
+                {% endif %}
+
+                <!-- Submit Button -->
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save me-1"></i>Save Configuration
+                    </button>
+                    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary ms-2">
+                        <i class="bi bi-x-circle me-1"></i>Cancel
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- Reference: Common Industry Codes -->
+    <div class="card mb-4">
+        <div class="card-header bg-light">
+            <h6 class="mb-0"><i class="bi bi-info-circle me-2"></i>Common Factiva Industry Codes</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-sm reference-table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Description</th>
+                            <th>Coverage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>i82</code></td>
+                            <td>Insurance</td>
+                            <td>Broad insurance industry (life, health, property, casualty)</td>
+                        </tr>
+                        <tr>
+                            <td><code>i8200</code></td>
+                            <td>General Insurance</td>
+                            <td>Non-life insurance products</td>
+                        </tr>
+                        <tr>
+                            <td><code>i82001</code></td>
+                            <td>Life Insurance</td>
+                            <td>Life insurance and annuities</td>
+                        </tr>
+                        <tr>
+                            <td><code>i82002</code></td>
+                            <td>Health Insurance</td>
+                            <td>Medical and health coverage</td>
+                        </tr>
+                        <tr>
+                            <td><code>i82003</code></td>
+                            <td>Property & Casualty</td>
+                            <td>Auto, home, business property insurance</td>
+                        </tr>
+                        <tr>
+                            <td><code>i832</code></td>
+                            <td>Medical/Health Services</td>
+                            <td>Healthcare sector (includes supplemental health plans)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <small class="text-muted mt-2 d-block">
+                <strong>Tip:</strong> Combine multiple codes with commas (e.g., <code>i82,i832</code>) to cast a wider net. The AI classifier will filter results for relevance after collection.
+            </small>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

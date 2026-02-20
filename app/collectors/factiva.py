@@ -89,7 +89,7 @@ class FactivaCollector:
         run_id: Optional[int] = None,
     ) -> List[Dict[str, Any]]:
         """
-        Collect articles from Factiva for the past 48 hours.
+        Collect articles from Factiva for the configured lookback window.
 
         Builds a search query from query_params, fetches search results, then
         fetches individual article bodies for plaintext content. Normalizes all
@@ -97,7 +97,7 @@ class FactivaCollector:
 
         Args:
             query_params: Dict with keys: industry_codes, company_codes, keywords,
-                          page_size. Values are comma-separated strings.
+                          page_size, date_range_hours. Values are comma-separated strings.
             run_id: Optional pipeline run ID for event attribution.
 
         Returns:
@@ -107,10 +107,11 @@ class FactivaCollector:
             Exception: If the search request itself fails after retries. The caller
                        (pipeline) is responsible for handling the fallback to Apify.
         """
-        # Build date window: 48 hours (2 days) to today (UTC)
+        # Build date window from configurable range (default 48 hours)
+        date_range_hours = int(query_params.get("date_range_hours", 48))
         today = datetime.now(timezone.utc)
-        two_days_ago = today - timedelta(days=2)
-        from_date = two_days_ago.strftime("%Y-%m-%d")
+        lookback = today - timedelta(hours=date_range_hours)
+        from_date = lookback.strftime("%Y-%m-%d")
         to_date = today.strftime("%Y-%m-%d")
 
         # Parse comma-separated codes to lists for query building

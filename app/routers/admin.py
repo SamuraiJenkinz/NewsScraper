@@ -23,6 +23,7 @@ from app.models.insurer import Insurer
 from app.models.run import Run
 from app.models.equity_ticker import EquityTicker
 from app.models.api_event import ApiEvent, ApiEventType
+from app.models.factiva_config import FactivaConfig
 from app.services.excel_service import parse_excel_insurers
 from app.services.scheduler_service import SchedulerService
 from app.services.report_archiver import ReportArchiver
@@ -1655,5 +1656,130 @@ async def enterprise_config_save(
             "active": "enterprise_config",
             "config": config_display,
             "success": "Enterprise configuration saved successfully. Changes will take effect on the next pipeline run.",
+        }
+    )
+
+
+# ----- Factiva Config Routes -----
+
+@router.get("/factiva", response_class=HTMLResponse, name="admin_factiva")
+async def factiva_config(
+    request: Request,
+    username: str = Depends(verify_admin),
+    db: Session = Depends(get_db)
+) -> HTMLResponse:
+    """
+    Factiva configuration page for query parameters.
+
+    Allows admin to configure Factiva search parameters (industry codes,
+    company codes, keywords, page size, date range) through web UI.
+
+    Args:
+        request: FastAPI request object
+        username: Authenticated admin username
+        db: Database session
+
+    Returns:
+        Rendered Factiva config page with current settings
+    """
+    # Query FactivaConfig row id=1 (create if missing)
+    factiva_config = db.query(FactivaConfig).filter(FactivaConfig.id == 1).first()
+    if not factiva_config:
+        # Create default config row
+        factiva_config = FactivaConfig(
+            id=1,
+            industry_codes="i82,i8200,i82001,i82002,i82003",
+            company_codes="",
+            keywords="seguro,seguradora,resseguro,resseguradora,previdência,saúde suplementar,plano de saúde,apólice,sinistro",
+            page_size=50,
+            date_range_hours=48,
+            enabled=True,
+        )
+        db.add(factiva_config)
+        db.commit()
+        db.refresh(factiva_config)
+
+    return templates.TemplateResponse(
+        "admin/factiva.html",
+        {
+            "request": request,
+            "username": username,
+            "active": "factiva",
+            "config": factiva_config,
+        }
+    )
+
+
+@router.post("/factiva", response_class=HTMLResponse, name="admin_factiva_post")
+async def factiva_config_save(
+    request: Request,
+    industry_codes: str = Form(""),
+    company_codes: str = Form(""),
+    keywords: str = Form(""),
+    page_size: int = Form(25),
+    date_range_hours: int = Form(48),
+    enabled_hidden: str = Form("false"),
+    enabled: str = Form("off"),
+    username: str = Depends(verify_admin),
+    db: Session = Depends(get_db)
+) -> HTMLResponse:
+    """
+    Save Factiva configuration parameters to database.
+
+    Updates FactivaConfig row id=1 with new query parameters. Changes take
+    effect on next pipeline run.
+
+    Args:
+        request: FastAPI request object
+        industry_codes: Comma-separated Factiva industry codes
+        company_codes: Comma-separated Factiva company codes
+        keywords: Comma-separated search keywords
+        page_size: Results per page (10, 25, 50, or 100)
+        date_range_hours: Lookback window (24, 48, or 168)
+        enabled_hidden: Hidden field default value
+        enabled: Checkbox value (overrides hidden if present)
+        username: Authenticated admin username
+        db: Database session
+
+    Returns:
+        Re-rendered page with success message
+    """
+    # Query or create FactivaConfig row id=1
+    factiva_config = db.query(FactivaConfig).filter(FactivaConfig.id == 1).first()
+    if not factiva_config:
+        factiva_config = FactivaConfig(id=1)
+        db.add(factiva_config)
+
+    # Clean comma-separated inputs
+    factiva_config.industry_codes = ",".join(c.strip() for c in industry_codes.split(",") if c.strip())
+    factiva_config.company_codes = ",".join(c.strip() for c in company_codes.split(",") if c.strip())
+    factiva_config.keywords = ",".join(k.strip() for k in keywords.split(",") if k.strip())
+
+    # Validate page_size
+    valid_page_sizes = {10, 25, 50, 100}
+    factiva_config.page_size = page_size if page_size in valid_page_sizes else 25
+
+    # Validate date_range_hours
+    valid_date_ranges = {24, 48, 168}
+    factiva_config.date_range_hours = date_range_hours if date_range_hours in valid_date_ranges else 48
+
+    # Handle enabled checkbox with hidden field pattern
+    factiva_config.enabled = enabled.lower() in ("on", "true", "1", "yes")
+
+    # Update audit fields
+    factiva_config.updated_at = datetime.utcnow()
+    factiva_config.updated_by = username
+
+    db.commit()
+    db.refresh(factiva_config)
+
+    return templates.TemplateResponse(
+        "admin/factiva.html",
+        {
+            "request": request,
+            "username": username,
+            "active": "factiva",
+            "config": factiva_config,
+            "success": "Factiva configuration saved successfully. Changes will take effect on the next pipeline run.",
         }
     )

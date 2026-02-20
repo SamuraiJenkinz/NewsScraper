@@ -63,6 +63,12 @@ class FactivaConfig(Base):
         default=25,
         comment="Articles per search page (1-100)"
     )
+    date_range_hours = Column(
+        Integer,
+        nullable=False,
+        default=48,
+        comment="Lookback window in hours (24, 48, or 168 for 7 days)"
+    )
 
     # Master switch — set False to disable Factiva without removing config
     enabled = Column(
