@@ -14,9 +14,9 @@
 - [x] **FACT-01**: Pipeline collects news via MMC Core API Recent News (Factiva/Dow Jones) endpoint using X-Api-Key authentication
 - [x] **FACT-02**: Factiva queries use Brazilian insurance industry codes and Portuguese keywords to fetch relevant articles in batch
 - [x] **FACT-03**: Individual article bodies are fetched from Factiva for full-text content (not just headlines)
-- [ ] **FACT-04**: AI-assisted matching assigns each Factiva article to one or more of the 897 tracked insurers using insurer names, search_terms, and Azure OpenAI for ambiguous cases
+- [x] **FACT-04**: AI-assisted matching assigns each Factiva article to one or more of the 897 tracked insurers using insurer names, search_terms, and Azure OpenAI for ambiguous cases
 - [x] **FACT-05**: Factiva articles are normalized to BrasilIntel's NewsItem schema (title, description, source_url, source_name, published_at, insurer_id)
-- [ ] **FACT-06**: Factiva replaces all 6 Apify/RSS sources as the sole news collection mechanism — no fallback path
+- [x] **FACT-06**: Factiva replaces all 6 Apify/RSS sources as the sole news collection mechanism — no fallback path
 - [x] **FACT-07**: Duplicate articles are detected and filtered (URL dedup + semantic dedup within batch)
 
 ### Equity Price Enrichment (EQTY)
@@ -74,9 +74,9 @@
 | FACT-01 | Phase 10 | 10-01 | Complete |
 | FACT-02 | Phase 10 | 10-01 | Complete |
 | FACT-03 | Phase 10 | 10-01 | Complete |
-| FACT-04 | Phase 11 | 11-01, 11-02 | Pending |
+| FACT-04 | Phase 11 | 11-01, 11-02 | Complete |
 | FACT-05 | Phase 10 | 10-01 | Complete |
-| FACT-06 | Phase 11 | 11-03 | Pending |
+| FACT-06 | Phase 11 | 11-03 | Complete |
 | FACT-07 | Phase 10 | 10-02, 10-03 | Complete |
 | EQTY-01 | Phase 12 | 12-01 | Pending |
 | EQTY-02 | Phase 12 | 12-02 | Pending |

@@ -73,9 +73,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 11-01-PLAN.md — Deterministic insurer matcher: MatchResult schema + InsurerMatcher with name/search_term word-boundary matching, Portuguese accent normalization
-- [ ] 11-02-PLAN.md — AI-assisted insurer matcher: AIInsurerMatcher with Azure OpenAI structured output for ambiguous articles, ApiEvent logging
-- [ ] 11-03-PLAN.md — Pipeline integration: rewrite runs.py to use FactivaCollector + dedup + insurer matching, remove Apify from active flow, sentinel insurer for unmatched
+- [x] 11-01-PLAN.md — Deterministic insurer matcher: MatchResult schema + InsurerMatcher with name/search_term word-boundary matching, Portuguese accent normalization
+- [x] 11-02-PLAN.md — AI-assisted insurer matcher: AIInsurerMatcher with Azure OpenAI structured output for ambiguous articles, ApiEvent logging
+- [x] 11-03-PLAN.md — Pipeline integration: rewrite runs.py to use FactivaCollector + dedup + insurer matching, remove Apify from active flow, sentinel insurer for unmatched
 
 #### Phase 12: Equity Price Enrichment
 
@@ -168,7 +168,7 @@ Note: Phase 12 depends only on Phase 9 (not Phase 10/11) and may parallelize wit
 | 8. Admin Interface | v1.0 | 6/6 | Complete | 2026-02-05 |
 | 9. Enterprise API Foundation | v1.1 | 3/3 | Complete | 2026-02-19 |
 | 10. Factiva News Collection | v1.1 | 3/3 | Complete | 2026-02-19 |
-| 11. Insurer Matching Pipeline | v1.1 | 0/3 | Not started | - |
+| 11. Insurer Matching Pipeline | v1.1 | 3/3 | Complete | 2026-02-19 |
 | 12. Equity Price Enrichment | v1.1 | 0/4 | Not started | - |
 | 13. Enterprise Email Delivery | v1.1 | 0/3 | Not started | - |
 | 14. Admin Dashboard Extensions | v1.1 | 0/5 | Not started | - |
