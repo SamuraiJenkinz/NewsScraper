@@ -103,15 +103,14 @@ Plans:
   1. Dashboard home page shows an enterprise API health panel with current auth status, API connectivity indicator, and timestamps of last successful and failed requests
   2. Admin can enter and save MMC Core API credentials (API key, client ID, client secret) through a settings page without editing environment variables
   3. Admin can configure Factiva query parameters (industry codes, Portuguese keywords, date range) through a dedicated page that immediately affects the next pipeline run
-  4. Admin can add, edit, and delete equity ticker mappings through the dedicated tickers page (CRUD operations persist to database)
+  4. Admin can add, edit, and delete equity ticker mappings through the dedicated tickers page (CRUD operations persist to database) -- ALREADY COMPLETE (Phase 12-02)
   5. Article listings in the admin show a "Factiva" source badge on articles collected from Factiva
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 13-01: Enterprise API health panel — auth status widget, connectivity check, last success/failure display on dashboard
-- [ ] 13-02: Credentials settings page — MMC Core API key/client ID/secret form, persist to DB (FactivaConfig model)
-- [ ] 13-03: Factiva query config page — industry codes, keywords, date range form, persist to DB
-- [ ] 13-04: Article source badge — "Factiva" label in article listings, HTMX partial update
+- [ ] 13-01-PLAN.md — Enterprise API health panel + fallback event log on dashboard (ADMN-17)
+- [ ] 13-02-PLAN.md — Enterprise Config credentials page + Factiva query config page with date range (ADMN-18, ADMN-19)
+- [ ] 13-03-PLAN.md — Factiva source badges in report templates (ADMN-22)
 
 #### Phase 14: Apify Cleanup
 
@@ -150,5 +149,5 @@ Note: Phase 12 depends only on Phase 9 (not Phase 10/11) and may parallelize wit
 | 10. Factiva News Collection | v1.1 | 3/3 | Complete | 2026-02-19 |
 | 11. Insurer Matching Pipeline | v1.1 | 3/3 | Complete | 2026-02-19 |
 | 12. Equity Price Enrichment | v1.1 | 3/3 | Complete | 2026-02-19 |
-| 13. Admin Dashboard Extensions | v1.1 | 0/4 | Not started | - |
+| 13. Admin Dashboard Extensions | v1.1 | 0/3 | Not started | - |
 | 14. Apify Cleanup | v1.1 | 0/2 | Not started | - |
