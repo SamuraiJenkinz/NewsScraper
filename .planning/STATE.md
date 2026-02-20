@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 13 of 14 (Admin Dashboard Extensions) — IN PROGRESS
-Plan: 1 of 3 complete
+Plan: 2 of 3 complete (13-01, 13-03)
 Status: In progress
-Last activity: 2026-02-20 — Completed 13-01-PLAN.md (Enterprise API health panel and fallback event log)
+Last activity: 2026-02-20 — Completed 13-03-PLAN.md (Factiva source badges in reports)
 
-Progress: v1.0 [##########] 100% | v1.1 [#######▪..] 70%
+Progress: v1.0 [##########] 100% | v1.1 [#######▪..] 73%
 
 ## Performance Metrics
 
@@ -24,9 +24,9 @@ Progress: v1.0 [##########] 100% | v1.1 [#######▪..] 70%
 - Total execution time: ~7.0 hours
 
 **v1.1 Velocity:**
-- Total plans completed: 13
-- Average duration: 7.0 min
-- Total execution time: 91 min
+- Total plans completed: 14
+- Average duration: 6.6 min
+- Total execution time: 92 min
 
 **By Phase (v1.1):**
 
@@ -36,7 +36,7 @@ Progress: v1.0 [##########] 100% | v1.1 [#######▪..] 70%
 | 10. Factiva News Collection | 3/3 COMPLETE | 48 min | 16 min |
 | 11. Insurer Matching Pipeline | 3/3 COMPLETE | 17 min | 5.7 min |
 | 12. Equity Price Enrichment | 3/3 COMPLETE | 29 min | 9.7 min |
-| 13. Admin Dashboard Extensions | 1/3 IN PROGRESS | 3 min | 3.0 min |
+| 13. Admin Dashboard Extensions | 2/3 IN PROGRESS | 4 min | 2.0 min |
 
 *Updated after each plan completion*
 
@@ -100,6 +100,9 @@ v1.1 decisions:
 | Overall status from most recent | API status = most recent event (success or failure); degraded if fallback, offline if failure | 13-01 |
 | Separate timestamp queries | Query most recent success AND failure separately for full visibility into API behavior over time | 13-01 |
 | Fallback log includes TOKEN_FAILED | Auth failures visible in ops log alongside NEWS_FALLBACK, EQUITY_FALLBACK, EMAIL_FALLBACK | 13-01 |
+| Dow Jones blue for Factiva | #0077c8 badge color — brand consistency with MDInsights Factiva identity | 13-03 |
+| Inline badge styles only | All badge styles inline (no CSS classes) — email client compatibility for Outlook/Gmail | 13-03 |
+| Conditional Factiva badge | Badge only when source_name == 'Factiva' — backward compatible with legacy Apify sources | 13-03 |
 
 ### Pending Todos
 
@@ -109,9 +112,10 @@ None.
 
 - **ACTION REQUIRED before Phase 12 testing:** Staging MMC credentials must be added to .env and validated with `python scripts/test_auth.py` (Phase 9) and `python scripts/test_factiva.py` (Phase 10)
 - **Phase 12 COMPLETE:** Equity enrichment end-to-end ready — pipeline enrichment (12-01), admin UI (12-02), report display (12-03)
+- **Phase 13 Plans 13-01 and 13-03 COMPLETE:** Enterprise API health panel (13-01) and Factiva source badges (13-03) ready
 - **Enterprise Email Delivery REMOVED:** Staying with Graph API for email delivery — Phase 13 removed, phases renumbered
-- **Email visual QA recommended:** Equity chips use inline styles for Outlook/Gmail compatibility, but real email client testing needed before production deployment
-- First production run will validate complete pipeline: Factiva → matcher → classifier → equity enrichment → report delivery
+- **Email visual QA recommended:** Both equity chips AND Factiva badges use inline styles for Outlook/Gmail compatibility — real email client testing needed before production deployment
+- First production run will validate complete pipeline: Factiva → matcher → classifier → equity enrichment → report delivery with badges
 - Sentinel insurer may accumulate noise — admin dashboard should provide filtering/hiding
 - 3-insurer cap may be restrictive for industry-wide news — monitor in production
 - AI matching costs will increase with Factiva volume — ApiEvent monitoring critical for Phase 13
@@ -120,10 +124,10 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-20T12:16:11Z
-Stopped at: Completed 13-01-PLAN.md — Enterprise API health panel and fallback event log on dashboard
-Resume file: .planning/phases/13-admin-dashboard-extensions/13-01-SUMMARY.md
+Last session: 2026-02-20T07:16:00Z
+Stopped at: Completed 13-03-PLAN.md — Factiva source badges in all report templates
+Resume file: .planning/phases/13-admin-dashboard-extensions/13-03-SUMMARY.md
 
 ---
 *Initialized: 2026-02-04*
-*Last updated: 2026-02-20 after 13-01 completion (Phase 13 Plan 01 COMPLETE)*
+*Last updated: 2026-02-20 after 13-03 completion (Phase 13: 2 of 3 plans COMPLETE)*
