@@ -21,10 +21,10 @@
 
 ### Equity Price Enrichment (EQTY)
 
-- [ ] **EQTY-01**: Equity price data is retrieved via MMC Core API Equity Price endpoint for tracked Brazilian insurance companies
-- [ ] **EQTY-02**: Admin can configure entity-to-ticker mappings (insurer name → B3 stock ticker) via the admin dashboard
-- [ ] **EQTY-03**: Browser reports display inline equity chips (ticker, price, change%) alongside relevant insurer news
-- [ ] **EQTY-04**: Email reports display inline equity data in table-based layout compatible with Outlook and Gmail
+- [x] **EQTY-01**: Equity price data is retrieved via MMC Core API Equity Price endpoint for tracked Brazilian insurance companies
+- [x] **EQTY-02**: Admin can configure entity-to-ticker mappings (insurer name → B3 stock ticker) via the admin dashboard
+- [x] **EQTY-03**: Browser reports display inline equity chips (ticker, price, change%) alongside relevant insurer news
+- [x] **EQTY-04**: Email reports display inline equity data in table-based layout compatible with Outlook and Gmail
 
 ### Enterprise Email Delivery (EEML)
 
@@ -78,10 +78,10 @@
 | FACT-05 | Phase 10 | 10-01 | Complete |
 | FACT-06 | Phase 11 | 11-03 | Complete |
 | FACT-07 | Phase 10 | 10-02, 10-03 | Complete |
-| EQTY-01 | Phase 12 | 12-01 | Pending |
-| EQTY-02 | Phase 12 | 12-02 | Pending |
-| EQTY-03 | Phase 12 | 12-03 | Pending |
-| EQTY-04 | Phase 12 | 12-04 | Pending |
+| EQTY-01 | Phase 12 | 12-01 | Complete |
+| EQTY-02 | Phase 12 | 12-02 | Complete |
+| EQTY-03 | Phase 12 | 12-03 | Complete |
+| EQTY-04 | Phase 12 | 12-03 | Complete |
 | EEML-01 | Phase 13 | 13-01 | Pending |
 | EEML-02 | Phase 13 | 13-01 | Pending |
 | EEML-03 | Phase 13 | 13-02 | Pending |
@@ -90,7 +90,7 @@
 | ADMN-17 | Phase 14 | 14-01 | Pending |
 | ADMN-18 | Phase 14 | 14-02 | Pending |
 | ADMN-19 | Phase 14 | 14-03 | Pending |
-| ADMN-20 | Phase 12 | 12-02 | Pending |
+| ADMN-20 | Phase 12 | 12-02 | Complete |
 | ADMN-21 | Phase 14 | 14-04 | Pending |
 | ADMN-22 | Phase 14 | 14-05 | Pending |
 | CLNP-01 | Phase 15 | 15-01 | Pending |

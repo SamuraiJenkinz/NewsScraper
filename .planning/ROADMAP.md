@@ -90,9 +90,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 12-01-PLAN.md — EquityPriceClient service port + pipeline equity enrichment integration
-- [ ] 12-02-PLAN.md — Admin ticker CRUD routes, equity.html template, sidebar nav, seed defaults
-- [ ] 12-03-PLAN.md — Report equity chip display (email-compatible inline styles in report_professional.html)
+- [x] 12-01-PLAN.md — EquityPriceClient service port + pipeline equity enrichment integration
+- [x] 12-02-PLAN.md — Admin ticker CRUD routes, equity.html template, sidebar nav, seed defaults
+- [x] 12-03-PLAN.md — Report equity chip display (email-compatible inline styles in report_professional.html)
 
 #### Phase 13: Enterprise Email Delivery
 
@@ -168,7 +168,7 @@ Note: Phase 12 depends only on Phase 9 (not Phase 10/11) and may parallelize wit
 | 9. Enterprise API Foundation | v1.1 | 3/3 | Complete | 2026-02-19 |
 | 10. Factiva News Collection | v1.1 | 3/3 | Complete | 2026-02-19 |
 | 11. Insurer Matching Pipeline | v1.1 | 3/3 | Complete | 2026-02-19 |
-| 12. Equity Price Enrichment | v1.1 | 0/3 | Not started | - |
+| 12. Equity Price Enrichment | v1.1 | 3/3 | Complete | 2026-02-19 |
 | 13. Enterprise Email Delivery | v1.1 | 0/3 | Not started | - |
 | 14. Admin Dashboard Extensions | v1.1 | 0/5 | Not started | - |
 | 15. Apify Cleanup | v1.1 | 0/2 | Not started | - |
