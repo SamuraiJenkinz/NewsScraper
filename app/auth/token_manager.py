@@ -77,7 +77,7 @@ class TokenManager:
     def __init__(self):
         settings = get_settings()
         self._base_url = settings.mmc_api_base_url
-        self._client_id = settings.mmc_api_client_id
+        self._client_id = settings.get_mmc_client_id()
         self._client_secret = settings.mmc_api_client_secret
         self._token_path = settings.mmc_api_token_path
         self._token: Optional[TokenInfo] = None

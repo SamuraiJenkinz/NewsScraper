@@ -177,6 +177,15 @@ class Settings(BaseSettings):
         }
         return config_map.get(category, {"cron": "0 6 * * *", "enabled": False})
 
+    def get_mmc_client_id(self) -> str:
+        """Get MMC API client ID, falling back to mmc_api_key.
+
+        The MMC portal issues a single 'API Key / Client ID' credential
+        that serves as both the X-Api-Key header and the OAuth2 client_id.
+        This allows users to set only MMC_API_KEY in .env.
+        """
+        return self.mmc_api_client_id or self.mmc_api_key
+
     def is_mmc_auth_configured(self) -> bool:
         """Check if MMC Core API OAuth2 (JWT) auth is fully configured.
 
@@ -184,7 +193,7 @@ class Settings(BaseSettings):
         """
         return bool(
             self.mmc_api_base_url
-            and self.mmc_api_client_id
+            and self.get_mmc_client_id()
             and self.mmc_api_client_secret
         )
 
