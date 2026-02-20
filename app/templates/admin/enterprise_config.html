@@ -1,0 +1,190 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Enterprise Configuration{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .page-header h3 {
+        color: var(--marsh-blue);
+        margin-bottom: 0.25rem;
+    }
+
+    .field-hint {
+        font-size: 0.8125rem;
+        color: #6c757d;
+        margin-top: 0.375rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .secret-field {
+        font-family: 'Courier New', monospace;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+    <!-- Header -->
+    <div class="row mb-4 page-header">
+        <div class="col-12">
+            <h3><i class="bi bi-shield-lock"></i> Enterprise Configuration</h3>
+            <p class="text-muted mb-0">Configure MMC Core API credentials for Factiva news collection, equity price enrichment, and enterprise email delivery.</p>
+        </div>
+    </div>
+
+    <!-- Success alert -->
+    {% if success %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>{{ success }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+
+    <!-- Error alert -->
+    {% if error %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ error }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+
+    <!-- MMC Core API Card -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-cloud me-2"></i>MMC Core API</h5>
+        </div>
+        <div class="card-body">
+            <form method="post" action="{{ url_for('admin_enterprise_config_post') }}">
+
+                <!-- Base URL -->
+                <div class="mb-3">
+                    <label for="mmc_api_base_url" class="form-label">
+                        <i class="bi bi-link-45deg me-1"></i>Base URL
+                    </label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="mmc_api_base_url"
+                        name="mmc_api_base_url"
+                        value="{{ config.mmc_api_base_url }}"
+                        placeholder="https://api.mmc.com"
+                    >
+                    <div class="field-hint">
+                        MMC Core API base URL (e.g., https://api.mmc.com)
+                    </div>
+                </div>
+
+                <!-- Client ID -->
+                <div class="mb-3">
+                    <label for="mmc_api_client_id" class="form-label">
+                        <i class="bi bi-person-badge me-1"></i>Client ID
+                    </label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="mmc_api_client_id"
+                        name="mmc_api_client_id"
+                        value="{{ config.mmc_api_client_id }}"
+                        placeholder="client-id-here"
+                    >
+                    <div class="field-hint">
+                        OAuth2 client ID for JWT token authentication
+                    </div>
+                </div>
+
+                <!-- Client Secret -->
+                <div class="mb-3">
+                    <label for="mmc_api_client_secret" class="form-label">
+                        <i class="bi bi-key me-1"></i>Client Secret
+                    </label>
+                    <input
+                        type="password"
+                        class="form-control secret-field"
+                        id="mmc_api_client_secret"
+                        name="mmc_api_client_secret"
+                        value=""
+                        placeholder="{% if config.mmc_api_client_secret_set %}••••••••••••••••{% else %}Not set{% endif %}"
+                    >
+                    <div class="field-hint">
+                        OAuth2 client secret. <strong>Leave blank to keep existing value.</strong>
+                    </div>
+                </div>
+
+                <!-- API Key -->
+                <div class="mb-3">
+                    <label for="mmc_api_key" class="form-label">
+                        <i class="bi bi-shield-check me-1"></i>API Key
+                    </label>
+                    <input
+                        type="password"
+                        class="form-control secret-field"
+                        id="mmc_api_key"
+                        name="mmc_api_key"
+                        value=""
+                        placeholder="{% if config.mmc_api_key_set %}••••••••••••••••{% else %}Not set{% endif %}"
+                    >
+                    <div class="field-hint">
+                        X-Api-Key header value for Factiva and Equity APIs. <strong>Leave blank to keep existing value.</strong>
+                    </div>
+                </div>
+
+                <!-- Sender Email -->
+                <div class="mb-3">
+                    <label for="mmc_sender_email" class="form-label">
+                        <i class="bi bi-envelope me-1"></i>Sender Email
+                    </label>
+                    <input
+                        type="email"
+                        class="form-control"
+                        id="mmc_sender_email"
+                        name="mmc_sender_email"
+                        value="{{ config.mmc_sender_email }}"
+                        placeholder="no-reply@mmc.com"
+                    >
+                    <div class="field-hint">
+                        Enterprise mailbox for email delivery (used when enterprise email is enabled)
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save me-1"></i>Save Configuration
+                    </button>
+                    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary ms-2">
+                        <i class="bi bi-x-circle me-1"></i>Cancel
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- Help Card -->
+    <div class="card mb-4">
+        <div class="card-header bg-light">
+            <h6 class="mb-0"><i class="bi bi-info-circle me-2"></i>Configuration Notes</h6>
+        </div>
+        <div class="card-body">
+            <ul class="mb-0">
+                <li><strong>Secret Fields:</strong> Client Secret and API Key fields are masked. Leave blank to preserve existing values.</li>
+                <li><strong>Changes Take Effect:</strong> Updated credentials are used on the next scheduled pipeline run or manual trigger.</li>
+                <li><strong>Testing:</strong> Use <code>python scripts/test_auth.py</code> to validate OAuth2 credentials after saving.</li>
+                <li><strong>Factiva News:</strong> Requires <code>Base URL</code> and <code>API Key</code>.</li>
+                <li><strong>Equity Prices:</strong> Requires <code>Base URL</code> and <code>API Key</code>.</li>
+                <li><strong>Enterprise Email:</strong> Requires all fields including <code>Client ID</code>, <code>Client Secret</code>, and <code>Sender Email</code>.</li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

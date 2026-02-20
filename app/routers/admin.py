@@ -45,6 +45,18 @@ def cleanup_expired_sessions() -> None:
         del import_sessions[k]
 
 
+def _update_env_var(env_content: str, var_name: str, value: str) -> str:
+    """Replace or append an environment variable in .env file content."""
+    import re
+    pattern = re.compile(f"^{re.escape(var_name)}=.*$", re.MULTILINE)
+    if pattern.search(env_content):
+        return pattern.sub(f"{var_name}={value}", env_content)
+    else:
+        if env_content and not env_content.endswith("\n"):
+            env_content += "\n"
+        return env_content + f"{var_name}={value}\n"
+
+
 # ----- Template Filters -----
 
 def format_datetime(value) -> str:
@@ -1522,4 +1534,126 @@ async def equity_seed(
     return RedirectResponse(
         url=f"/admin/equity?success={added_count}+default+ticker(s)+seeded",
         status_code=303,
+    )
+
+
+# ----- Enterprise Config Routes -----
+
+@router.get("/enterprise-config", response_class=HTMLResponse, name="admin_enterprise_config")
+async def enterprise_config(
+    request: Request,
+    username: str = Depends(verify_admin),
+    settings: Settings = Depends(get_settings)
+) -> HTMLResponse:
+    """
+    Enterprise configuration page for MMC Core API credentials.
+
+    Allows admin to configure MMC API credentials (base URL, client ID, client secret,
+    API key, sender email) through web UI without editing .env files directly.
+
+    Args:
+        request: FastAPI request object
+        username: Authenticated admin username
+        settings: Application settings
+
+    Returns:
+        Rendered enterprise config page with masked secrets
+    """
+    # Build config display dict with boolean flags for secrets
+    config_display = {
+        "mmc_api_base_url": settings.mmc_api_base_url,
+        "mmc_api_client_id": settings.mmc_api_client_id,
+        "mmc_api_client_secret_set": bool(settings.mmc_api_client_secret),
+        "mmc_api_key_set": bool(settings.mmc_api_key),
+        "mmc_sender_email": settings.mmc_sender_email,
+    }
+
+    return templates.TemplateResponse(
+        "admin/enterprise_config.html",
+        {
+            "request": request,
+            "username": username,
+            "active": "enterprise_config",
+            "config": config_display,
+        }
+    )
+
+
+@router.post("/enterprise-config", response_class=HTMLResponse, name="admin_enterprise_config_post")
+async def enterprise_config_save(
+    request: Request,
+    mmc_api_base_url: str = Form(""),
+    mmc_api_client_id: str = Form(""),
+    mmc_api_client_secret: str = Form(""),
+    mmc_api_key: str = Form(""),
+    mmc_sender_email: str = Form(""),
+    username: str = Depends(verify_admin),
+    settings: Settings = Depends(get_settings)
+) -> HTMLResponse:
+    """
+    Save enterprise configuration credentials to .env file.
+
+    Updates MMC Core API credentials. Non-secret fields always updated.
+    Secret fields only updated if non-blank (to preserve existing secrets).
+    Clears settings cache after save so pipeline picks up new values.
+
+    Args:
+        request: FastAPI request object
+        mmc_api_base_url: MMC Core API base URL
+        mmc_api_client_id: OAuth2 client ID
+        mmc_api_client_secret: OAuth2 client secret (only updated if non-blank)
+        mmc_api_key: X-Api-Key header value (only updated if non-blank)
+        mmc_sender_email: Enterprise sender email address
+        username: Authenticated admin username
+        settings: Application settings
+
+    Returns:
+        Re-rendered page with success message
+    """
+    from pathlib import Path
+
+    # Read current .env content
+    env_path = Path(".env")
+    if env_path.exists():
+        env_content = env_path.read_text(encoding="utf-8")
+    else:
+        env_content = ""
+
+    # Always update non-secret fields
+    env_content = _update_env_var(env_content, "MMC_API_BASE_URL", mmc_api_base_url.strip())
+    env_content = _update_env_var(env_content, "MMC_API_CLIENT_ID", mmc_api_client_id.strip())
+    env_content = _update_env_var(env_content, "MMC_SENDER_EMAIL", mmc_sender_email.strip())
+
+    # Only update secrets if non-blank (preserve existing if blank)
+    if mmc_api_client_secret.strip():
+        env_content = _update_env_var(env_content, "MMC_API_CLIENT_SECRET", mmc_api_client_secret.strip())
+
+    if mmc_api_key.strip():
+        env_content = _update_env_var(env_content, "MMC_API_KEY", mmc_api_key.strip())
+
+    # Write updated .env
+    env_path.write_text(env_content, encoding="utf-8")
+
+    # Clear settings cache so pipeline reads fresh values
+    get_settings.cache_clear()
+
+    # Re-render with success message
+    settings_refreshed = get_settings()
+    config_display = {
+        "mmc_api_base_url": settings_refreshed.mmc_api_base_url,
+        "mmc_api_client_id": settings_refreshed.mmc_api_client_id,
+        "mmc_api_client_secret_set": bool(settings_refreshed.mmc_api_client_secret),
+        "mmc_api_key_set": bool(settings_refreshed.mmc_api_key),
+        "mmc_sender_email": settings_refreshed.mmc_sender_email,
+    }
+
+    return templates.TemplateResponse(
+        "admin/enterprise_config.html",
+        {
+            "request": request,
+            "username": username,
+            "active": "enterprise_config",
+            "config": config_display,
+            "success": "Enterprise configuration saved successfully. Changes will take effect on the next pipeline run.",
+        }
     )

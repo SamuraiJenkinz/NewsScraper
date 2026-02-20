@@ -238,6 +238,12 @@
             <a class="nav-link {% if active == 'equity' %}active{% endif %}" href="{{ url_for('admin_equity') }}">
                 <i class="bi bi-graph-up"></i>Equity Tickers
             </a>
+            <a class="nav-link {% if active == 'factiva' %}active{% endif %}" href="{{ url_for('admin_factiva') }}">
+                <i class="bi bi-newspaper"></i>Factiva Config
+            </a>
+            <a class="nav-link {% if active == 'enterprise_config' %}active{% endif %}" href="{{ url_for('admin_enterprise_config') }}">
+                <i class="bi bi-shield-lock"></i>Enterprise Config
+            </a>
         </nav>
     </div>
 
