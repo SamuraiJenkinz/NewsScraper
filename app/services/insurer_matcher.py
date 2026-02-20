@@ -13,6 +13,7 @@ import structlog
 
 from app.models.insurer import Insurer
 from app.schemas.matching import MatchResult
+from app.services.ai_matcher import AIInsurerMatcher
 
 
 logger = structlog.get_logger(__name__)
@@ -27,8 +28,11 @@ class InsurerMatcher:
     """
 
     def __init__(self):
-        """Initialize matcher with structlog logger."""
+        """Initialize matcher with structlog logger and AI fallback."""
         self.logger = structlog.get_logger(__name__)
+        self.ai_matcher = AIInsurerMatcher()
+        self.ai_enabled = self.ai_matcher.is_configured()
+        self.logger.info("insurer_matcher_init", ai_enabled=self.ai_enabled)
 
     def _normalize_text(self, text: str) -> str:
         """
@@ -143,17 +147,19 @@ class InsurerMatcher:
     def match_article(
         self,
         article: dict[str, Any],
-        insurers: list[Insurer]
+        insurers: list[Insurer],
+        run_id: int | None = None
     ) -> MatchResult:
         """
         Match a single article to insurers.
 
         Returns MatchResult with appropriate method and confidence based on
-        number of deterministic matches found.
+        number of deterministic matches found. Falls back to AI for ambiguous cases.
 
         Args:
             article: Article dict with 'title' and 'description' keys
             insurers: List of Insurer ORM objects to match against
+            run_id: Optional pipeline run ID for AI matcher event attribution
 
         Returns:
             MatchResult indicating matched insurers, confidence, and method
@@ -181,27 +187,34 @@ class InsurerMatcher:
             )
 
         elif match_count > 3:
-            # Too many matches - needs AI disambiguation
-            return MatchResult(
-                insurer_ids=[],
-                confidence=0.0,
-                method="unmatched",
-                reasoning=f"Too many matches ({match_count}), needs AI disambiguation"
-            )
+            # Too many matches - try AI disambiguation if available
+            if self.ai_enabled:
+                return self.ai_matcher.ai_match(article, insurers, run_id)
+            else:
+                return MatchResult(
+                    insurer_ids=[],
+                    confidence=0.0,
+                    method="unmatched",
+                    reasoning=f"Too many matches ({match_count}), AI disambiguation unavailable"
+                )
 
         else:
-            # No matches - AI will attempt in Plan 02
-            return MatchResult(
-                insurer_ids=[],
-                confidence=0.0,
-                method="unmatched",
-                reasoning="No clear deterministic match"
-            )
+            # No matches - try AI if available
+            if self.ai_enabled:
+                return self.ai_matcher.ai_match(article, insurers, run_id)
+            else:
+                return MatchResult(
+                    insurer_ids=[],
+                    confidence=0.0,
+                    method="unmatched",
+                    reasoning="No clear deterministic match, AI unavailable"
+                )
 
     def match_batch(
         self,
         articles: list[dict[str, Any]],
-        insurers: list[Insurer]
+        insurers: list[Insurer],
+        run_id: int | None = None
     ) -> list[MatchResult]:
         """
         Match a batch of articles to insurers.
@@ -211,6 +224,7 @@ class InsurerMatcher:
         Args:
             articles: List of article dicts with 'title' and 'description'
             insurers: List of Insurer ORM objects to match against
+            run_id: Optional pipeline run ID for AI matcher event attribution
 
         Returns:
             List of MatchResult objects, one per article
@@ -225,20 +239,26 @@ class InsurerMatcher:
         stats = {
             "deterministic_single": 0,
             "deterministic_multi": 0,
+            "ai_disambiguation": 0,
             "unmatched": 0,
         }
 
         for article in articles:
-            result = self.match_article(article, insurers)
+            result = self.match_article(article, insurers, run_id)
             results.append(result)
-            stats[result.method] += 1
+            # Count by method
+            if result.method in stats:
+                stats[result.method] += 1
+            else:
+                stats[result.method] = 1
 
         self.logger.info(
-            "Batch matching complete",
-            total_articles=len(articles),
-            deterministic_single=stats["deterministic_single"],
-            deterministic_multi=stats["deterministic_multi"],
-            unmatched=stats["unmatched"]
+            "match_batch_complete",
+            total=len(articles),
+            deterministic_single=stats.get("deterministic_single", 0),
+            deterministic_multi=stats.get("deterministic_multi", 0),
+            ai_disambiguation=stats.get("ai_disambiguation", 0),
+            unmatched=stats.get("unmatched", 0),
         )
 
         return results
