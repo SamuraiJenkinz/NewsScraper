@@ -325,7 +325,8 @@ class ReportService:
         insurers: list[Insurer],
         report_date: Optional[datetime] = None,
         use_ai_summary: bool = True,
-        archive_report: bool = True
+        archive_report: bool = True,
+        equity_data: dict = None
     ) -> Tuple[str, Optional[Path]]:
         """
         Generate comprehensive professional HTML report.
@@ -335,6 +336,7 @@ class ReportService:
         - Market context sections
         - Strategic recommendations
         - Category indicators with Portuguese labels
+        - Equity price chips (optional)
         - Report archival (optional)
 
         Args:
@@ -343,12 +345,17 @@ class ReportService:
             report_date: Date for report (defaults to now)
             use_ai_summary: Whether to use AI for executive summary
             archive_report: Whether to save report to archive
+            equity_data: Optional dict mapping insurer_id to list of price dicts
 
         Returns:
             Tuple of (rendered HTML string, archive path or None)
         """
         if report_date is None:
             report_date = datetime.now()
+
+        # Default equity_data to empty dict for backward compatibility
+        if equity_data is None:
+            equity_data = {}
 
         # Group insurers by status
         insurers_by_status = self.get_insurers_by_status(insurers)
@@ -386,7 +393,8 @@ class ReportService:
             executive_summary=executive_summary,
             key_findings=key_findings,
             market_context=market_context,
-            recommendations=recommendations
+            recommendations=recommendations,
+            equity_by_insurer=equity_data
         )
 
         # Archive report if requested
@@ -406,7 +414,8 @@ class ReportService:
         run_id: int,
         db_session: Session,
         use_ai_summary: bool = True,
-        archive_report: bool = True
+        archive_report: bool = True,
+        equity_data: dict = None
     ) -> Tuple[str, Optional[Path]]:
         """
         Generate professional report for a specific run from database.
@@ -420,6 +429,7 @@ class ReportService:
             db_session: Database session
             use_ai_summary: Whether to use AI for executive summary
             archive_report: Whether to save report to archive
+            equity_data: Optional dict mapping insurer_id to list of price dicts
 
         Returns:
             Tuple of (rendered HTML string, archive path or None)
@@ -464,7 +474,8 @@ class ReportService:
             insurers=insurers,
             report_date=run.started_at,
             use_ai_summary=use_ai_summary,
-            archive_report=archive_report
+            archive_report=archive_report,
+            equity_data=equity_data
         )
 
     def _get_basic_summary(
