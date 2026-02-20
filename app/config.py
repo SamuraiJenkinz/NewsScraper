@@ -39,9 +39,6 @@ class Settings(BaseSettings):
     azure_client_secret: str = ""
     sender_email: str = ""
 
-    # Apify (for web scraping)
-    apify_token: str = ""
-
     # Application
     debug: bool = False
     log_level: str = "INFO"
@@ -59,22 +56,6 @@ class Settings(BaseSettings):
     report_recipients_group_life: str = ""
     report_recipients_group_life_cc: str = ""
     report_recipients_group_life_bcc: str = ""
-
-    # Batch processing settings (NEWS-07)
-    batch_size: int = 30  # Insurers per batch (30-50 recommended)
-    batch_delay_seconds: float = 2.0  # Delay between batches
-    max_concurrent_sources: int = 3  # Max sources to query in parallel
-    scrape_timeout_seconds: int = 60  # Default per-source timeout
-    scrape_max_results: int = 10  # Max results per insurer per source
-
-    # Source-specific timeouts (website crawlers need longer)
-    source_timeout_valor: int = 120  # Valor Economico
-    source_timeout_cqcs: int = 120  # CQCS
-
-    # Relevance scoring settings (NEWS-10)
-    use_ai_relevance_scoring: bool = True  # Enable AI relevance pre-filter
-    relevance_keyword_threshold: int = 20  # Items below this skip AI scoring
-    relevance_ai_batch_size: int = 10  # Items per AI scoring request
 
     # Admin interface settings (Phase 8)
     admin_username: str = "admin"
@@ -169,26 +150,6 @@ class Settings(BaseSettings):
             and self.azure_client_secret
             and self.sender_email
         )
-
-    def is_apify_configured(self) -> bool:
-        """Check if Apify is configured."""
-        return bool(self.apify_token)
-
-    def get_source_timeout(self, source_name: str) -> int:
-        """
-        Get timeout for a specific source.
-
-        Args:
-            source_name: Name of the source (e.g., "valor", "cqcs")
-
-        Returns:
-            Timeout in seconds, falling back to default if not configured
-        """
-        timeout_map = {
-            "valor": self.source_timeout_valor,
-            "cqcs": self.source_timeout_cqcs,
-        }
-        return timeout_map.get(source_name, self.scrape_timeout_seconds)
 
     def get_schedule_config(self, category: str) -> dict:
         """
