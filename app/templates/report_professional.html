@@ -318,6 +318,11 @@
             font-family: monospace;
         }
 
+        .equity-chip-container {
+            margin-top: 6px;
+            margin-bottom: 8px;
+        }
+
         .insurer-content {
             padding: 30px;
         }
@@ -800,6 +805,27 @@
                 <div class="insurer-header">
                     <div>
                         <h2>{{ insurer.name }}</h2>
+                        {% if equity_by_insurer and equity_by_insurer.get(insurer.id) %}
+                        <div class="equity-chip-container" style="margin-top: 6px; margin-bottom: 8px;">
+                            {% for eq in equity_by_insurer.get(insurer.id, []) %}
+                            <span style="display: inline-block; background-color: #f8f9fa; border: 1px solid #dee2e6; padding: 4px 10px; border-radius: 4px; font-size: 0.75em; font-weight: 600; margin-right: 6px; margin-bottom: 4px; vertical-align: middle;">
+                                <span style="color: #00263e;">{{ eq.ticker }}</span>
+                                {% if eq.price is not none %}
+                                <span style="color: #495057; margin-left: 4px;">R$&nbsp;{{ "%.2f"|format(eq.price) }}</span>
+                                {% endif %}
+                                {% if eq.change_pct is not none %}
+                                {% if eq.change_pct > 0 %}
+                                <span style="color: #198754; margin-left: 4px;">&#9650;&nbsp;{{ "%.2f"|format(eq.change_pct) }}%</span>
+                                {% elif eq.change_pct < 0 %}
+                                <span style="color: #dc3545; margin-left: 4px;">&#9660;&nbsp;{{ "%.2f"|format(eq.change_pct|abs) }}%</span>
+                                {% else %}
+                                <span style="color: #6c757d; margin-left: 4px;">&mdash;</span>
+                                {% endif %}
+                                {% endif %}
+                            </span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
                         <div class="insurer-codes">
                             <span class="code-badge">ANS: {{ insurer.ans_code }}</span>
                             {% if insurer.market_master_code %}
