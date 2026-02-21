@@ -2,7 +2,7 @@
 Seed the FactivaConfig table with Brazilian insurance industry defaults.
 
 Creates the default configuration row (id=1) with:
-    - Brazilian insurance industry codes (i82, i8200, i82001, i82002, i82003)
+    - Brazilian insurance industry code (i82 — covers all insurance sub-categories)
     - Portuguese insurance keywords
     - page_size=50 (balance between coverage and API cost)
     - enabled=True
@@ -38,7 +38,7 @@ def seed_factiva_config():
         existing = session.query(FactivaConfig).filter_by(id=1).first()
 
         # Brazilian insurance defaults
-        industry_codes = "i82,i8200,i82001,i82002,i82003"
+        industry_codes = "i82"
         keywords = "seguro,seguradora,resseguro,saude suplementar,plano de saude,previdencia,sinistro,apolice,corretora de seguros"
         page_size = 50
 
