@@ -196,11 +196,12 @@ class ReportService:
             .all()
         )
 
-        # Load news items for each insurer
-        # Expunge insurers first to avoid ORM relationship side effects
+        # Load news items for each insurer, then detach from session.
+        # Order matters: query BEFORE expunge to avoid lazy load errors
+        # when downstream code accesses insurer.news_items on the detached object.
         for insurer in insurers:
-            db_session.expunge(insurer)
-            insurer.news_items = (
+            # Query news items while insurer is still bound to session
+            run_news_items = (
                 db_session.query(NewsItem)
                 .filter(
                     NewsItem.insurer_id == insurer.id,
@@ -208,6 +209,9 @@ class ReportService:
                 )
                 .all()
             )
+            # Expunge to detach from session, then assign pre-loaded items
+            db_session.expunge(insurer)
+            insurer.news_items = run_news_items
 
         return self.generate_report(
             category=category,
@@ -455,12 +459,12 @@ class ReportService:
             .all()
         )
 
-        # Load news items for each insurer
-        # Expunge insurers first to avoid ORM relationship side effects
-        # when assigning news_items (which could orphan items from other runs)
+        # Load news items for each insurer, then detach from session.
+        # Order matters: query BEFORE expunge to avoid lazy load errors
+        # when downstream code accesses insurer.news_items on the detached object.
         for insurer in insurers:
-            db_session.expunge(insurer)
-            insurer.news_items = (
+            # Query news items while insurer is still bound to session
+            run_news_items = (
                 db_session.query(NewsItem)
                 .filter(
                     NewsItem.insurer_id == insurer.id,
@@ -468,6 +472,9 @@ class ReportService:
                 )
                 .all()
             )
+            # Expunge to detach from session, then assign pre-loaded items
+            db_session.expunge(insurer)
+            insurer.news_items = run_news_items
 
         return self.generate_professional_report(
             category=category,
