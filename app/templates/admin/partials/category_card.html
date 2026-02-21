@@ -62,7 +62,7 @@
     </div>
     <div class="card-footer bg-transparent">
         <button class="btn btn-marsh btn-sm w-100"
-                hx-post="/api/schedules/{{ stats.category }}/trigger"
+                hx-post="/admin/schedules/{{ stats.category }}/trigger"
                 hx-swap="none"
                 hx-confirm="Run {{ stats.category }} category now?"
                 hx-on::after-request="if(event.detail.successful) {
