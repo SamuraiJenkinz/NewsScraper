@@ -16,6 +16,10 @@ from app.schemas.classification import NewsClassification, InsurerClassification
 
 logger = logging.getLogger(__name__)
 
+# ~50K chars is ~12.5K tokens, leaving ample room for system prompt + title + response
+# within GPT-4o-mini's 128K token limit. Articles front-load the most relevant info.
+MAX_DESCRIPTION_CHARS = 50_000
+
 
 # System prompts in Portuguese for better output consistency
 SYSTEM_PROMPT_SINGLE = """Você é um analista financeiro especializado em seguradoras brasileiras.
@@ -125,6 +129,14 @@ class ClassificationService:
         if not self.client or not self.use_llm:
             logger.info("LLM classification disabled or not configured")
             return self._fallback_classification()
+
+        if news_description and len(news_description) > MAX_DESCRIPTION_CHARS:
+            original_len = len(news_description)
+            news_description = news_description[:MAX_DESCRIPTION_CHARS]
+            logger.warning(
+                f"Truncated description for '{news_title[:80]}' "
+                f"from {original_len} to {MAX_DESCRIPTION_CHARS} chars"
+            )
 
         content = f"Título: {news_title}"
         if news_description:
